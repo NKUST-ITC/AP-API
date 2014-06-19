@@ -1,6 +1,7 @@
 ﻿#-*- coding: utf-8 -*-
 
 import requests
+from lxml import etree
 
 
 RANDOM_ID = "AG009"
@@ -11,16 +12,17 @@ fnc_url = "http://140.127.113.227/kuas/fnc.jsp"
 query_url = "http://140.127.113.227/kuas/%s_pro/%s.jsp?"
 
 s = requests.Session()
-def login( uid , pwd ):
-    response = s.post( "http://ap.kuas.edu.tw/kuas/perchk.jsp", data={"uid":uid,"pwd":pwd}).text
 
-    if response.find('f_index.html') != -1 :
-        print(str(uid) + "," + pwd)
-        with open("s.log", 'a') as l:
-            l.write( str(uid) + "," + pwd + "\n")
-        return True
-    else :
-        return False
+def login(username, password):
+    global s
+
+    s = requests.Session()
+
+    payload = {"uid": username, "pwd": password}
+    response = s.post(login_url, data=payload)
+
+
+    return True if u"密碼不正確" not in response.text else False
 
 
 
@@ -43,12 +45,14 @@ def query(qid, username, password, *args):
 def random_number(fncid):
     raw_data = {"fncid": fncid, "sysyear": "103", "syssms":
                 "1", "online": "okey", "loginid": "1102108131"}
-    response = session.post(fnc_url, data=raw_data)
-    root = BeautifulSoup(response.text)
-    ans = root.findAll("input", {"type": "hidden", "name": "ls_randnum"})
-    ls_randnum = ans[0]['value']
-    return ls_randnum
+    r = s.post(fnc_url, data=raw_data)
+    print(r.text)
+
+    root = etree.HTML(r.text)
+    lsr = root.xpath("//input")[-1].values()[-1]
+
+    return lsr
 
 
 if __name__ == "__main__":
-	login("1102108133", "111")
+	pass
