@@ -19,10 +19,14 @@ def login(username, password):
     s = requests.Session()
 
     payload = {"uid": username, "pwd": password}
-    response = s.post(login_url, data=payload)
+    r = s.post(login_url, data=payload)
 
 
-    return True if u"密碼不正確" not in response.text else False
+    root = etree.HTML(r.text)
+    is_login = not root.xpath("//script")[-1].text.startswith("alert")
+
+
+    return is_login
 
 
 
