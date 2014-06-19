@@ -13,20 +13,27 @@ def index():
 
 @app.route('/ap/login', methods=['POST'])
 def login_post():
-    account = request.form['account']
-    password = request.form['password']
 
-    if account == "" and password == "":
-        return render_template('login.html')
-    else:
-        return function.login(account, password)
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+
+        is_login = function.login(username, password)
+
+        if is_login:
+            return "login"
+        else:
+            return "fail"
+
+
+    return render_template("login.html")
 
 
 @app.route('/ap/query', methods=['GET', 'POST'])
 def query_post():
     if request.method == "POST":
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form['username'] if 'username' in request.form else None
+        password = request.form['password'] if 'password' in request.form else None
         fncid = request.form['fncid']
 
 

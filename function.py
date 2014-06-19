@@ -14,9 +14,9 @@ query_url = "http://140.127.113.227/kuas/%s_pro/%s.jsp?"
 s = requests.Session()
 
 def login(username, password):
-    global s
+    #global s
 
-    s = requests.Session()
+    #s = requests.Session()
 
     payload = {"uid": username, "pwd": password}
     r = s.post(login_url, data=payload)
@@ -31,7 +31,7 @@ def login(username, password):
 
 
 def query(username=None, password=None, qid=None, *args):
-    login(username, password)
+    #login(username, password)
     ls_random = random_number(RANDOM_ID)
 
     payload = {"arg01": "", "arg02": "", "arg03": "",
@@ -50,9 +50,8 @@ def query(username=None, password=None, qid=None, *args):
 
 def random_number(fncid):
     raw_data = {"fncid": fncid, "sysyear": "103", "syssms":
-                "1", "online": "okey", "loginid": "1102108131"}
+                "1", "online": "okey", "loginid": "1102108130"}
     r = s.post(fnc_url, data=raw_data)
-    print(r.text)
 
     root = etree.HTML(r.text)
     lsr = root.xpath("//input")[-1].values()[-1]
