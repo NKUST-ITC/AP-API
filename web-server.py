@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import function
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 
 
 app = Flask(__name__)
@@ -21,6 +21,8 @@ def login_post():
         is_login = function.login(username, password)
 
         if is_login:
+            session['s'] = is_login
+
             return "login"
         else:
             return "fail"
@@ -37,11 +39,12 @@ def query_post():
         fncid = request.form['fncid']
 
 
-        query_content = function.query(username, password, fncid)
+        query_content = function.query(session['s'], username, password, fncid)
         return query_content
 
     return render_template("query.html")
 
 
 if __name__ == '__main__':
+    app.secret_key = "testing"
     app.run(debug=True)
