@@ -10,3 +10,8 @@ How to use?
     python2 web-server.py
 
 
+Demo
+---
+http://api.grd.idv.tw:14768/ap/login
+http://api.grd.idv.tw:14768/ap/query
+
