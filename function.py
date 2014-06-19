@@ -26,7 +26,7 @@ def login(username, password):
 
 
 
-def query(qid, username, password, *args):
+def query(username=None, password=None, qid=None, *args):
     login(username, password)
     ls_random = random_number(RANDOM_ID)
 
@@ -35,6 +35,8 @@ def query(qid, username, password, *args):
 
     payload['ls_randnum'] = ls_random
     payload['fucid'] = qid
+    payload["arg01"] = "103"
+    payload["arg02"] = "01"
 
     r = s.post(query_url % (qid[:2], qid), data=payload)
 
