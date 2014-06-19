@@ -22,7 +22,6 @@ def login_post():
 
         if is_login:
             session['s'] = is_login
-
             return "login"
         else:
             return "fail"
@@ -38,6 +37,8 @@ def query_post():
         password = request.form['password'] if 'password' in request.form else None
         fncid = request.form['fncid']
 
+        if 's' not in session:
+            return "you did't login"
 
         query_content = function.query(session['s'], username, password, fncid)
         return query_content
