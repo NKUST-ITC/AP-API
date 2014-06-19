@@ -26,7 +26,7 @@ def login_post():
 
         hash_value = function.login(username, password)
 
-        if is_login:
+        if hash_value:
             session['s'] = hash_value
             return "login"
         else:
