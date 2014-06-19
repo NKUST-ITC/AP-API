@@ -42,7 +42,6 @@ def login(username, password):
 
 
 def query(hash_value, username=None, password=None, qid=None, *args):
-    #login(username, password)
     ls_random = random_number(hash_value, RANDOM_ID)
 
     payload = {"arg01": "", "arg02": "", "arg03": "",
