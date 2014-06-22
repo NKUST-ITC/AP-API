@@ -34,10 +34,13 @@ def login(username, password):
     root = etree.HTML(r.text)
     is_login = not root.xpath("//script")[-1].text.startswith("alert")
 
-    hash_value = hash(username)
-    sd[hash_value] = s
+    if is_login:
+        hash_value = hash(username)
+        sd[hash_value] = s
 
-    return hash_value
+        return hash_value
+    else:
+        return None
 
 
 
