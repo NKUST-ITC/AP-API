@@ -20,7 +20,6 @@ origins = "http://localhost:8000"
 def index():
     return "Hello, World!"
 
-
 @app.route('/ap/login', methods=['POST'])
 @cross_origin(supports_credentials=True, origins=origins)
 def login_post():
@@ -29,7 +28,6 @@ def login_post():
         username = request.form['username']
         password = request.form['password']
 
-        print(username, password)
 
         hash_value = function.login(username, password)
 
@@ -43,6 +41,21 @@ def login_post():
     return render_template("login.html")
 
 
+@app.route('/ap/is_login', methods=['POST'])
+@cross_origin(supports_credentials=True, origins=origins)
+def is_login():
+    if 's' not in session:
+        print("no session")
+        return "false"
+
+    if function.is_login(session['s']):
+        print("login success")
+        return "true"
+    else:
+        print("login unsuccess")
+        return "false"
+
+
 @app.route('/ap/query', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin(supports_credentials=True, origins=origins)
 def query_post():
@@ -53,6 +66,9 @@ def query_post():
 
         if 's' not in session:
             return "you did't login"
+
+        if not function.is_login(session['s']):
+            return "false"
 
         query_content = function.query(session['s'], username, password, fncid)
         #open("c.html", "w").write(json.dumps(parse.course(query_content)))
