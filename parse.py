@@ -40,16 +40,16 @@ def course(cont):
                 break
 
     # Check Saturday and Sunday class
-    course_table['have_saturday'] = False
-    course_table['have_sunday'] = False
+    have_saturday = False
+    have_sunday = False
     for r in course_table:
         if not isinstance(course_table[r], bool) and course_table[r][6]["course_name"]:
-            course_table['have_saturday'] = True
+            have_saturday = True
         if not isinstance(course_table[r], bool) and course_table[r][7]["course_name"]:
-            course_table['have_saturday'] = True
+            have_sunday = True
 
 
-    return course_table
+    return [course_table, have_saturday, have_sunday]
       
 
 

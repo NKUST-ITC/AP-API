@@ -55,7 +55,7 @@ def query_post():
             return "you did't login"
 
         query_content = function.query(session['s'], username, password, fncid)
-        open("c.html", "w").write(json.dumps(parse.course(query_content)))
+        #open("c.html", "w").write(json.dumps(parse.course(query_content)))
         return json.dumps(parse.course(query_content))
 
     return render_template("query.html")
@@ -63,4 +63,4 @@ def query_post():
 
 if __name__ == '__main__':
     app.secret_key = "testing"
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
