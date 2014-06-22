@@ -63,6 +63,8 @@ def query_post():
         username = request.form['username'] if 'username' in request.form else None
         password = request.form['password'] if 'password' in request.form else None
         fncid = request.form['fncid']
+        arg01 = request.form['arg01'] if 'arg01' in request.form else None
+        arg02 = request.form['arg02'] if 'arg02' in request.form else None
 
         if 's' not in session:
             return "you did't login"
@@ -70,9 +72,16 @@ def query_post():
         if not function.is_login(session['s']):
             return "false"
 
-        query_content = function.query(session['s'], username, password, fncid)
+        query_content = function.query(
+            session['s'], username, password, 
+            fncid, {"arg01": arg01, "arg02": arg02})
         #open("c.html", "w").write(json.dumps(parse.course(query_content)))
-        return json.dumps(parse.course(query_content))
+        
+
+        if fncid == "ag222":
+            return json.dumps(parse.course(query_content))
+        elif fncid == "ag008":
+            return json.dumps(parse.score(query_content))
 
     return render_template("query.html")
 

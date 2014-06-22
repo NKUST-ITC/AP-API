@@ -52,7 +52,30 @@ def course(cont):
     return [course_table, have_saturday, have_sunday]
       
 
+def score(cont):
+    root = etree.HTML(cont)
 
+    tbody = root.xpath("//table")[-1]
+
+
+    score_table = []
+    for r_index, r in enumerate(tbody[1:-1]):
+        r = list(map(lambda x: x.replace(u"\xa0", ""), r.itertext()))
+
+        row = {}
+
+        row["course_name"] = r[1]
+        row["credit"] = r[2]
+        row["time"] = r[3]
+        row["required"] = r[4]
+        row["at"] = r[5]
+        row["middle_score"] = r[6]
+        row["final_score"] = r[7]
+        row["remark"] = r[8]
+        
+        score_table.append(row)
+
+    return [score_table]
 
 if __name__ == "__main__":
     course(open("course.html").read())

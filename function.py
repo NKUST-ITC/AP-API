@@ -42,22 +42,29 @@ def login(username, password):
     else:
         return None
 
+def is_login(hash_value):
+    if hash_value in sd:
+        return True
+    else:
+        return False
 
 
-def query(hash_value, username=None, password=None, qid=None, *args):
+
+def query(hash_value, username=None, password=None, qid=None, args=None):
     ls_random = random_number(hash_value, RANDOM_ID)
-
     payload = {"arg01": "", "arg02": "", "arg03": "",
                 "fncid": "", "uid": "", "ls_randnum": ""}
 
     payload['ls_randnum'] = ls_random
     payload['fucid'] = qid
-    payload["arg01"] = "103"
-    payload["arg02"] = "01"
+    payload["arg01"] = args["arg01"]
+    payload["arg02"] = args["arg02"]
+    payload["arg03"] = username
 
     r = sd[hash_value].post(query_url % (qid[:2], qid), data=payload)
 
     return r.content
+
 
 
 
@@ -73,4 +80,4 @@ def random_number(hash_value, fncid):
 
 
 if __name__ == "__main__":
-	pass
+    pass
