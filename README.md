@@ -28,3 +28,9 @@ http://api.grd.idv.tw:14768/ap/login
 
 http://api.grd.idv.tw:14768/ap/query
 
+
+TODO LIST
+---
+ * 查詢缺曠課功能
+ * 預定校車
+ * 累積學分
