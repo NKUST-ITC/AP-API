@@ -5,10 +5,12 @@ import hashlib
 import requests
 from lxml import etree
 
+import leave
+
 
 RANDOM_ID = "AG009"
 
-login_url = "http://140.127.113.227/kuas/perchk.jsp"
+ap_login_url = "http://140.127.113.227/kuas/perchk.jsp"
 fnc_url = "http://140.127.113.227/kuas/fnc.jsp"
 
 query_url = "http://140.127.113.227/kuas/%s_pro/%s.jsp?"
@@ -27,8 +29,10 @@ def hash(f):
 def login(username, password):
     s = requests.Session()
 
+    # AP Login
     payload = {"uid": username, "pwd": password}
-    r = s.post(login_url, data=payload)
+
+    r = s.post(ap_login_url, data=payload)
 
 
     root = etree.HTML(r.text)
@@ -36,6 +40,10 @@ def login(username, password):
 
     if is_login:
         hash_value = hash(username)
+
+        # If login success, login leave system
+        leave.login(s, username, password)
+
         sd[hash_value] = s
 
         return hash_value
@@ -60,11 +68,13 @@ def query(hash_value, username=None, password=None, qid=None, args=None):
     payload["arg01"] = args["arg01"]
     payload["arg02"] = args["arg02"]
     payload["arg03"] = username
-
     r = sd[hash_value].post(query_url % (qid[:2], qid), data=payload)
 
     return r.content
 
+
+def leave_query(hash_value, year="102", semester="2"):
+    return leave.getList(sd[hash_value], year, semester)
 
 
 

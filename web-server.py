@@ -15,13 +15,15 @@ app.config['SESSION_COOKIE_HTTPONLY'] = False
 origins = "http://localhost:8000"
 #origins = "*"
 
+app.config["CORS_ORIGINS"] = origins
+
 
 @app.route('/')
 def index():
     return "Hello, World!"
 
 @app.route('/ap/login', methods=['POST'])
-@cross_origin(supports_credentials=True, origins=origins)
+@cross_origin(supports_credentials=True)
 def login_post():
     print(request.method)
     if request.method == "POST":
@@ -42,7 +44,7 @@ def login_post():
 
 
 @app.route('/ap/is_login', methods=['POST'])
-@cross_origin(supports_credentials=True, origins=origins)
+@cross_origin(supports_credentials=True)
 def is_login():
     if 's' not in session:
         print("no session")
@@ -57,7 +59,7 @@ def is_login():
 
 
 @app.route('/ap/query', methods=['GET', 'POST', 'OPTIONS'])
-@cross_origin(supports_credentials=True, origins=origins)
+@cross_origin(supports_credentials=True)
 def query_post():
     if request.method == "POST":
         username = request.form['username'] if 'username' in request.form else None
@@ -84,6 +86,13 @@ def query_post():
             return json.dumps(parse.score(query_content))
 
     return render_template("query.html")
+
+
+@app.route('/leave', methods=["POST"])
+@cross_origin(supports_credentials=True)
+def leave_post():
+    if request.method == "POST":
+        return json.dumps(function.leave_query(session['s']))
 
 
 if __name__ == '__main__':
