@@ -34,3 +34,12 @@ TODO LIST
  * 查詢缺曠課功能
  * 預定校車
  * 累積學分
+
+
+Donate
+---
+[![BitCoin donate
+button](http://img.shields.io/bitcoin/donate.png?color=yellow)](https://coinbase.com/checkouts/aa7cf80a2a85b4906cb98fc7b2aad5c5 "Donate
+once-off to this project using BitCoin")
+
+
