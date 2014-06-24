@@ -4,23 +4,30 @@ import json
 import uniout
 import parse
 import function
-from flask import Flask, render_template, request, \
-    session
+from flask import Flask, render_template, request, session
 from flask_cors import *
+
+__version__ = "1.0.4"
+
 
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
+app.secret_key = "This is Secret Key"
 
 
 origins = "http://localhost:8000"
-#origins = "*"
-
 app.config["CORS_ORIGINS"] = origins
 
 
 @app.route('/')
 def index():
     return "Hello, World!"
+
+
+@app.route('/version')
+@cross_origin(supports_credentials=True)
+def version():
+    return __version__
 
 
 @app.route('/ap/login', methods=['POST'])
@@ -42,7 +49,6 @@ def login_post():
 
 
     return render_template("login.html")
-    
 
 @app.route('/ap/is_login', methods=['POST'])
 @cross_origin(supports_credentials=True)
@@ -97,5 +103,4 @@ def leave_post():
 
 
 if __name__ == '__main__':
-    app.secret_key = "testing"
     app.run(host="0.0.0.0", debug=True)

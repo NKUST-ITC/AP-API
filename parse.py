@@ -75,7 +75,9 @@ def score(cont):
         
         score_table.append(row)
 
-    return [score_table]
+    total_score = root.xpath("//div")[-1].text.replace(u"　　　　", " ").split(" ")
+
+    return [score_table, total_score]
 
 if __name__ == "__main__":
     course(open("course.html").read())
