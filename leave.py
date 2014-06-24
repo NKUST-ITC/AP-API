@@ -6,51 +6,54 @@ import requests
 s = requests.session()
 
 def login(session, username, password):
-	root = etree.HTML(session.get("http://leave.kuas.edu.tw").text)
-	
-	form = {}
-	for i in root.xpath("//input"):
-		form[i.attrib['name']] = ""
-		if "value" in i.attrib:
-			form[i.attrib['name']] = i.attrib['value']
+    root = etree.HTML(session.get("http://leave.kuas.edu.tw").text)
+    
+    form = {}
+    for i in root.xpath("//input"):
+        form[i.attrib['name']] = ""
+        if "value" in i.attrib:
+            form[i.attrib['name']] = i.attrib['value']
 
-	form['Login1$UserName'] = username
-	form['Login1$Password'] = password
+    form['Login1$UserName'] = username
+    form['Login1$Password'] = password
 
-	session.post('http://leave.kuas.edu.tw/', data=form )
+    session.post('http://leave.kuas.edu.tw/', data=form )
 
 
 def getList(session=s, year="102", semester="2"):
-	root = etree.HTML(session.get("http://leave.kuas.edu.tw/AK002MainM.aspx").text)
-	
-	form = {}
-	for i in root.xpath("//input"):
-		form[i.attrib["name"]] = i.attrib["value"]
+    root = etree.HTML(session.get("http://leave.kuas.edu.tw/AK002MainM.aspx").text)
+    
+    form = {}
+    for i in root.xpath("//input"):
+        form[i.attrib["name"]] = i.attrib["value"]
 
-	form['ctl00$ContentPlaceHolder1$SYS001$DropDownListYms'] = "%s-%s" % (year, semester)
-	
-	root = etree.HTML(session.post("http://leave.kuas.edu.tw/AK002MainM.aspx", data=form).text)
-	
-	tr = root.xpath("//table")[-1]
+    form['ctl00$ContentPlaceHolder1$SYS001$DropDownListYms'] = "%s-%s" % (year, semester)
+    
+    root = etree.HTML(session.post("http://leave.kuas.edu.tw/AK002MainM.aspx", data=form).text)
+    
+    tr = root.xpath("//table")[-1]
 
-	result = []
+    result = []
 
-        # Just abort class C to 14
-        # And row id, leave id, teacher quote
-	for r in tr:
-            r = list(map(lambda x: x.replace("\r", "").replace("\n", "").
-                                                      replace("\t", "").replace(u"\u3000", "").
-                                                      replace(" ", ""),
-                            r.itertext()))[2: -6]
+    # Just abort class C to 14
+    # And row id, leave id, teacher quote
+    for r in tr:
+            r = list(map(lambda x: x.replace("\r", "").
+            						replace("\n", "").
+                                    replace("\t", "").
+                                    replace(u"\u3000", "").
+                                    replace(" ", ""),
+                            r.itertext()
+                            ))[3: -6]
 
             # Teacher quote
             del r[1]
 
             result.append(r)
 
-	return result
+    return result
 
 
 if __name__ == '__main__':
-	login(s, "1102108133", "111")
-	print(getList(s))
+    login(s, "1102108133", "111")
+    print(getList(s))
