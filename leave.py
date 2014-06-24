@@ -31,25 +31,22 @@ def getList(session=s, year="102", semester="2"):
 	
 	root = etree.HTML(session.post("http://leave.kuas.edu.tw/AK002MainM.aspx", data=form).text)
 	
-	tr = root.xpath("id('ContentPlaceHolder1_AK002_GridViewDaily')/tr")
+	tr = root.xpath("//table")[-1]
 
 	result = []
 
-	# Just abort class C to 14
-	# And row id, leave id, teacher quote
+        # Just abort class C to 14
+        # And row id, leave id, teacher quote
 	for r in tr:
-		r = list(map(lambda x: x.replace("\r", "").replace("\n", "").
-							  replace("\t", "").replace(u"\u3000", "").
-							  replace(" ", ""), 
-				r.itertext()))[2: -6]
+            r = list(map(lambda x: x.replace("\r", "").replace("\n", "").
+                                                      replace("\t", "").replace(u"\u3000", "").
+                                                      replace(" ", ""),
+                            r.itertext()))[2: -6]
 
-		# Leave id
-		del r[0]
+            # Teacher quote
+            del r[1]
 
-		# Teacher quote
-		del r[1]
-
-		result.append(r)
+            result.append(r)
 
 	return result
 
