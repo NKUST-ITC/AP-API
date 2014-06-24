@@ -38,18 +38,23 @@ def getList(session=s, year="102", semester="2"):
     # Just abort class C to 14
     # And row id, leave id, teacher quote
     for r in tr:
-            r = list(map(lambda x: x.replace("\r", "").
-            						replace("\n", "").
-                                    replace("\t", "").
-                                    replace(u"\u3000", "").
-                                    replace(" ", ""),
-                            r.itertext()
-                            ))[3: -6]
+        r = list(map(lambda x: x.replace("\r", "").
+        						replace("\n", "").
+                                replace("\t", "").
+                                replace(u"\u3000", "").
+                                replace(" ", ""),
+                        r.itertext()
+                        ))
 
-            # Teacher quote
-            del r[1]
+        if not r[0]: del r[0]
+        if not r[-1]: del r[-1]
 
-            result.append(r)
+        r = r[2: -5]
+        del r[1]
+
+        # Teacher quote
+
+        result.append(r)
 
     return result
 
