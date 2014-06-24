@@ -16,7 +16,7 @@ def course(cont):
             r = list(filter(lambda x: x != u"\xa0", c.itertext()))
             
             if index == 0:
-                row['time'] = r[0]
+                row['time'] = r[0].replace(" ", "")
             else:
                 row[index] = {
                         "course_name": "",

@@ -22,6 +22,7 @@ app.config["CORS_ORIGINS"] = origins
 def index():
     return "Hello, World!"
 
+
 @app.route('/ap/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login_post():
@@ -41,7 +42,7 @@ def login_post():
 
 
     return render_template("login.html")
-
+    
 
 @app.route('/ap/is_login', methods=['POST'])
 @cross_origin(supports_credentials=True)
