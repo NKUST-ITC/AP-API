@@ -7,7 +7,7 @@ import function
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.0.4"
+__version__ = "1.0.6"
 
 
 app = Flask(__name__)
