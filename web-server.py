@@ -7,7 +7,10 @@ import function
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.0.6"
+__version__ = "1.0.9"
+
+android_version = "1.0.7"
+ios_version = "1.0.7"
 
 
 app = Flask(__name__)
@@ -27,7 +30,17 @@ def index():
 @app.route('/version')
 @cross_origin(supports_credentials=True)
 def version():
-    return __version__
+    return android_version
+
+@app.route('/android_version')
+@cross_origin(supports_credentials=True)
+def a_version():
+    return android_version
+
+@app.route('/ios_version')
+@cross_origin(supports_credentials=True)
+def i_version():
+    return ios_version
 
 
 @app.route('/ap/login', methods=['POST'])
