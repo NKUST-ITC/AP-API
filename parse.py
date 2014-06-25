@@ -42,11 +42,12 @@ def course(cont):
     # Check Saturday and Sunday class
     have_saturday = False
     have_sunday = False
-    for r in course_table:
-        if not isinstance(course_table[r], bool) and course_table[r][6]["course_name"]:
-            have_saturday = True
-        if not isinstance(course_table[r], bool) and course_table[r][7]["course_name"]:
-            have_sunday = True
+    
+    #for r in course_table:
+    #    if not isinstance(course_table[r], bool) and course_table[r][6]["course_name"]:
+    #        have_saturday = True
+    #    if not isinstance(course_table[r], bool) and course_table[r][7]["course_name"]:
+    #        have_sunday = True
 
 
     return [course_table, have_saturday, have_sunday]
@@ -80,4 +81,4 @@ def score(cont):
     return [score_table, total_score]
 
 if __name__ == "__main__":
-    course(open("course.html").read())
+    print(course(open("c.html").read()))
