@@ -7,10 +7,10 @@ import function
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.0.9"
+__version__ = "1.1.1"
 
-android_version = "1.0.7"
-ios_version = "1.0.7"
+android_version = "1.1.0"
+ios_version = "1.1.0"
 
 
 app = Flask(__name__)
