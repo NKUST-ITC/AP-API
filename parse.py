@@ -33,21 +33,49 @@ def course(cont):
                     row[index]["course_teacher"] = r[1]
                     row[index]["course_classroom"] = r[2]
 
-        # Check if over 8th didn't have class
-        for i in row:
-            if r_index < 10 or i != "time" and row[i]["course_name"]:
-                course_table[r_index] = row
-                break
+        course_table[r_index] = row
+
+
+
+    # Check if over 8th didn't have class
+    token_b = False
+    token_night = False
+
+
+
+
+    for r in course_table:
+        for c in course_table[r]:
+            if r > 9 and c != "time" and course_table[r][c]['course_name']:
+                if r == 10:
+                    token_b = True
+                else:
+                    print(course_table[r][c]['course_name'])
+                    token_night = True
+
+    print(token_b, token_night)
+
+
+    if token_night: 
+        pass
+    elif token_b:
+        for i in [11, 12, 13, 14]:
+            del course_table[i]
+    else:
+        for i in [10, 11, 12, 13, 14]:
+            del course_table[i]
+
+        
 
     # Check Saturday and Sunday class
     have_saturday = False
     have_sunday = False
     
-    #for r in course_table:
-    #    if not isinstance(course_table[r], bool) and course_table[r][6]["course_name"]:
-    #        have_saturday = True
-    #    if not isinstance(course_table[r], bool) and course_table[r][7]["course_name"]:
-    #        have_sunday = True
+    for r in course_table:
+        if not isinstance(course_table[r], bool) and course_table[r][6]["course_name"]:
+            have_saturday = True
+        if not isinstance(course_table[r], bool) and course_table[r][7]["course_name"]:
+            have_sunday = True
 
 
     return [course_table, have_saturday, have_sunday]

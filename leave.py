@@ -35,9 +35,9 @@ def getList(session=s, year="102", semester="2"):
 
     result = []
 
-    # Just abort class C to 14
-    # And row id, leave id, teacher quote
-    for r in tr:
+    # Delete row id, leave id, teacher quote
+    token_night = False
+    for r_index, r in enumerate(tr):
         r = list(map(lambda x: x.replace("\r", "").
         						replace("\n", "").
                                 replace("\t", "").
@@ -49,12 +49,24 @@ def getList(session=s, year="102", semester="2"):
         if not r[0]: del r[0]
         if not r[-1]: del r[-1]
 
-        r = r[2: -5]
-        del r[1]
+        r = r[2:]
+
+        # Detect if night class have dismiss class
+        for c in r[-5:]:
+            if c and r_index:
+                token_night = True
 
         # Teacher quote
+        del r[1]
+
 
         result.append(r)
+
+    if not token_night:
+        for index, r in enumerate(result):
+            result[index] = result[index][:-5]
+
+    print(token_night)
 
     return result
 
