@@ -57,7 +57,10 @@ def getList(session=s, year="102", semester="2"):
                 token_night = True
 
         # Teacher quote
-        del r[1]
+        try:
+            del r[1]
+        except:
+            pass
 
 
         result.append(r)
@@ -66,11 +69,12 @@ def getList(session=s, year="102", semester="2"):
         for index, r in enumerate(result):
             result[index] = result[index][:-5]
 
-    print(token_night)
+    if result == [[]]:
+        result = [["本學期無缺曠課記錄"]]
 
     return result
 
 
 if __name__ == '__main__':
     login(s, "1102108133", "111")
-    print(getList(s))
+    print(getList(s, "103", "1"))

@@ -6,8 +6,15 @@ from lxml import etree
 def course(cont):
     root = etree.HTML(cont)
 
-    tbody = root.xpath("//table")[-1]
+    center = root.xpath("//center")[0]
+    center_text = list(center.itertext())[0]
 
+    # Return if no course data
+    if center_text.startswith(u'學生目前無選課資料!'):
+        return [[], False, False, center_text]
+
+
+    tbody = root.xpath("//table")[-1]
 
     course_table = {}
     for r_index, r in enumerate(tbody[1:]):
@@ -78,7 +85,7 @@ def course(cont):
             have_sunday = True
 
 
-    return [course_table, have_saturday, have_sunday]
+    return [course_table, have_saturday, have_sunday, False]
       
 
 def score(cont):
@@ -86,6 +93,11 @@ def score(cont):
 
     tbody = root.xpath("//table")[-1]
 
+    center = root.xpath("//center")
+    center_text = list(center[-1].itertext())[0]
+
+    if center_text.startswith(u'目前無學生個人成績資料'):
+        return [[], [], center_text]
 
     score_table = []
     for r_index, r in enumerate(tbody[1:-1]):
@@ -106,7 +118,7 @@ def score(cont):
 
     total_score = root.xpath("//div")[-1].text.replace(u"　　　　", " ").split(" ")
 
-    return [score_table, total_score]
+    return [score_table, total_score, False]
 
 if __name__ == "__main__":
     print(course(open("c.html").read()))
