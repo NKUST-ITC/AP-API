@@ -69,7 +69,7 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
 
 
 def getRealTime(timestamp):
-    return datetime.datetime.fromtimestamp(int(timestamp)/10000000 - 62135596800)
+    return datetime.datetime.fromtimestamp(int(timestamp)/10000000 - 62135596800).strftime("%Y-%m-%d %H:%M")
 
 def login(uid, pwd):
     data = {}
@@ -141,9 +141,9 @@ def init():
 
 if __name__ == '__main__':
     init()
-    login('1102108133', '')
+    login('1102108133', '111')
     
-    print(query('2014', '5', '22'))
+    print(query('2014', '6', '30'))
 
     """
     result = query('2014', '6', '27')
