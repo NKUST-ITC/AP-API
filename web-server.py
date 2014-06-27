@@ -119,7 +119,7 @@ def leave_post():
         if arg01 and arg02:
             return json.dumps(function.leave_query(session['s'], arg01, arg02))
         else:
-            return json.dumps(function.leave_qeury(session['s']))
+            return json.dumps(function.leave_query(session['s']))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)
