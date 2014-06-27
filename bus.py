@@ -145,7 +145,7 @@ if __name__ == '__main__':
     init()
     login('1102108133', '')
     
-    print(query('2014', '6', '30'))
+    print(query('2014', '5', '22'))
 
     """
     result = query('2014', '6', '27')
