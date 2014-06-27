@@ -5,6 +5,8 @@ import uniout
 import requests
 import execjs
 import json
+import datetime
+
 
 session = requests.session()
 
@@ -62,16 +64,12 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
         function getTime(){
             return new Date().getTime();
         }
-        function getRealDate(timestamp){
-            var d = new Date((timestamp/10000000 - 62135596800) * 1000)
-            return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() ;
-        }
         """
 
 
 
-def getRandom(pwd):
-    pass
+def getRealTime(timestamp):
+    return datetime.datetime.fromtimestamp(int(timestamp)/10000000 - 62135596800)
 
 def login(uid, pwd):
     data = {}
@@ -87,15 +85,15 @@ def query(y, m, d, operation="全部"):
         'operation': operation,
         'page':1,
         'start':0,
-        'limit':14
+        'limit':90
     }
     res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', data=data)
     resource = json.loads(res.content)
     returnData = []
     for i in resource['data']:
         Data = {}
-        Data['EndEnrollDateTime'] = js.call('getRealDate', i['EndEnrollDateTime'])
-        Data['runDateTime'] = js.call('getRealDate', i['runDateTime'])[-5:]
+        Data['EndEnrollDateTime'] = getRealTime(i['EndEnrollDateTime'])
+        Data['runDateTime'] = getRealTime(i['runDateTime'])
         Data['endStation'] = i['endStation']
         Data['busId'] = i['busId']
         Data['reserveCount'] = i['reserveCount']
@@ -110,15 +108,15 @@ def reserve():
     data = {
         'page':1,
         'start':0,
-        'limit':30
+        'limit':90
     }
     res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn?_dc=' + str(js.call('getTime')), data=data)
     resource = json.loads(res.content)
     rd = []
     for i in resource['data']:
         data = {}
-        data['time'] = js.call('getRealDate', i['time'])
-        data['endTime'] = js.call('getRealDate', i['endTime'])
+        data['time'] = getRealTime(i['time'])
+        data['endTime'] = getRealTime(i['endTime'])
         data['key'] = i['key']
         data['end'] = i['end']
         rd.append(data)
