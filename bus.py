@@ -1,14 +1,11 @@
 #-*- coding: utf-8
 
-from bs4 import BeautifulSoup as bs
 import uniout
 import requests
 import execjs
 import json
 import datetime
 
-
-session = requests.session()
 
 js_function ="""
         function baseEncryption(e) {
@@ -71,15 +68,15 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
 def getRealTime(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp)/10000000 - 62135596800).strftime("%Y-%m-%d %H:%M")
 
-def login(uid, pwd):
+def login(session, uid, pwd):
     data = {}
     data['account'] = uid
     data['password'] = pwd
     data['n'] = js.call('loginEncryption', str(uid), str(pwd))
     res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data)
-    print(res.content)
 
-def query(y, m, d, operation="全部"):
+
+def query(session, y, m, d, operation="全部"):
     data = {
         'data':'{"y": \'%s\',"m": \'%s\',"d": \'%s\'}' % (y, m, d),
         'operation': operation,
@@ -93,7 +90,7 @@ def query(y, m, d, operation="全部"):
     for i in resource['data']:
         Data = {}
         Data['EndEnrollDateTime'] = getRealTime(i['EndEnrollDateTime'])
-        Data['runDateTime'] = getRealTime(i['runDateTime'])
+        Data['runDateTime'] = getRealTime(i['runDateTime'])[-5:]
         Data['endStation'] = i['endStation']
         Data['busId'] = i['busId']
         Data['reserveCount'] = i['reserveCount']
@@ -104,7 +101,7 @@ def query(y, m, d, operation="全部"):
     return returnData
 
 
-def reserve():
+def reserve(session):
     data = {
         'page':1,
         'start':0,
@@ -123,7 +120,7 @@ def reserve():
 
     return rd
         
-def book(kid, action=None):
+def book(session, kid, action=None):
     if not action:
         res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', data="{busId:"+ kid +"}")
     else :
@@ -133,17 +130,18 @@ def book(kid, action=None):
     return result['success'] 
     
 
-def init():
+def init(session):
     global js
     session.get('http://bus.kuas.edu.tw/')
     js = execjs.compile(js_function + session.get('http://bus.kuas.edu.tw/API/Scripts/a1').content)
 
 
 if __name__ == '__main__':
-    init()
-    login('1102108133', '111')
+    session = requests.session()
+    init(session)
+    login(session, '1102108133', '111')
     
-    print(query('2014', '6', '30'))
+    print(query(session, *'2014-06-30'.split("-")))
 
     """
     result = query('2014', '6', '27')

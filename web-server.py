@@ -7,10 +7,10 @@ import function
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.1.2"
+__version__ = "1.1.4 beta for bus system"
 
-android_version = "1.1.1"
-ios_version = "1.1.1"
+android_version = "1.1.3"
+ios_version = "1.1.0"
 
 
 app = Flask(__name__)
@@ -120,6 +120,15 @@ def leave_post():
             return json.dumps(function.leave_query(session['s'], arg01, arg02))
         else:
             return json.dumps(function.leave_query(session['s']))
+
+
+@app.route('/bus/query', methods=["POST"])
+@cross_origin(supports_credentials=True)
+def bus_query():
+    if request.method == "POST":
+        date = request.form['date']
+        print(date)
+        return json.dumps(function.bus_query(session['s'], date))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

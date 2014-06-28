@@ -6,7 +6,7 @@ import requests
 from lxml import etree
 
 import leave
-
+import bus
 
 RANDOM_ID = "AG009"
 
@@ -41,8 +41,12 @@ def login(username, password):
     if is_login:
         hash_value = hash(username)
 
-        # If login success, login leave system
+        # Login leave system
         leave.login(s, username, password)
+
+        # Login bus system
+        bus.init(s)
+        bus.login(s, username, password)
 
         sd[hash_value] = s
 
@@ -76,6 +80,9 @@ def query(hash_value, username=None, password=None, qid=None, args=None):
 def leave_query(hash_value, year="102", semester="2"):
     return leave.getList(sd[hash_value], year, semester)
 
+
+def bus_query(hash_value, date):
+    return bus.query(sd[hash_value], *date.split("-"))
 
 
 def random_number(hash_value, fncid):
