@@ -125,9 +125,10 @@ def book(session, kid, action=None):
         res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', data="{busId:"+ kid +"}")
     else :
         res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + kid + "}")
-
+ 
+    print(res.content)
     result = json.loads(res.content)
-    return result['success'] 
+    return result['message'] 
     
 
 def init(session):
@@ -142,7 +143,7 @@ if __name__ == '__main__':
     login(session, '1102108133', '111')
     
     print(query(session, *'2014-06-30'.split("-")))
-
+    book(session, "22423")
     """
     result = query('2014', '6', '27')
     for i in result:

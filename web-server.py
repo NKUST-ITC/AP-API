@@ -130,5 +130,15 @@ def bus_query():
         print(date)
         return json.dumps(function.bus_query(session['s'], date))
 
+@app.route('/bus/booking', methods=["POST"])
+@cross_origin(supports_credentials=True)
+def bus_booking():
+    if request.method == "POST":
+        busId = request.form['busId']
+        action = request.form['action']
+
+        return json.dumps(function.bus_booking(session['s'], busId, action))
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

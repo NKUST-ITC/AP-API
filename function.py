@@ -85,6 +85,10 @@ def bus_query(hash_value, date):
     return bus.query(sd[hash_value], *date.split("-"))
 
 
+def bus_booking(hash_value, busId, action):
+    return bus.book(sd[hash_value], busId, action)
+    
+
 def random_number(hash_value, fncid):
     raw_data = {"fncid": fncid, "sysyear": "103", "syssms":
                 "1", "online": "okey", "loginid": "1102108130"}
