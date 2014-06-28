@@ -90,7 +90,8 @@ def query(session, y, m, d, operation="全部"):
     for i in resource['data']:
         Data = {}
         Data['EndEnrollDateTime'] = getRealTime(i['EndEnrollDateTime'])
-        Data['runDateTime'] = getRealTime(i['runDateTime'])[-5:]
+        Data['runDateTime'] = getRealTime(i['runDateTime'])
+        Data['Time'] = Data['runDateTime'][-5:]
         Data['endStation'] = i['endStation']
         Data['busId'] = i['busId']
         Data['reserveCount'] = i['reserveCount']
@@ -123,12 +124,20 @@ def reserve(session):
 def book(session, kid, action=None):
     if not action:
         res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', data="{busId:"+ kid +"}")
-    else :
-        res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + kid + "}")
- 
-    print(res.content)
-    result = json.loads(res.content)
-    return result['message'] 
+    else:
+        unbook = reserve(session)
+        token = False
+        for i in unbook:
+            if i['time'] == kid:
+                res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}")
+                token = True
+
+        if not token:
+            res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}")
+
+    resource = json.loads(res.content)
+
+    return resource['message']
     
 
 def init(session):
@@ -143,7 +152,8 @@ if __name__ == '__main__':
     login(session, '1102108133', '111')
     
     print(query(session, *'2014-06-30'.split("-")))
-    book(session, "22423")
+    print("---------------------")
+    print(reserve(session))
     """
     result = query('2014', '6', '27')
     for i in result:
