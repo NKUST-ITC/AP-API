@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import json
+import requests
 import uniout
 import parse
 import function
-from flask import Flask, render_template, request, session
+
+
+from flask import Flask, render_template, request, session, g
 from flask_cors import *
 
 __version__ = "1.2.3 testing for memcached session"
@@ -12,6 +15,7 @@ __version__ = "1.2.3 testing for memcached session"
 android_version = "1.2.3"
 ios_version = "1.1.0"
 
+DEBUG = True
 
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
@@ -21,6 +25,7 @@ app.secret_key = "This is Secret Key"
 origins = "http://localhost:8000"
 app.config["CORS_ORIGINS"] = origins
 
+sd = {}
 
 @app.route('/')
 def index():
@@ -52,10 +57,15 @@ def login_post():
         password = request.form['password']
 
 
-        hash_value = function.login(username, password)
+        s = requests.session()
+        hash_value = function.login(s, username, password)
 
         if hash_value:
             session['s'] = hash_value
+            sd[hash_value] = s
+
+            print(sd)
+            print(session['s'])
             return "true"
         else:
             return "false"
@@ -66,16 +76,15 @@ def login_post():
 @app.route('/ap/is_login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def is_login():
-    if 's' not in session:
+    if 's' not in session :
         print("no session")
         return "false"
 
-    if function.is_login(session['s']):
-        print("login success")
-        return "true"
-    else:
-        print("login unsuccess")
+    if session['s'] not in sd:
+        print("session outdate")
         return "false"
+
+    return "true"
 
 
 @app.route('/ap/query', methods=['GET', 'POST', 'OPTIONS'])
@@ -90,13 +99,11 @@ def query_post():
         arg03 = request.form['arg03'] if 'arg03' in request.form else None
 
         if 's' not in session:
-            return "you did't login"
-
-        if not function.is_login(session['s']):
             return "false"
+ 
 
         query_content = function.query(
-            session['s'], username, password, 
+            sd[session['s']], username, password, 
             fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03})
         #open("c.html", "w").write(json.dumps(parse.course(query_content)))
         
@@ -116,10 +123,13 @@ def leave_post():
         arg01 = request.form['arg01'] if 'arg01' in request.form else None
         arg02 = request.form['arg02'] if 'arg02' in request.form else None
 
+        print(sd)
+        print(session['s'])
+
         if arg01 and arg02:
-            return json.dumps(function.leave_query(session['s'], arg01, arg02))
+            return json.dumps(function.leave_query(sd[session['s']], arg01, arg02))
         else:
-            return json.dumps(function.leave_query(session['s']))
+            return json.dumps(function.leave_query(sd[session['s']]))
 
 
 @app.route('/bus/query', methods=["POST"])
@@ -127,8 +137,8 @@ def leave_post():
 def bus_query():
     if request.method == "POST":
         date = request.form['date']
-        print(date)
-        return json.dumps(function.bus_query(session['s'], date))
+        return json.dumps(function.bus_query(sd[session['s']], date))
+
 
 @app.route('/bus/booking', methods=["POST"])
 @cross_origin(supports_credentials=True)
@@ -137,8 +147,8 @@ def bus_booking():
         busId = request.form['busId']
         action = request.form['action']
 
-        return json.dumps(function.bus_booking(session['s'], busId, action))
+        return json.dumps(function.bus_booking(sd[session['s']], busId, action))
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=DEBUG)

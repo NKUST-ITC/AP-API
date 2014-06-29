@@ -2,7 +2,6 @@
 
 import time
 import hashlib
-import requests
 from lxml import etree
 
 import leave
@@ -15,8 +14,6 @@ fnc_url = "http://140.127.113.227/kuas/fnc.jsp"
 
 query_url = "http://140.127.113.227/kuas/%s_pro/%s.jsp?"
 
-sd = {}
-
 
 def hash(f):
 	result = hashlib.sha256(f + str(time.time())).hexdigest()
@@ -26,8 +23,9 @@ def hash(f):
 	return result
 
 
-def login(username, password):
-    s = requests.Session()
+def login(session, username, password):
+    #s = requests.session()
+    s = session
 
     # AP Login
     payload = {"uid": username, "pwd": password}
@@ -48,22 +46,13 @@ def login(username, password):
         bus.init(s)
         bus.login(s, username, password)
 
-        sd[hash_value] = s
-
         return hash_value
     else:
         return None
 
-def is_login(hash_value):
-    if hash_value in sd:
-        return True
-    else:
-        return False
 
-
-
-def query(hash_value, username=None, password=None, qid=None, args=None):
-    ls_random = random_number(hash_value, RANDOM_ID)
+def query(session, username=None, password=None, qid=None, args=None):
+    ls_random = random_number(session, RANDOM_ID)
     payload = {"arg01": "", "arg02": "", "arg03": "",
                 "fncid": "", "uid": "", "ls_randnum": ""}
 
@@ -72,27 +61,27 @@ def query(hash_value, username=None, password=None, qid=None, args=None):
     payload["arg01"] = args["arg01"]
     payload["arg02"] = args["arg02"]
     payload["arg03"] = username
-    r = sd[hash_value].post(query_url % (qid[:2], qid), data=payload)
+    r = session.post(query_url % (qid[:2], qid), data=payload)
 
     return r.content
 
 
-def leave_query(hash_value, year="102", semester="2"):
-    return leave.getList(sd[hash_value], year, semester)
+def leave_query(session, year="102", semester="2"):
+    return leave.getList(session, year, semester)
 
 
-def bus_query(hash_value, date):
-    return bus.query(sd[hash_value], *date.split("-"))
+def bus_query(session, date):
+    return bus.query(session, *date.split("-"))
 
 
-def bus_booking(hash_value, busId, action):
-    return bus.book(sd[hash_value], busId, action)
+def bus_booking(session, busId, action):
+    return bus.book(session, busId, action)
     
 
-def random_number(hash_value, fncid):
+def random_number(session, fncid):
     raw_data = {"fncid": fncid, "sysyear": "103", "syssms":
                 "1", "online": "okey", "loginid": "1102108130"}
-    r = sd[hash_value].post(fnc_url, data=raw_data)
+    r = session.post(fnc_url, data=raw_data)
 
     root = etree.HTML(r.text)
     lsr = root.xpath("//input")[-1].values()[-1]
