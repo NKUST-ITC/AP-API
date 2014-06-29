@@ -123,6 +123,7 @@ def reserve(session):
         
 def book(session, kid, action=None):
     if not action:
+        print(kid)
         res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', data="{busId:"+ kid +"}")
     else:
         unbook = reserve(session)
@@ -152,6 +153,7 @@ if __name__ == '__main__':
     login(session, '1102108133', '111')
     
     print(query(session, *'2014-06-30'.split("-")))
+    book(session, '22567', '')
     print("---------------------")
     print(reserve(session))
     """
