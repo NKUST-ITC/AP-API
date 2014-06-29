@@ -12,6 +12,7 @@ __version__ = "1.2.3 stable"
 android_version = "1.2.3"
 ios_version = "1.1.0"
 
+DEBUG = False
 
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
@@ -141,4 +142,4 @@ def bus_booking():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=DEBUG)
