@@ -7,9 +7,9 @@ import function
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.1.4 beta for bus system"
+__version__ = "1.2.3 testing for memcached session"
 
-android_version = "1.1.3"
+android_version = "1.2.3"
 ios_version = "1.1.0"
 
 
