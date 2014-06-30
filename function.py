@@ -24,27 +24,28 @@ def hash(f):
 
 
 def login(session, username, password):
-    #s = requests.session()
-    s = session
+    print("Start login")
 
     # AP Login
     payload = {"uid": username, "pwd": password}
 
-    r = s.post(ap_login_url, data=payload)
+    r = session.post(ap_login_url, data=payload)
 
 
     root = etree.HTML(r.text)
     is_login = not root.xpath("//script")[-1].text.startswith("alert")
 
+
+
     if is_login:
         hash_value = hash(username)
 
         # Login leave system
-        leave.login(s, username, password)
+        leave.login(session, username, password)
 
         # Login bus system
-        bus.init(s)
-        bus.login(s, username, password)
+        #bus.init(session)
+        #bus.login(session, username, password)
 
         return hash_value
     else:
@@ -76,10 +77,6 @@ def bus_query(session, date):
 
 def bus_booking(session, busId, action):
     return bus.book(session, busId, action)
-    
-
-def bus_timeout(session):
-    return bus.timeout(session)
     
 
 def random_number(session, fncid):
