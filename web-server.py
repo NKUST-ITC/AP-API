@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import time
 import json
 import requests
@@ -20,7 +21,7 @@ DEBUG = True
 
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
-app.secret_key = "This is Secret Key"
+app.secret_key = os.urandom(24)
 
 
 origins = "http://localhost:8000"
