@@ -10,25 +10,16 @@ import function
 from flask import Flask, render_template, request, session, g
 from flask_cors import *
 
-<<<<<<< HEAD
-__version__ = "1.2.4 testing for logout"
-=======
-__version__ = "1.2.3 stable"
->>>>>>> master
+__version__ = "1.2.4 stable"
 
 android_version = "1.2.3"
 ios_version = "1.1.0"
 
-<<<<<<< HEAD
 DEBUG = True
-=======
-DEBUG = False
->>>>>>> master
 
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
 app.secret_key = "This is Secret Key"
-
 
 origins = "http://localhost:8000"
 app.config["CORS_ORIGINS"] = origins
