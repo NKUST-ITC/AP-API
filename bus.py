@@ -141,6 +141,19 @@ def book(session, kid, action=None):
     return resource['message']
     
 
+def timeout(session):
+    data = {
+        'data':'{"y": \'%s\',"m": \'%s\',"d": \'%s\'}' % ('2013', '01', '01'),
+        'operation': "全部",
+        'page':1,
+        'start':0,
+        'limit':90
+    }
+    res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', data=data)
+    resource = json.loads(res.content)
+
+    return not resource
+
 def init(session):
     global js
     session.get('http://bus.kuas.edu.tw/')

@@ -78,6 +78,10 @@ def bus_booking(session, busId, action):
     return bus.book(session, busId, action)
     
 
+def bus_timeout(session):
+    return bus.timeout(session)
+    
+
 def random_number(session, fncid):
     raw_data = {"fncid": fncid, "sysyear": "103", "syssms":
                 "1", "online": "okey", "loginid": "1102108130"}

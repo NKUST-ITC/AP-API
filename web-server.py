@@ -10,7 +10,7 @@ import function
 from flask import Flask, render_template, request, session, g
 from flask_cors import *
 
-__version__ = "1.2.3 testing for memcached session"
+__version__ = "1.2.3 testing for logout"
 
 android_version = "1.2.3"
 ios_version = "1.1.0"
@@ -64,8 +64,6 @@ def login_post():
             session['s'] = hash_value
             sd[hash_value] = s
 
-            print(sd)
-            print(session['s'])
             return "true"
         else:
             return "false"
@@ -84,7 +82,20 @@ def is_login():
         print("session outdate")
         return "false"
 
+
+    if function.bus_timeout(sd[session['s']]):
+        print("bus timeout")
+        return "false"
+
     return "true"
+
+@app.route('/ap/logout', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def logout():
+    if 's' in session:
+        del session['s']
+
+    return ''
 
 
 @app.route('/ap/query', methods=['GET', 'POST', 'OPTIONS'])
@@ -123,8 +134,6 @@ def leave_post():
         arg01 = request.form['arg01'] if 'arg01' in request.form else None
         arg02 = request.form['arg02'] if 'arg02' in request.form else None
 
-        print(sd)
-        print(session['s'])
 
         if arg01 and arg02:
             return json.dumps(function.leave_query(sd[session['s']], arg01, arg02))
