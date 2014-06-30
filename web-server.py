@@ -11,12 +11,8 @@ from datetime import timedelta
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-<<<<<<< HEAD
-__version__ = "1.2.4 stable"
-=======
 __version__ = "1.2.5 stable"
 
->>>>>>> develop
 android_version = "1.2.3"
 ios_version = "1.1.0"
 
