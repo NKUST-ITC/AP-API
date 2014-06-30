@@ -12,7 +12,7 @@ from datetime import timedelta
 from flask import Flask, render_template, request, session, g
 from flask_cors import *
 
-__version__ = "1.2.4 testing for stable"
+__version__ = "1.2.5 stable"
 
 android_version = "1.2.3"
 ios_version = "1.1.0"
@@ -29,8 +29,24 @@ app.config["CORS_ORIGINS"] = origins
 
 
 # Session and Session timeout 10minutes
-sd = {}
 app.permanent_session_lifetime = timedelta(minutes=10)
+
+
+def dump_cookies(cookies_list):
+    cookies = []
+    for c in cookies_list:
+        cookies.append({
+            'name': c.name,
+            'domain': c.domain,
+            'value': c.value
+            })
+
+    return cookies
+
+def set_cookies(s, cookies):
+    for c in cookies:
+        s.cookies.set(c['name'], c['value'], domain=c['domain'])
+
 
 
 @app.route('/')
@@ -66,8 +82,9 @@ def login_post():
         hash_value = function.login(s, username, password)
 
         if hash_value:
-            session['s'] = hash_value
-            sd[hash_value] = s
+            # Serialize cookies with domain 
+            session['c'] = dump_cookies(s.cookies)
+
 
             return "true"
         else:
@@ -79,12 +96,8 @@ def login_post():
 @app.route('/ap/is_login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def is_login():
-    if 's' not in session :
+    if 'c' not in session :
         print("no session")
-        return "false"
-
-    if session['s'] not in sd:
-        print("session outdate")
         return "false"
 
     return "true"
@@ -108,15 +121,19 @@ def query_post():
         arg02 = request.form['arg02'] if 'arg02' in request.form else None
         arg03 = request.form['arg03'] if 'arg03' in request.form else None
 
-        if 's' not in session:
+        if 'c' not in session:
             return "false"
- 
+
+        # Restore cookies
+        s = requests.session()
+        set_cookies(s, session['c'])
 
         query_content = function.query(
-            sd[session['s']], username, password, 
+            s, username, password, 
             fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03})
         #open("c.html", "w").write(json.dumps(parse.course(query_content)))
         
+
         if fncid == "ag222":
             return json.dumps(parse.course(query_content))
         elif fncid == "ag008":
@@ -133,10 +150,15 @@ def leave_post():
         arg02 = request.form['arg02'] if 'arg02' in request.form else None
 
 
+        # Restore cookies
+        s = requests.session()
+        set_cookies(s, session['c'])
+
+
         if arg01 and arg02:
-            return json.dumps(function.leave_query(sd[session['s']], arg01, arg02))
+            return json.dumps(function.leave_query(s, arg01, arg02))
         else:
-            return json.dumps(function.leave_query(sd[session['s']]))
+            return json.dumps(function.leave_query(s))
 
 
 @app.route('/bus/query', methods=["POST"])
@@ -144,7 +166,14 @@ def leave_post():
 def bus_query():
     if request.method == "POST":
         date = request.form['date']
-        return json.dumps(function.bus_query(sd[session['s']], date))
+
+
+        # Restore cookies
+        s = requests.session()
+        set_cookies(s, session['c'])
+
+
+        return json.dumps(function.bus_query(s, date))
 
 
 @app.route('/bus/booking', methods=["POST"])
@@ -154,7 +183,12 @@ def bus_booking():
         busId = request.form['busId']
         action = request.form['action']
 
-        return json.dumps(function.bus_booking(sd[session['s']], busId, action))
+
+        # Restore cookies
+        s = requests.session()
+        set_cookies(s, session['c'])
+
+        return json.dumps(function.bus_booking(s, busId, action))
 
 
 if __name__ == '__main__':
