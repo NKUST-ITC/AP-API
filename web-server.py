@@ -10,7 +10,7 @@ import function
 from flask import Flask, render_template, request, session, g
 from flask_cors import *
 
-__version__ = "1.2.3 testing for logout"
+__version__ = "1.2.4 testing for logout"
 
 android_version = "1.2.3"
 ios_version = "1.1.0"
