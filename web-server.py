@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import time
 import json
 import requests
 import uniout
@@ -9,7 +8,7 @@ import parse
 import function
 
 from datetime import timedelta
-from flask import Flask, render_template, request, session, g
+from flask import Flask, render_template, request, session
 from flask_cors import *
 
 __version__ = "1.2.5 stable"
