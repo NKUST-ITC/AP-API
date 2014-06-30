@@ -91,11 +91,9 @@ def is_login():
 @app.route('/ap/logout', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def logout():
-    if 's' in session:
-        del sd[session['s']]
-        del session['s']
+    session.clear()
 
-    return ''
+    return 'logout'
 
 
 @app.route('/ap/query', methods=['GET', 'POST', 'OPTIONS'])
