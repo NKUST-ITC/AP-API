@@ -1,5 +1,6 @@
 #-*- encoding=utf-8
 
+import time
 from lxml import etree
 import requests
 
@@ -7,17 +8,18 @@ s = requests.session()
 
 def login(session, username, password):
     root = etree.HTML(session.get("http://leave.kuas.edu.tw").text)
-    
+
     form = {}
     for i in root.xpath("//input"):
         form[i.attrib['name']] = ""
         if "value" in i.attrib:
             form[i.attrib['name']] = i.attrib['value']
 
+
     form['Login1$UserName'] = username
     form['Login1$Password'] = password
 
-    session.post('http://leave.kuas.edu.tw/', data=form )
+    session.post('http://leave.kuas.edu.tw/', data=form)
 
 
 def getList(session=s, year="102", semester="2"):

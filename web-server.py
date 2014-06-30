@@ -1,16 +1,22 @@
 # -*- coding: utf-8 -*-
 
+import os
+import time
 import json
 import requests
 import uniout
 import parse
 import function
 
-
+from datetime import timedelta
 from flask import Flask, render_template, request, session, g
 from flask_cors import *
 
+<<<<<<< HEAD
 __version__ = "1.2.4 stable"
+=======
+__version__ = "1.2.4 testing for stable"
+>>>>>>> develop
 
 android_version = "1.2.3"
 ios_version = "1.1.0"
@@ -19,12 +25,16 @@ DEBUG = True
 
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
-app.secret_key = "This is Secret Key"
+app.secret_key = os.urandom(24)
 
 origins = "http://localhost:8000"
 app.config["CORS_ORIGINS"] = origins
 
+
+# Session and Session timeout 10minutes
 sd = {}
+app.permanent_session_lifetime = timedelta(minutes=10)
+
 
 @app.route('/')
 def index():
@@ -50,11 +60,10 @@ def i_version():
 @app.route('/ap/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login_post():
-    print(request.method)
     if request.method == "POST":
+        session.permanent = True
         username = request.form['username']
         password = request.form['password']
-
 
         s = requests.session()
         hash_value = function.login(s, username, password)
@@ -81,21 +90,14 @@ def is_login():
         print("session outdate")
         return "false"
 
-
-    if function.bus_timeout(sd[session['s']]):
-        print("bus timeout")
-        return "false"
-
     return "true"
 
 @app.route('/ap/logout', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def logout():
-    if 's' in session:
-        del sd[session['s']]
-        del session['s']
+    session.clear()
 
-    return ''
+    return 'logout'
 
 
 @app.route('/ap/query', methods=['GET', 'POST', 'OPTIONS'])
@@ -118,7 +120,6 @@ def query_post():
             fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03})
         #open("c.html", "w").write(json.dumps(parse.course(query_content)))
         
-
         if fncid == "ag222":
             return json.dumps(parse.course(query_content))
         elif fncid == "ag008":
