@@ -87,6 +87,10 @@ def query(session, y, m, d, operation="全部"):
     res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', data=data)
     resource = json.loads(res.content)
     returnData = []
+
+    if not resource['data']:
+        return []
+
     for i in resource['data']:
         Data = {}
         Data['EndEnrollDateTime'] = getRealTime(i['EndEnrollDateTime'])
@@ -150,11 +154,16 @@ if __name__ == '__main__':
     session = requests.session()
     init(session)
     login(session, '1102108133', '111')
+
+    c = session.cookies.get_dict()
+    s = requests.session()
+    s.cookies.update(c)
+    print(json.dumps(s.cookies._cookies))
     
-    print(query(session, *'2014-06-30'.split("-")))
-    book(session, '22567', '')
-    print("---------------------")
-    print(reserve(session))
+    #print(query(s, *'2014-07-01'.split("-")))
+    #book(session, '22868', '')
+    #print("---------------------")
+    #print(reserve(session))
     """
     result = query('2014', '6', '27')
     for i in result:

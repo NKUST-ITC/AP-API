@@ -1,6 +1,5 @@
 #-*- encoding=utf-8
 
-import time
 from lxml import etree
 import requests
 
@@ -8,6 +7,7 @@ s = requests.session()
 
 def login(session, username, password):
     root = etree.HTML(session.get("http://leave.kuas.edu.tw").text)
+
 
     form = {}
     for i in root.xpath("//input"):

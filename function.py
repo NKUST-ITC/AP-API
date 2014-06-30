@@ -36,16 +36,15 @@ def login(session, username, password):
     is_login = not root.xpath("//script")[-1].text.startswith("alert")
 
 
-
     if is_login:
         hash_value = hash(username)
 
+        # Login bus system
+        bus.init(session)
+        bus.login(session, username, password)
+
         # Login leave system
         leave.login(session, username, password)
-
-        # Login bus system
-        #bus.init(session)
-        #bus.login(session, username, password)
 
         return hash_value
     else:
