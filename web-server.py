@@ -93,6 +93,7 @@ def is_login():
 @cross_origin(supports_credentials=True)
 def logout():
     if 's' in session:
+        del sd[session['s']]
         del session['s']
 
     return ''
