@@ -155,15 +155,12 @@ if __name__ == '__main__':
     init(session)
     login(session, '1102108133', '111')
 
-    c = session.cookies.get_dict()
-    s = requests.session()
-    s.cookies.update(c)
-    print(json.dumps(s.cookies._cookies))
-    
-    #print(query(s, *'2014-07-01'.split("-")))
+    print(query(session, *'2014-07-10'.split("-")))
     #book(session, '22868', '')
-    #print("---------------------")
-    #print(reserve(session))
+    print("---------------------")
+    print(reserve(session))
+    book(session, '741583', 'un')
+    print(reserve(session))
     """
     result = query('2014', '6', '27')
     for i in result:
