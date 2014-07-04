@@ -68,6 +68,11 @@ def i_version():
     return ios_version
 
 
+@app.route('/fixed')
+def is_fixed():
+    return "學校伺服器維修中，暫時無法查詢"
+
+
 @app.route('/ap/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login_post():
