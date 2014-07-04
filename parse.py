@@ -57,10 +57,10 @@ def course(cont):
                 if r == 10:
                     token_b = True
                 else:
-                    print(course_table[r][c]['course_name'])
+                    #print(course_table[r][c]['course_name'])
                     token_night = True
 
-    print(token_b, token_night)
+    #print(token_b, token_night)
 
 
     if token_night: 
