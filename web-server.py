@@ -17,6 +17,7 @@ android_version = "1.2.5"
 ios_version = "1.1.0"
 
 DEBUG = True
+PORT = 14768
 
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
@@ -201,4 +202,4 @@ def notification(page):
     return json.dumps(function.notification_query(page))
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=DEBUG)
+    app.run(host="0.0.0.0", port=PORT, hdebug=DEBUG)
