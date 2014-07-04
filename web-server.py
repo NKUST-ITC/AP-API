@@ -189,5 +189,11 @@ def bus_booking():
         return json.dumps(function.bus_booking(s, busId, action))
 
 
+@app.route('/notification/<page>')
+@cross_origin(supports_credentials=True)
+def notification(page):
+    page = int(page)
+    return json.dumps(function.notification_query(page))
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=DEBUG)
