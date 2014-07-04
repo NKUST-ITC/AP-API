@@ -6,6 +6,7 @@ from lxml import etree
 
 import leave
 import bus
+import notification
 
 RANDOM_ID = "AG009"
 
@@ -76,6 +77,10 @@ def bus_query(session, date):
 
 def bus_booking(session, busId, action):
     return bus.book(session, busId, action)
+    
+
+def notification_query(page=1):
+    return notification.get(page)
     
 
 def random_number(session, fncid):
