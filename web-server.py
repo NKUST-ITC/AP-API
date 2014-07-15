@@ -19,6 +19,7 @@ ios_version = "1.1.0"
 DEBUG = True
 PORT = 14768
 
+
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
 app.secret_key = os.urandom(24)
@@ -70,8 +71,14 @@ def i_version():
 
 
 @app.route('/fixed')
+@cross_origin(supports_credentials=True)
 def is_fixed():
-    return "學校伺服器維修中，暫時無法查詢"
+    return ""
+
+@app.route('/backup')
+@cross_origin(supports_credentials=True)
+def backup():
+    return "0"
 
 
 @app.route('/ap/login', methods=['POST'])
@@ -97,6 +104,7 @@ def login_post():
 
     return render_template("login.html")
 
+
 @app.route('/ap/is_login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def is_login():
@@ -105,6 +113,7 @@ def is_login():
         return "false"
 
     return "true"
+
 
 @app.route('/ap/logout', methods=['POST'])
 @cross_origin(supports_credentials=True)
@@ -200,6 +209,7 @@ def bus_booking():
 def notification(page):
     page = int(page)
     return json.dumps(function.notification_query(page))
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=PORT, hdebug=DEBUG)
