@@ -13,8 +13,8 @@ from flask_cors import *
 
 __version__ = "1.3.0 stable"
 
-android_version = "1.2.5"
-ios_version = "1.1.0"
+android_version = "1.3.5"
+ios_version = "1.3.2"
 
 DEBUG = True
 PORT = 14768
