@@ -7,6 +7,8 @@ import json
 import datetime
 
 
+proxies = {"http": "http://127.0.0.1:8000"}
+
 js_function ="""
         function baseEncryption(e) {
         function h(b, a) { var d, c, e, f, g; e = b & 2147483648; f = a & 2147483648; d = b & 1073741824; c = a & 1073741824; g = (b & 
@@ -73,8 +75,8 @@ def login(session, uid, pwd):
     data['account'] = uid
     data['password'] = pwd
     data['n'] = js.call('loginEncryption', str(uid), str(pwd))
-    res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data)
-
+    res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data, proxies=proxies)
+    print(res.content)
 
 def query(session, y, m, d, operation="全部"):
     data = {
@@ -84,7 +86,7 @@ def query(session, y, m, d, operation="全部"):
         'start':0,
         'limit':90
     }
-    res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', data=data)
+    res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', data=data, proxies=proxies)
     resource = json.loads(res.content)
     returnData = []
 
@@ -112,7 +114,7 @@ def reserve(session):
         'start':0,
         'limit':90
     }
-    res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn?_dc=' + str(js.call('getTime')), data=data)
+    res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn?_dc=' + str(js.call('getTime')), data=data, proxies=proxies)
     resource = json.loads(res.content)
     rd = []
     for i in resource['data']:
@@ -127,17 +129,17 @@ def reserve(session):
         
 def book(session, kid, action=None):
     if not action:
-        res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', data="{busId:"+ kid +"}")
+        res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', data="{busId:"+ kid +"}", proxies=proxies)
     else:
         unbook = reserve(session)
         token = False
         for i in unbook:
             if i['time'] == kid:
-                res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}")
+                res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}", proxies=proxies)
                 token = True
 
         if not token:
-            res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}")
+            res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}", proxies=proxies)
 
     resource = json.loads(res.content)
 
@@ -146,8 +148,8 @@ def book(session, kid, action=None):
 
 def init(session):
     global js
-    session.get('http://bus.kuas.edu.tw/')
-    js = execjs.compile(js_function + session.get('http://bus.kuas.edu.tw/API/Scripts/a1').content)
+    session.get('http://bus.kuas.edu.tw/', proxies=proxies)
+    js = execjs.compile(js_function + session.get('http://bus.kuas.edu.tw/API/Scripts/a1', proxies=proxies).content)
 
 
 if __name__ == '__main__':
