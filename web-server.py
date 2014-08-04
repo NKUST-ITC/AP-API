@@ -17,7 +17,7 @@ android_version = "1.3.5"
 ios_version = "1.3.2"
 
 DEBUG = True
-PORT = 14768
+PORT = 5000
 
 
 app = Flask(__name__)
@@ -212,4 +212,4 @@ def notification(page):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=PORT, hdebug=DEBUG)
+    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)

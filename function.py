@@ -10,10 +10,10 @@ import notification
 
 RANDOM_ID = "AG009"
 
-ap_login_url = "http://140.127.113.227/kuas/perchk.jsp"
-fnc_url = "http://140.127.113.227/kuas/fnc.jsp"
+ap_login_url = "http://140.127.113.113/kuas/perchk.jsp"
+fnc_url = "http://140.127.113.113/kuas/fnc.jsp"
 
-query_url = "http://140.127.113.227/kuas/%s_pro/%s.jsp?"
+query_url = "http://140.127.113.113/kuas/%s_pro/%s.jsp?"
 
 
 def hash(f):
@@ -95,4 +95,6 @@ def random_number(session, fncid):
 
 
 if __name__ == "__main__":
-    pass
+    import requests
+    s = requests.Session()
+    print(login(s, "1102108133", "111"))
