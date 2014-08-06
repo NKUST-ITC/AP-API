@@ -52,7 +52,7 @@ def login(session, username, password):
         return None
 
 
-def query(session, username=None, password=None, qid=None, args=None):
+def query(session, qid=None, args=None):
     ls_random = random_number(session, RANDOM_ID)
     payload = {"arg01": "", "arg02": "", "arg03": "",
                 "fncid": "", "uid": "", "ls_randnum": ""}

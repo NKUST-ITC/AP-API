@@ -127,8 +127,6 @@ def logout():
 @cross_origin(supports_credentials=True)
 def query_post():
     if request.method == "POST":
-        username = request.form['username'] if 'username' in request.form else None
-        password = request.form['password'] if 'password' in request.form else None
         fncid = request.form['fncid']
         arg01 = request.form['arg01'] if 'arg01' in request.form else None
         arg02 = request.form['arg02'] if 'arg02' in request.form else None
@@ -142,10 +140,7 @@ def query_post():
         set_cookies(s, session['c'])
 
         query_content = function.query(
-            s, username, password, 
-            fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03})
-        #open("c.html", "w").write(json.dumps(parse.course(query_content)))
-        
+            s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03})
 
         if fncid == "ag222":
             return json.dumps(parse.course(query_content))
