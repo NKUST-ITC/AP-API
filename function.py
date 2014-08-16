@@ -10,10 +10,10 @@ import notification
 
 RANDOM_ID = "AG009"
 
-ap_login_url = "http://140.127.113.113/kuas/perchk.jsp"
-fnc_url = "http://140.127.113.113/kuas/fnc.jsp"
+ap_login_url = "http://140.127.113.231/kuas/perchk.jsp"
+fnc_url = "http://140.127.113.231/kuas/fnc.jsp"
 
-query_url = "http://140.127.113.113/kuas/%s_pro/%s.jsp?"
+query_url = "http://140.127.113.231/kuas/%s_pro/%s.jsp?"
 
 
 def hash(f):
