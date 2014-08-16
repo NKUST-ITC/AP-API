@@ -90,9 +90,9 @@ def login_post():
         password = request.form['password']
 
         s = requests.session()
-        hash_value = function.login(s, username, password)
+        is_login = function.login(s, username, password)
 
-        if hash_value:
+        if is_login:
             # Serialize cookies with domain 
             session['c'] = dump_cookies(s.cookies)
 

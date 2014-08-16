@@ -4,42 +4,17 @@ import time
 import hashlib
 from lxml import etree
 
+import ap
 import leave
 import bus
 import notification
 
-RANDOM_ID = "AG009"
-
-ap_login_url = "http://140.127.113.231/kuas/perchk.jsp"
-fnc_url = "http://140.127.113.231/kuas/fnc.jsp"
-
-query_url = "http://140.127.113.231/kuas/%s_pro/%s.jsp?"
-
-
-def hash(f):
-	result = hashlib.sha256(f + str(time.time())).hexdigest()
-	for i in range(48):
-		result = hashlib.sha256(result).hexdigest()
-
-	return result
-
 
 def login(session, username, password):
-    print("Start login")
-
     # AP Login
-    payload = {"uid": username, "pwd": password}
-
-    r = session.post(ap_login_url, data=payload)
-
-
-    root = etree.HTML(r.text)
-    is_login = not root.xpath("//script")[-1].text.startswith("alert")
-
+    is_login = ap.login(session, username, password)
 
     if is_login:
-        hash_value = hash(username)
-
         # Login bus system
         bus.init(session)
         bus.login(session, username, password)
@@ -47,24 +22,13 @@ def login(session, username, password):
         # Login leave system
         leave.login(session, username, password)
 
-        return hash_value
+        return True
     else:
         return None
 
 
-def query(session, qid=None, args=None):
-    ls_random = random_number(session, RANDOM_ID)
-    payload = {"arg01": "", "arg02": "", "arg03": "",
-                "fncid": "", "uid": "", "ls_randnum": ""}
-
-    payload['ls_randnum'] = ls_random
-    payload['fucid'] = qid
-    payload["arg01"] = args["arg01"]
-    payload["arg02"] = args["arg02"]
-    payload["arg03"] = username
-    r = session.post(query_url % (qid[:2], qid), data=payload)
-
-    return r.content
+def ap_query(session, qid=None, args=None):
+    return ap.query(session, qid, args)
 
 
 def leave_query(session, year="102", semester="2"):
@@ -83,18 +47,10 @@ def notification_query(page=1):
     return notification.get(page)
     
 
-def random_number(session, fncid):
-    raw_data = {"fncid": fncid, "sysyear": "103", "syssms":
-                "1", "online": "okey", "loginid": "1102108130"}
-    r = session.post(fnc_url, data=raw_data)
-
-    root = etree.HTML(r.text)
-    lsr = root.xpath("//input")[-1].values()[-1]
-
-    return lsr
-
 
 if __name__ == "__main__":
     import requests
     s = requests.Session()
-    print(login(s, "1102108133", "111"))
+    is_login = login(s, "guest", "123")
+
+    print(is_login)
