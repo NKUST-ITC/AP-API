@@ -139,7 +139,7 @@ def query_post():
         s = requests.session()
         set_cookies(s, session['c'])
 
-        query_content = function.query(
+        query_content = function.ap_query(
             s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03})
 
         if fncid == "ag222":

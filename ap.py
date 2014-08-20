@@ -1,4 +1,4 @@
-#-*- encoding=utf-8
+#-*- encoding=utf-8 -*-
 
 from lxml import etree
 import requests
@@ -31,9 +31,10 @@ def query(session, qid=None, args=None):
 
     payload['ls_randnum'] = ls_random
     payload['fucid'] = qid
-    payload["arg01"] = args["arg01"]
-    payload["arg02"] = args["arg02"]
-    payload["arg03"] = args["arg03"]
+    
+    for key in args:
+        payload[key] = args[key]
+
     r = session.post(query_url % (qid[:2], qid), data=payload)
 
     return r.content
