@@ -59,12 +59,12 @@ def server_status():
         pass
 
     try:
-        leave_status = requests.head("http://bus.kuas.edu.tw").status_code
+        leave_status = requests.head("http://leave.kuas.edu.tw").status_code
     except:
         pass
 
     try:
-        bus_status = requests.head("http://leave.kuas.edu.tw").status_code
+        bus_status = requests.head("http://bus.kuas.edu.tw").status_code
     except:
         pass
 
