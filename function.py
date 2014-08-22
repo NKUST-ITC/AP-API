@@ -1,7 +1,7 @@
 ﻿#-*- coding: utf-8 -*-
 
 import time
-import hashlib
+import requests
 from lxml import etree
 
 import ap
@@ -46,6 +46,30 @@ def bus_booking(session, busId, action):
 def notification_query(page=1):
     return notification.get(page)
     
+
+def server_status():
+    ap_status = False 
+    leave_status = 400
+    bus_status = 400
+
+
+    try:
+        ap_status = ap.login(requests, "guest", "123")
+    except:
+        pass
+
+    try:
+        leave_status = requests.head("http://bus.kuas.edu.tw").status_code
+    except:
+        pass
+
+    try:
+        bus_status = requests.head("http://leave.kuas.edu.tw").status_code
+    except:
+        pass
+
+
+    return [ap_status, leave_status, bus_status]
 
 
 if __name__ == "__main__":

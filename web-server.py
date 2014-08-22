@@ -43,10 +43,10 @@ def dump_cookies(cookies_list):
 
     return cookies
 
+
 def set_cookies(s, cookies):
     for c in cookies:
         s.cookies.set(c['name'], c['value'], domain=c['domain'])
-
 
 
 @app.route('/')
@@ -59,10 +59,12 @@ def index():
 def version():
     return android_version
 
+
 @app.route('/android_version')
 @cross_origin(supports_credentials=True)
 def a_version():
     return android_version
+
 
 @app.route('/ios_version')
 @cross_origin(supports_credentials=True)
@@ -73,12 +75,19 @@ def i_version():
 @app.route('/fixed')
 @cross_origin(supports_credentials=True)
 def is_fixed():
-    return ""
+    return "校務系統繁忙中，或有機會無法登入"
+
 
 @app.route('/backup')
 @cross_origin(supports_credentials=True)
 def backup():
     return "0"
+
+
+@app.route('/status')
+@cross_origin(supports_credentials=True)
+def status():
+    return json.dumps(function.server_status())
 
 
 @app.route('/ap/login', methods=['POST'])
