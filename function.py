@@ -76,7 +76,7 @@ def server_status():
         pass
 
     try:
-        bus_status = requests.head("http://bus.kuas.edu.tw").status_code
+        bus_status = requests.head("http://bus.kuas.edu.tw", proxies={"http": "http://127.0.0.1:8000"}).status_code
     except:
         pass
 
