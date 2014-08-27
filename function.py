@@ -11,20 +11,32 @@ import notification
 
 
 def login(session, username, password):
-    # AP Login
-    is_login = ap.login(session, username, password)
+    is_login = False
 
-    if is_login:
-        # Login bus system
+    # AP Login
+    try:
+        is_login = ap.login(session, username, password)
+    except:
+        pass
+
+
+    # Login bus system
+    try:
         bus.init(session)
         bus.login(session, username, password)
+        is_login = True
+    except:
+        pass
 
-        # Login leave system
+    # Login leave system
+    try:
         leave.login(session, username, password)
+        is_login = True
+    except:
+        pass
 
-        return True
-    else:
-        return None
+    
+    return is_login
 
 
 def ap_query(session, qid=None, args=None):
