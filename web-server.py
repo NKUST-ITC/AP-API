@@ -7,8 +7,9 @@ import uniout
 import parse
 import function
 
-from datetime import timedelta
-from flask import Flask, render_template, request, session
+from redis import Redis
+from datetime import datetime, timedelta
+from flask import Flask, render_template, request, session, Response
 from flask_cors import *
 
 __version__ = "1.3.6 stable"
@@ -26,11 +27,25 @@ app.secret_key = os.urandom(24)
 
 origins = "http://localhost:8000"
 app.config["CORS_ORIGINS"] = origins
-
+redis = Redis()
+app.config["ONLINE_LAST_MINUTES"] = 10
 
 # Session and Session timeout 10minutes
 app.permanent_session_lifetime = timedelta(minutes=10)
 
+def mark_online(user_id):
+    now = int(time.time())
+    expires = now + (app.config['ONLINE_LAST_MINUTES'] * 60)
+    all_users_key = 'online-users'
+    p = redis.pipeline()
+    p.sadd(all_users_key, user_id)
+    p.expireat(all_users_key, expires)
+    p.execute()
+
+def get_online_users():
+    current = int(time.time()) // 60
+    minutes = xrange(app.config['ONLINE_LAST_MINUTES'])
+    return redis.scard('online-users')
 
 def dump_cookies(cookies_list):
     cookies = []
@@ -53,6 +68,13 @@ def set_cookies(s, cookies):
 def index():
     return "Hello, World!"
 
+@app.route('/online')
+@cross_origin(supports_credentials=True)
+def onlineuser():
+    p = redis.pipeline()
+    p.scard('online-users')
+    hit = p.execute()
+    return Response(str(hit[0]),mimetype='text/plain')
 
 @app.route('/version')
 @cross_origin(supports_credentials=True)
@@ -97,15 +119,15 @@ def login_post():
         session.permanent = True
         username = request.form['username']
         password = request.form['password']
-
+        
         s = requests.session()
         is_login = function.login(s, username, password)
 
         if is_login:
             # Serialize cookies with domain 
             session['c'] = dump_cookies(s.cookies)
-
-
+            mark_online(username)
+            
             return "true"
         else:
             return "false"
