@@ -1,3 +1,4 @@
+
 #################
 ## Eclipse
 #################
@@ -213,3 +214,13 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+####################
+## Project Setting
+####################
+
+app.py
+config.xml
+leave_test.py
+myApp/
+test_page.html

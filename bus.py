@@ -64,6 +64,9 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
         """
 
 
+#proxies = {}
+proxies = {"http": "http://127.0.0.1:8000"}
+headers = {"User-Agnet": "Mozilla/5.0 (X11; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0"}
 
 def getRealTime(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp)/10000000 - 62135596800).strftime("%Y-%m-%d %H:%M")
@@ -73,7 +76,7 @@ def login(session, uid, pwd):
     data['account'] = uid
     data['password'] = pwd
     data['n'] = js.call('loginEncryption', str(uid), str(pwd))
-    res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data)
+    res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data, headers=headers, proxies=proxies)
 
 
 def query(session, y, m, d, operation="全部"):
@@ -84,7 +87,7 @@ def query(session, y, m, d, operation="全部"):
         'start':0,
         'limit':90
     }
-    res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', data=data)
+    res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', data=data, headers=headers, proxies=proxies)
     resource = json.loads(res.content)
     returnData = []
 
@@ -112,7 +115,8 @@ def reserve(session):
         'start':0,
         'limit':90
     }
-    res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn?_dc=' + str(js.call('getTime')), data=data)
+    res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn?_dc=' + str(js.call('getTime')), data=data, headers=headers, 
+proxies=proxies)
     resource = json.loads(res.content)
     rd = []
     for i in resource['data']:
@@ -127,17 +131,19 @@ def reserve(session):
         
 def book(session, kid, action=None):
     if not action:
-        res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', data="{busId:"+ kid +"}")
+        res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', data="{busId:"+ kid +"}", headers=headers, proxies=proxies)
     else:
         unbook = reserve(session)
         token = False
         for i in unbook:
             if i['time'] == kid:
-                res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}")
+                res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}", headers=headers, 
+proxies=proxies)
                 token = True
 
         if not token:
-            res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}")
+            res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}", headers=headers, 
+proxies=proxies)
 
     resource = json.loads(res.content)
 
@@ -146,8 +152,8 @@ def book(session, kid, action=None):
 
 def init(session):
     global js
-    session.get('http://bus.kuas.edu.tw/')
-    js = execjs.compile(js_function + session.get('http://bus.kuas.edu.tw/API/Scripts/a1').content)
+    session.get('http://bus.kuas.edu.tw/', headers=headers, proxies=proxies)
+    js = execjs.compile(js_function + session.get('http://bus.kuas.edu.tw/API/Scripts/a1', headers=headers, proxies=proxies).content)
 
 
 if __name__ == '__main__':
@@ -155,15 +161,12 @@ if __name__ == '__main__':
     init(session)
     login(session, '1102108133', '111')
 
-    c = session.cookies.get_dict()
-    s = requests.session()
-    s.cookies.update(c)
-    print(json.dumps(s.cookies._cookies))
-    
-    #print(query(s, *'2014-07-01'.split("-")))
+    print(query(session, *'2014-07-10'.split("-")))
     #book(session, '22868', '')
-    #print("---------------------")
-    #print(reserve(session))
+    print("---------------------")
+    print(reserve(session))
+    book(session, '741583', 'un')
+    print(reserve(session))
     """
     result = query('2014', '6', '27')
     for i in result:

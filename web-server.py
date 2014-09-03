@@ -11,17 +11,18 @@ from datetime import timedelta
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.2.5 stable"
+__version__ = "1.3.6 stable"
 
-android_version = "1.2.3"
-ios_version = "1.1.0"
+android_version = "1.3.6"
+ios_version = "1.3.2"
 
 DEBUG = True
+PORT = 5000
+
 
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
 app.secret_key = os.urandom(24)
-
 
 origins = "http://localhost:8000"
 app.config["CORS_ORIGINS"] = origins
@@ -42,10 +43,10 @@ def dump_cookies(cookies_list):
 
     return cookies
 
+
 def set_cookies(s, cookies):
     for c in cookies:
         s.cookies.set(c['name'], c['value'], domain=c['domain'])
-
 
 
 @app.route('/')
@@ -58,15 +59,35 @@ def index():
 def version():
     return android_version
 
+
 @app.route('/android_version')
 @cross_origin(supports_credentials=True)
 def a_version():
     return android_version
 
+
 @app.route('/ios_version')
 @cross_origin(supports_credentials=True)
 def i_version():
     return ios_version
+
+
+@app.route('/fixed')
+@cross_origin(supports_credentials=True)
+def is_fixed():
+    return "校務系統繁忙中，或有機會無法登入"
+
+
+@app.route('/backup')
+@cross_origin(supports_credentials=True)
+def backup():
+    return "0"
+
+
+@app.route('/status')
+@cross_origin(supports_credentials=True)
+def status():
+    return json.dumps(function.server_status())
 
 
 @app.route('/ap/login', methods=['POST'])
@@ -78,9 +99,9 @@ def login_post():
         password = request.form['password']
 
         s = requests.session()
-        hash_value = function.login(s, username, password)
+        is_login = function.login(s, username, password)
 
-        if hash_value:
+        if is_login:
             # Serialize cookies with domain 
             session['c'] = dump_cookies(s.cookies)
 
@@ -92,6 +113,7 @@ def login_post():
 
     return render_template("login.html")
 
+
 @app.route('/ap/is_login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def is_login():
@@ -100,6 +122,7 @@ def is_login():
         return "false"
 
     return "true"
+
 
 @app.route('/ap/logout', methods=['POST'])
 @cross_origin(supports_credentials=True)
@@ -113,8 +136,6 @@ def logout():
 @cross_origin(supports_credentials=True)
 def query_post():
     if request.method == "POST":
-        username = request.form['username'] if 'username' in request.form else None
-        password = request.form['password'] if 'password' in request.form else None
         fncid = request.form['fncid']
         arg01 = request.form['arg01'] if 'arg01' in request.form else None
         arg02 = request.form['arg02'] if 'arg02' in request.form else None
@@ -127,11 +148,8 @@ def query_post():
         s = requests.session()
         set_cookies(s, session['c'])
 
-        query_content = function.query(
-            s, username, password, 
-            fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03})
-        #open("c.html", "w").write(json.dumps(parse.course(query_content)))
-        
+        query_content = function.ap_query(
+            s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03})
 
         if fncid == "ag222":
             return json.dumps(parse.course(query_content))
@@ -190,5 +208,12 @@ def bus_booking():
         return json.dumps(function.bus_booking(s, busId, action))
 
 
+@app.route('/notification/<page>')
+@cross_origin(supports_credentials=True)
+def notification(page):
+    page = int(page)
+    return json.dumps(function.notification_query(page))
+
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=DEBUG)
+    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
