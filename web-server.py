@@ -11,7 +11,7 @@ from datetime import timedelta
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.3.6 stable"
+__version__ = "1.3.7 leave"
 
 android_version = "1.3.6"
 ios_version = "1.3.2"
