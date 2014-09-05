@@ -1,9 +1,11 @@
 #-*- encoding=utf-8
 
-from lxml import etree
 import requests
+from lxml import etree
 
 s = requests.session()
+
+SUBMIT_LEAVE_URL = "http://leave.kuas.edu.tw/CK001MainM.aspx"
 
 def login(session, username, password):
     root = etree.HTML(session.get("http://leave.kuas.edu.tw").text)
@@ -22,7 +24,7 @@ def login(session, username, password):
     session.post('http://leave.kuas.edu.tw/', data=form)
 
 
-def getList(session=s, year="102", semester="2"):
+def getList(session, year="102", semester="2"):
     root = etree.HTML(session.get("http://leave.kuas.edu.tw/AK002MainM.aspx").text)
     
     form = {}
@@ -41,7 +43,7 @@ def getList(session=s, year="102", semester="2"):
     token_night = False
     for r_index, r in enumerate(tr):
         r = list(map(lambda x: x.replace("\r", "").
-        						replace("\n", "").
+                                replace("\n", "").
                                 replace("\t", "").
                                 replace(u"\u3000", "").
                                 replace(" ", ""),
@@ -76,7 +78,78 @@ def getList(session=s, year="102", semester="2"):
 
     return result
 
+def submitLeave(session, start_date, end_date, leave_dict):
+    """Submit leave data to leave.kaus.edu.tw
+    session: The session include login cookies
+    start_date: Start date for leave
+    end_date: End date for leave
+    leave_dict: A dict with data include which section were leave
+        reason_id: String, 21 ~ 26.
+        reason_text: String, a reason why leave.
+        section: List, the number which count on it.
+
+    """
+
+
+    # First page
+    r = session.get(SUBMIT_LEAVE_URL)
+
+    root = etree.HTML(r.text)
+
+    d = {i.attrib['name']:i.attrib['value'] for i in root.xpath("//input")}
+    del d['ctl00$ButtonLogOut']
+
+    # Setting start date and end date
+    r = session.post(SUBMIT_LEAVE_URL, data=d)
+    root = etree.HTML(r.text)
+
+    d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
+    d["ctl00$ContentPlaceHolder1$CK001$DateUCCBegin$text1"] = start_date
+    d["ctl00$ContentPlaceHolder1$CK001$DateUCCEnd$text1"] = end_date
+    d["ctl00$ContentPlaceHolder1$CK001$ButtonCommit"] = u"下一步"
+
+    # Setting leaving section
+    r = session.post(SUBMIT_LEAVE_URL, data=d)
+    root = etree.HTML(r.text)
+
+    reason_map = {"21": u"事", "22": u"病", "23": u"公", "24": u"喪", "26": u"產"}
+    d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
+    
+    d['ctl00$ContentPlaceHolder1$CK001$RadioButtonListOption'] = leave_dict["reason_id"]
+    r = session.post(SUBMIT_LEAVE_URL, data=d)
+    print(r.text)
+    del d['ctl00$ContentPlaceHolder1$CK001$RadioButtonListOption'] 
+
+    d['ctl00$ContentPlaceHolder1$CK001$TextBoxReason'] = leave_dict['reason_text']
+    d['ctl00$ContentPlaceHolder1$CK001$DropDownListTeacher'] = root.xpath("//option[@selected='selected']")[0].values()[-1]
+
+    #d['__ASYNCPOST'] = "true"
+    button = root.xpath("//input[starts-with(@id, 'ContentPlaceHolder1_CK001_GridViewMain_Button_')]")
+    #for b in button:
+    #    d[b.attrib['name']] = ""
+    #
+    #for i in leave_dict["section"]:
+    #    d[button[int(i)].attrib['name']] = reason_map[leave_dict["reason_id"]]
+    #    print(button[int(i)].attrib['name'])
+    #    r = session.post(SUBMIT_LEAVE_URL, data=d)
+    #    del d[button[int(i)].attrib['name']]
+    #d['__ASYNCPOST'] = "false"
+    d['ctl00$ContentPlaceHolder1$CK001$GridViewMain$ctl02$Button_4'] = '事'
+    r = session.post(SUBMIT_LEAVE_URL, data=d)
+    del d['ctl00$ContentPlaceHolder1$CK001$GridViewMain$ctl02$Button_4']
+    d['ctl00$ContentPlaceHolder1$CK001$GridViewMain$ctl02$Button_5'] = '事'
+    r = session.post(SUBMIT_LEAVE_URL, data=d)
+    print(r.content[-100:])
+
+    #del d['__ASYNCPOST']
+    d['ctl00$ContentPlaceHolder1$CK001$ButtonCommit2'] = u'下一步'
+
+    r = session.post(SUBMIT_LEAVE_URL, data=d)
+
+    print(r.content[-100:])
+
 
 if __name__ == '__main__':
     login(s, "1102108133", "111")
-    print(getList(s, "103", "1"))
+    submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["5", "6", "7"]})
+    #print(getList(s, "103", "1"))
