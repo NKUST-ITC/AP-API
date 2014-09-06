@@ -113,43 +113,51 @@ def submitLeave(session, start_date, end_date, leave_dict):
     root = etree.HTML(r.text)
 
     reason_map = {"21": u"事", "22": u"病", "23": u"公", "24": u"喪", "26": u"產"}
-    d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
     
+    # Setting reason id
+    d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
     d['ctl00$ContentPlaceHolder1$CK001$RadioButtonListOption'] = leave_dict["reason_id"]
+    d['ctl00$ContentPlaceHolder1$CK001$TextBoxReason'] = ""
     r = session.post(SUBMIT_LEAVE_URL, data=d)
-    print(r.text)
-    del d['ctl00$ContentPlaceHolder1$CK001$RadioButtonListOption'] 
 
-    d['ctl00$ContentPlaceHolder1$CK001$TextBoxReason'] = leave_dict['reason_text']
-    d['ctl00$ContentPlaceHolder1$CK001$DropDownListTeacher'] = root.xpath("//option[@selected='selected']")[0].values()[-1]
 
-    #d['__ASYNCPOST'] = "true"
+    # Setting leaving button
     button = root.xpath("//input[starts-with(@id, 'ContentPlaceHolder1_CK001_GridViewMain_Button_')]")
-    #for b in button:
-    #    d[b.attrib['name']] = ""
-    #
-    #for i in leave_dict["section"]:
-    #    d[button[int(i)].attrib['name']] = reason_map[leave_dict["reason_id"]]
-    #    print(button[int(i)].attrib['name'])
-    #    r = session.post(SUBMIT_LEAVE_URL, data=d)
-    #    del d[button[int(i)].attrib['name']]
-    #d['__ASYNCPOST'] = "false"
-    d['ctl00$ContentPlaceHolder1$CK001$GridViewMain$ctl02$Button_4'] = '事'
-    r = session.post(SUBMIT_LEAVE_URL, data=d)
-    del d['ctl00$ContentPlaceHolder1$CK001$GridViewMain$ctl02$Button_4']
-    d['ctl00$ContentPlaceHolder1$CK001$GridViewMain$ctl02$Button_5'] = '事'
-    r = session.post(SUBMIT_LEAVE_URL, data=d)
-    print(r.content[-100:])
 
-    #del d['__ASYNCPOST']
-    d['ctl00$ContentPlaceHolder1$CK001$ButtonCommit2'] = u'下一步'
+    for i in leave_dict["section"]:
+        root = etree.HTML(r.text)
+        d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
+        d['ctl00$ContentPlaceHolder1$CK001$RadioButtonListOption'] = leave_dict["reason_id"]
+        d['ctl00$ContentPlaceHolder1$CK001$TextBoxReason'] = leave_dict['reason_text']
+        d['ctl00$ContentPlaceHolder1$CK001$DropDownListTeacher'] = root.xpath("//option[@selected='selected']")[0].values()[-1]
+        d[button[int(i)].attrib['name']] = ''
+        d['__ASYNCPOST'] = "ture"
+        r = session.post(SUBMIT_LEAVE_URL, data=d)
 
+        print(r.text)
+    del d['__ASYNCPOST']
+
+
+    # Send to last step
+    d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
+    d['ctl00$ContentPlaceHolder1$CK001$TextBoxReason'] = leave_dict['reason_text']
+    d['ctl00$ContentPlaceHolder1$CK001$ButtonCommit2'] = u"下一步"
     r = session.post(SUBMIT_LEAVE_URL, data=d)
 
-    print(r.content[-100:])
+    # Save leaving submit
+    root = etree.HTML(r.text)
+    d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
+    d['ctl00$ContentPlaceHolder1$CK001$ButtonSend'] = '存檔'
+    files = {"ctl00$ContentPlaceHolder1$CK001$FileUpload1": (" ", "", "application/octet-stream")}
+    r = session.post(SUBMIT_LEAVE_URL, files=files, data=d)
+
+    print(r.text)
+    return
+
 
 
 if __name__ == '__main__':
     login(s, "1102108133", "111")
-    submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["5", "6", "7"]})
+    submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"]})
     #print(getList(s, "103", "1"))
+
