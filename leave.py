@@ -1,6 +1,5 @@
 #-*- encoding=utf-8
 
-import time
 import requests
 from lxml import etree
 
@@ -89,6 +88,9 @@ def submitLeave(session, start_date, end_date, leave_dict):
         reason_text: String, a reason why leave.
         section: List, the number which count on it.
 
+    return (success, value)
+        success: Bool
+        value: String
     """
 
 
@@ -140,7 +142,7 @@ def submitLeave(session, start_date, end_date, leave_dict):
     root = etree.HTML(r.text)
     d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
     d['ctl00$ContentPlaceHolder1$CK001$TextBoxReason'] = leave_dict['reason_text']
-    d['ctl00$ContentPlaceHolder1$CK001$ButtonCommit2'] = u"下一步"
+    d['ctl00$ContentPlaceHolder1$CK001$ButtonCommit2'] = "下一步"
     r = session.post(SUBMIT_LEAVE_URL, data=d)
 
     # Save leaving submit
@@ -150,13 +152,17 @@ def submitLeave(session, start_date, end_date, leave_dict):
     files = {"ctl00$ContentPlaceHolder1$CK001$FileUpload1": (" ", "", "application/octet-stream")}
     
     # Send to server and save the submit
-    #r = session.post(SUBMIT_LEAVE_URL, files=files, data=d)
+    r = session.post(SUBMIT_LEAVE_URL, files=files, data=d)
+    root = etree.HTML(r.text)
 
+    return_value = r.xpath("//script")[-1].text
+    return_success = True if return_value == 'alert( "假單存檔成功，請利用假單查詢進行後續作業。" );' else False
 
+    return (return_success, return_success)
 
 
 if __name__ == '__main__':
-    login(s, "1102108133", "111")
+    login(s, "1102108133", "")
     submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]})
     #print(getList(s, "103", "1"))
 
