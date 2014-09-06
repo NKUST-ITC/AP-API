@@ -1,5 +1,6 @@
 #-*- encoding=utf-8
 
+import time
 import requests
 from lxml import etree
 
@@ -134,11 +135,9 @@ def submitLeave(session, start_date, end_date, leave_dict):
         d['__ASYNCPOST'] = "ture"
         r = session.post(SUBMIT_LEAVE_URL, data=d)
 
-        print(r.text)
-    del d['__ASYNCPOST']
-
 
     # Send to last step
+    root = etree.HTML(r.text)
     d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
     d['ctl00$ContentPlaceHolder1$CK001$TextBoxReason'] = leave_dict['reason_text']
     d['ctl00$ContentPlaceHolder1$CK001$ButtonCommit2'] = u"下一步"
@@ -149,15 +148,15 @@ def submitLeave(session, start_date, end_date, leave_dict):
     d = {i.attrib['name']:i.attrib['value']  for i in root.xpath("//input[starts-with(@id, '__')]")}
     d['ctl00$ContentPlaceHolder1$CK001$ButtonSend'] = '存檔'
     files = {"ctl00$ContentPlaceHolder1$CK001$FileUpload1": (" ", "", "application/octet-stream")}
-    r = session.post(SUBMIT_LEAVE_URL, files=files, data=d)
+    
+    # Send to server and save the submit
+    #r = session.post(SUBMIT_LEAVE_URL, files=files, data=d)
 
-    print(r.text)
-    return
 
 
 
 if __name__ == '__main__':
     login(s, "1102108133", "111")
-    submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"]})
+    submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]})
     #print(getList(s, "103", "1"))
 
