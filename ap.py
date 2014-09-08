@@ -18,7 +18,10 @@ def login(session, username, password):
 
     root = etree.HTML(r.text)
 
-    is_login = not root.xpath("//script")[-1].text.startswith("alert")
+    try:
+        is_login = not root.xpath("//script")[-1].text.startswith("alert")
+    except:
+        is_login = False
 
 
     return is_login
