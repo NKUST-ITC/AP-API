@@ -19,7 +19,6 @@ def login(session, username, password):
     except:
         pass
 
-    print(is_login)
 
     # Login bus system
     try:
@@ -29,7 +28,6 @@ def login(session, username, password):
     except:
         pass
 
-    print(is_login)
 
     # Login leave system
     try:
@@ -37,9 +35,7 @@ def login(session, username, password):
     except:
         pass
 
-    print(is_login)
 
-    
     return is_login
 
 
