@@ -7,7 +7,7 @@ import uniout
 import parse
 import function
 
-from redis import Redis
+#from redis import Redis
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, session, Response
 from flask_cors import *
@@ -27,25 +27,25 @@ app.secret_key = os.urandom(24)
 
 origins = "http://localhost:8000"
 app.config["CORS_ORIGINS"] = origins
-redis = Redis()
-app.config["ONLINE_LAST_MINUTES"] = 10
+#redis = Redis()
+#app.config["ONLINE_LAST_MINUTES"] = 10
 
 # Session and Session timeout 10minutes
 app.permanent_session_lifetime = timedelta(minutes=10)
 
-def mark_online(user_id):
-    now = int(time.time())
-    expires = now + (app.config['ONLINE_LAST_MINUTES'] * 60)
-    all_users_key = 'online-users'
-    p = redis.pipeline()
-    p.sadd(all_users_key, user_id)
-    p.expireat(all_users_key, expires)
-    p.execute()
-
-def get_online_users():
-    current = int(time.time()) // 60
-    minutes = xrange(app.config['ONLINE_LAST_MINUTES'])
-    return redis.scard('online-users')
+#def mark_online(user_id):
+#    now = int(time.time())
+#    expires = now + (app.config['ONLINE_LAST_MINUTES'] * 60)
+#    all_users_key = 'online-users'
+#    p = redis.pipeline()
+#    p.sadd(all_users_key, user_id)
+#    p.expireat(all_users_key, expires)
+#    p.execute()
+#
+#def get_online_users():
+#    current = int(time.time()) // 60
+#    minutes = xrange(app.config['ONLINE_LAST_MINUTES'])
+#    return redis.scard('online-users')
 
 def dump_cookies(cookies_list):
     cookies = []
@@ -68,13 +68,13 @@ def set_cookies(s, cookies):
 def index():
     return "Hello, World!"
 
-@app.route('/online')
-@cross_origin(supports_credentials=True)
-def onlineuser():
-    p = redis.pipeline()
-    p.scard('online-users')
-    hit = p.execute()
-    return Response(str(hit[0]),mimetype='text/plain')
+#@app.route('/online')
+#@cross_origin(supports_credentials=True)
+#def onlineuser():
+#    p = redis.pipeline()
+#    p.scard('online-users')
+#    hit = p.execute()
+#    return Response(str(hit[0]),mimetype='text/plain')
 
 @app.route('/version')
 @cross_origin(supports_credentials=True)
@@ -126,7 +126,7 @@ def login_post():
         if is_login:
             # Serialize cookies with domain 
             session['c'] = dump_cookies(s.cookies)
-            mark_online(username)
+            #mark_online(username)
             
             return "true"
         else:
@@ -198,6 +198,24 @@ def leave_post():
             return json.dumps(function.leave_query(s, arg01, arg02))
         else:
             return json.dumps(function.leave_query(s))
+
+@app.route('/leave/submit', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def leave_submit():
+    if request.method == 'POST':
+        reason_id = request.form['reason_id'] if 'reason_id' in request.form else None
+        reason_text = request.form['reason_text'] if 'reason_text' in request.form else None
+        section = json.loads(requst.form['sectino']) if 'section' in request.form else None
+
+        s = requests.session()
+        set_cookies(s, session['c'])
+
+        if reason_id and reason_text and section:
+            return json.dumps(function.leave_submit(s, reason_id, reason_text, section))
+        else:
+            return json.dumps((False, "Error..."))
+
+
 
 
 @app.route('/bus/query', methods=["POST"])

@@ -21,7 +21,13 @@ def login(session, username, password):
     form['Login1$UserName'] = username
     form['Login1$Password'] = password
 
-    session.post('http://leave.kuas.edu.tw/', data=form)
+    r = session.post('http://leave.kuas.edu.tw/', data=form)
+    root = etree.HTML(r.text)
+
+    if root.xpath("//td[@align='center' and @style='color:Red;' and @colspan='2']"):
+        return False
+    else:
+        return True
 
 
 def getList(session, year="102", semester="2"):
@@ -155,9 +161,14 @@ def submitLeave(session, start_date, end_date, leave_dict):
     r = session.post(SUBMIT_LEAVE_URL, files=files, data=d)
     root = etree.HTML(r.text)
 
-    return_value = r.xpath("//script")[-1].text
-    return_value = return_value[return_value.index('"') + 1: return_value.rindex('"')]
+    try:
+        return_value = r.xpath("//script")[-1].text
+        return_value = return_value[return_value.index('"') + 1: return_value.rindex('"')]
+    except:
+        return_value = "Error..."
+
     return_success = True if return_value == '假單存檔成功，請利用假單查詢進行後續作業。' else False
+
 
     return (return_success, return_success)
 
