@@ -35,7 +35,7 @@ def getList(session, year="102", semester="2"):
     
     form = {}
     for i in root.xpath("//input"):
-        form[i.attrib["name"]] = i.attrib["value"]
+        form[i.attrib["name"]] = i.attrib["value"] if "value" in i.attrib else ""
 
     form['ctl00$ContentPlaceHolder1$SYS001$DropDownListYms'] = "%s-%s" % (year, semester)
     
@@ -175,5 +175,5 @@ def submitLeave(session, start_date, end_date, leave_dict):
 
 if __name__ == '__main__':
     login(s, "1102108133", "")
-    submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]})
-    #print(getList(s, "103", "1"))
+    #submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]})
+    print(getList(s, "103", "1"))
