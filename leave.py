@@ -37,9 +37,12 @@ def getList(session, year="102", semester="2"):
     for i in root.xpath("//input"):
         form[i.attrib["name"]] = i.attrib["value"] if "value" in i.attrib else ""
 
+    del form['ctl00$ButtonLogOut']
+
     form['ctl00$ContentPlaceHolder1$SYS001$DropDownListYms'] = "%s-%s" % (year, semester)
     
-    root = etree.HTML(session.post("http://leave.kuas.edu.tw/AK002MainM.aspx", data=form).text)
+    r = session.post("http://leave.kuas.edu.tw/AK002MainM.aspx", data=form)
+    root = etree.HTML(r.text)
     
     tr = root.xpath("//table")[-1]
 
@@ -174,6 +177,6 @@ def submitLeave(session, start_date, end_date, leave_dict):
 
 
 if __name__ == '__main__':
-    login(s, "1102108133", "")
+    login(s, "1102108133", "111")
     #submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]})
-    print(getList(s, "103", "1"))
+    print(getList(s, "102", "1"))
