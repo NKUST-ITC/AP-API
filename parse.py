@@ -6,8 +6,13 @@ from lxml import etree
 def course(cont):
     root = etree.HTML(cont)
 
-    center = root.xpath("//center")[0]
-    center_text = list(center.itertext())[0]
+    try:
+        center = root.xpath("//center")[0]
+        center_text = list(center.itertext())[0]
+    except:
+        center = ""
+        center_text = ""
+
 
     # Return if no course data
     if center_text.startswith(u'學生目前無選課資料!'):
@@ -91,10 +96,16 @@ def course(cont):
 def score(cont):
     root = etree.HTML(cont)
 
-    tbody = root.xpath("//table")[-1]
+    try:
+        tbody = root.xpath("//table")[-1]
 
-    center = root.xpath("//center")
-    center_text = list(center[-1].itertext())[0]
+        center = root.xpath("//center")
+        center_text = list(center[-1].itertext())[0]
+    except:
+        tbody = ""
+        center = ""
+        center_text = ""
+        
 
     if center_text.startswith(u'目前無學生個人成績資料'):
         return [[], [], center_text]
