@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from flask import Flask, render_template, request, session, Response
 from flask_cors import *
 
-__version__ = "1.3.7 leave"
+__version__ = "1.3.7 timeout"
 
 android_version = "1.3.6"
 ios_version = "1.3.2"
@@ -193,11 +193,11 @@ def leave_post():
         s = requests.session()
         set_cookies(s, session['c'])
 
-
         if arg01 and arg02:
             return json.dumps(function.leave_query(s, arg01, arg02))
         else:
             return json.dumps(function.leave_query(s))
+
 
 @app.route('/leave/submit', methods=['POST'])
 @cross_origin(supports_credentials=True)
