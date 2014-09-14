@@ -60,25 +60,12 @@ def notification_query(page=1):
     
 
 def server_status():
-    ap_status = False 
-    leave_status = 400
-    bus_status = 400
+    ap_status = ap.status()
+    leave_status = leave.status()
+    bus_status = bus.status()
 
 
-    try:
-        ap_status = ap.login(requests, "guest", "123")
-    except:
-        pass
 
-    try:
-        leave_status = requests.head("http://leave.kuas.edu.tw").status_code
-    except:
-        pass
-
-    try:
-        bus_status = requests.head("http://bus.kuas.edu.tw", proxies={"http": "http://127.0.0.1:8000"}).status_code
-    except:
-        pass
 
 
     return [ap_status, leave_status, bus_status]
