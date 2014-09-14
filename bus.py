@@ -68,15 +68,30 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
 proxies = {"http": "http://127.0.0.1:8000"}
 headers = {"User-Agnet": "Mozilla/5.0 (X11; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0"}
 
+TIMEOUT = 1.0
+
 def getRealTime(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp)/10000000 - 62135596800).strftime("%Y-%m-%d %H:%M")
+
+
+def status():
+    buss_status = 400
+
+    try:
+        bus_status = requests.head("http://bus.kuas.edu.tw", proxies=proxies, timeout=TIMEOUT).status_code
+    except:
+        pass
+
+    return bus_status
+
 
 def login(session, uid, pwd):
     data = {}
     data['account'] = uid
     data['password'] = pwd
     data['n'] = js.call('loginEncryption', str(uid), str(pwd))
-    res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data, headers=headers, proxies=proxies)
+
+    res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data, headers=headers, proxies=proxies, timeout=TIMEOUT)
 
 
 def query(session, y, m, d, operation="全部"):
