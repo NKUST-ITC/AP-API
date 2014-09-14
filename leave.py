@@ -7,9 +7,26 @@ s = requests.session()
 
 SUBMIT_LEAVE_URL = "http://leave.kuas.edu.tw/CK001MainM.aspx"
 
-def login(session, username, password):
-    root = etree.HTML(session.get("http://leave.kuas.edu.tw").text)
+TIMEOUT = 1.0
 
+def status():
+    leave_status = 400
+
+    try:
+        leave_status = requests.head("http://leave.kuas.edu.tw", timeout=TIMEOUT).status_code
+    except:
+        pass
+
+    return leave_status
+
+
+def login(session, username, password):
+    try:
+        r = session.get("http://leave.kuas.edu.tw", timeout=TIMEOUT)
+    except requests.exceptions.ReadTimeout:
+        return False
+
+    root = etree.HTML(r.text)
 
     form = {}
     for i in root.xpath("//input"):
