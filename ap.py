@@ -1,18 +1,29 @@
 #-*- encoding=utf-8 -*-
 
-from lxml import etree
 import requests
+from lxml import etree
 
 
-ap_login_url = "http://140.127.113.231/kuas/perchk.jsp"
-fnc_url = "http://140.127.113.231/kuas/fnc.jsp"
-query_url = "http://140.127.113.231/kuas/%s_pro/%s.jsp?"
+ap_login_url = "http://140.127.113.227/kuas/perchk.jsp"
+fnc_url = "http://140.127.113.227/kuas/fnc.jsp"
+query_url = "http://140.127.113.227/kuas/%s_pro/%s.jsp?"
 
 RANDOM_ID = "AG009"
+
 LOGIN_TIMEOUT = 1.0
 QUERY_TIMEOUT = 1.0
 RANDOM_TIMEOUT = 1.0
 
+
+def status():
+    ap_status = False
+
+    try:
+        ap_status = login(requests, "guest", "123")
+    except:
+        pass
+
+    return ap_status
 
 
 def login(session, username, password):
@@ -42,9 +53,12 @@ def query(session, qid=None, args=None):
     for key in args:
         payload[key] = args[key]
 
-    r = session.post(query_url % (qid[:2], qid), data=payload, timeout=QUERY_TIMEOUT)
+    try:
+        r = session.post(query_url % (qid[:2], qid), data=payload, timeout=QUERY_TIMEOUT).content
+    except requests.exceptions.ReadTimeout:
+        r = ""
 
-    return r.content
+    return r
 
 
 def random_number(session, fncid):
@@ -56,6 +70,7 @@ def random_number(session, fncid):
     lsr = root.xpath("//input")[-1].values()[-1]
 
     return lsr
+
 
 
 if __name__ == "__main__":
