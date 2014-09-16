@@ -93,6 +93,8 @@ def status():
 def login_post():
     if request.method == "POST":
         session.permanent = True
+
+        # Start login
         username = request.form['username']
         password = request.form['password']
         
@@ -102,8 +104,7 @@ def login_post():
         if is_login:
             # Serialize cookies with domain 
             session['c'] = dump_cookies(s.cookies)
-            #mark_online(username)
-            
+
             return "true"
         else:
             return "false"
@@ -116,7 +117,6 @@ def login_post():
 @cross_origin(supports_credentials=True)
 def is_login():
     if 'c' not in session :
-        print("no session")
         return "false"
 
     return "true"
