@@ -4,8 +4,8 @@ import os
 import json
 import requests
 import uniout
-import parse
-import function
+import kuas.parse as parse
+import kuas.function as function
 
 from flask import Flask, render_template, request, session
 from flask_cors import *
