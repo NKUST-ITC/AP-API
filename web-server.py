@@ -12,7 +12,7 @@ from flask_cors import *
 
 __version__ = "1.3.7 timeout"
 
-android_version = "1.3.9"
+android_version = "1.3.10"
 ios_version = "1.3.2"
 
 app = Flask(__name__)
@@ -218,7 +218,7 @@ def bus_booking():
 def notification(page):
     page = int(page)
     return json.dumps(function.notification_query(page))
-
+ 
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0")
