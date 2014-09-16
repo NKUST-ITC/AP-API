@@ -7,7 +7,7 @@ import uniout
 import parse
 import function
 
-from flask import Flask, render_template, request, session, Response
+from flask import Flask, render_template, request, session
 from flask_cors import *
 
 __version__ = "1.3.7 timeout"
@@ -15,19 +15,8 @@ __version__ = "1.3.7 timeout"
 android_version = "1.3.9"
 ios_version = "1.3.2"
 
-DEBUG = False
-PORT = 5000
-
-
 app = Flask(__name__)
-app.config['SESSION_COOKIE_HTTPONLY'] = False
-app.secret_key = os.urandom(24)
-
-origins = "http://localhost:8000"
-app.config["CORS_ORIGINS"] = origins
-
-# Session and Session timeout 10minutes
-app.permanent_session_lifetime = timedelta(minutes=10)
+app.config.from_object("config")
 
 
 def dump_cookies(cookies_list):
@@ -232,4 +221,4 @@ def notification(page):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
+    app.run(host="0.0.0.0")
