@@ -75,7 +75,7 @@ def getRealTime(timestamp):
 
 
 def status():
-    buss_status = 400
+    bus_status = 400
 
     try:
         bus_status = requests.head("http://bus.kuas.edu.tw", proxies=proxies, timeout=TIMEOUT).status_code
