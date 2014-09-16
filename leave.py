@@ -189,11 +189,10 @@ def submitLeave(session, start_date, end_date, leave_dict):
 
     return_success = True if return_value == '假單存檔成功，請利用假單查詢進行後續作業。' else False
 
-
     return (return_success, return_success)
 
 
 if __name__ == '__main__':
-    login(s, "1102108133", "111")
+    login(s, "1102108133", "")
     #submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]})
-    print(getList(s, "102", "1"))
+    print(getList(s, "103", "1"))
