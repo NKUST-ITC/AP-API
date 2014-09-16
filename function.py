@@ -3,12 +3,14 @@
 import time
 import requests
 from lxml import etree
+from werkzeug.contrib.cache import SimpleCache
 
 import ap
 import leave
 import bus
 import notification
 
+cache = SimpleCache()
 
 def login(session, username, password):
     is_login = False
@@ -60,16 +62,20 @@ def notification_query(page=1):
     
 
 def server_status():
-    ap_status = ap.status()
-    leave_status = leave.status()
-    bus_status = bus.status()
+    if not cache.get("server_status"):
+        ap_status = ap.status()
+        leave_status = leave.status()
+        bus_status = bus.status()
+
+        server_status = [ap_status, leave_status, bus_status]
+
+        cache.set("server_status", server_status, timeout=180)
+    else:
+        server_status = cache.get("server_status")
 
 
-
-
-
-    return [ap_status, leave_status, bus_status]
-
+    return server_status
+    
 
 if __name__ == "__main__":
     import requests
