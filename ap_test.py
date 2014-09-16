@@ -2,8 +2,8 @@
 
 import requests
 
-USERNAME = "guest"
-PASSWORD = "123"
+USERNAME = "1102108133"
+PASSWORD = ""
 
 URL = "http://kuas.grd.idv.tw:14768/"
 
@@ -42,6 +42,22 @@ def process():
         print("[-] AP Query fatal error")
         print(e)
         return
+
+    
+    try:
+        r = s.post(URL + "leave", data={"arg01": "102", "arg02": "01"})
+        if not r.text.startswith("false"):
+            print("[*] Leave Query success")
+            print(r.text)
+        else:
+            print("[-] Leave Query fail")
+            return
+    except Exception as e:
+        print("[-] Leave Query fatal error")
+        print(e)
+        return
+
+    
 
     print("[*] Pass test :)")
 
