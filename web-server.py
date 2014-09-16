@@ -14,7 +14,7 @@ from flask_cors import *
 
 __version__ = "1.3.7 timeout"
 
-android_version = "1.3.6"
+android_version = "1.3.9"
 ios_version = "1.3.2"
 
 DEBUG = True
@@ -97,7 +97,7 @@ def i_version():
 @app.route('/fixed')
 @cross_origin(supports_credentials=True)
 def is_fixed():
-    return "校務系統繁忙中，或有機會無法登入"
+    return ""
 
 
 @app.route('/backup')
