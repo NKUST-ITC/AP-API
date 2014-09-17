@@ -149,6 +149,9 @@ def submitLeave(session, start_date, end_date, leave_dict):
     d['ctl00$ContentPlaceHolder1$CK001$TextBoxReason'] = ""
     r = session.post(SUBMIT_LEAVE_URL, data=d)
 
+    # Get Teacher id 
+    teacher_id = root.xpath("//option[@selected='selected']")[0].values()[-1]
+
 
     # Setting leaving button
     button = root.xpath("//input[starts-with(@id, 'ContentPlaceHolder1_CK001_GridViewMain_Button_')]")
@@ -182,17 +185,17 @@ def submitLeave(session, start_date, end_date, leave_dict):
     root = etree.HTML(r.text)
 
     try:
-        return_value = r.xpath("//script")[-1].text
+        return_value = root.xpath("//script")[-1].text
         return_value = return_value[return_value.index('"') + 1: return_value.rindex('"')]
     except:
         return_value = "Error..."
 
-    return_success = True if return_value == '假單存檔成功，請利用假單查詢進行後續作業。' else False
+    return_success = True if return_value == u'假單存檔成功，請利用假單查詢進行後續作業。' else False
 
     return (return_success, return_value)
 
 
 if __name__ == '__main__':
-    login(s, "1102108133", "")
-    #submitLeave(s, '103/09/15', '103/09/15', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]})
-    print(getList(s, "103", "1"))
+    login(s, "1102108133", "111")
+    print(submitLeave(s, '103/09/25', '103/09/25', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]}))
+    #print(getList(s, "103", "1"))

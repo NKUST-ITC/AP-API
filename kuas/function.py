@@ -50,7 +50,9 @@ def leave_query(session, year="102", semester="2"):
 
 
 def leave_submit(session, start_date, end_date, reason_id, reason_text, section):
-    return leave.submitLeave(session, start_date, end_date, reason_id, reason_text, section)
+    leave_dict = {"reason_id": reason_id, "reason_text": reason_text, "section": section}
+
+    return leave.submitLeave(session, start_date, end_date, leave_dict)
 
 
 def bus_query(session, date):

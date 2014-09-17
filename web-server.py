@@ -10,7 +10,7 @@ import kuas.function as function
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.3.7 timeout"
+__version__ = "1.4.0 leave"
 
 android_version = "1.3.10"
 ios_version = "1.3.2"
@@ -168,14 +168,23 @@ def leave_post():
 @cross_origin(supports_credentials=True)
 def leave_submit():
     if request.method == 'POST':
-        start_date = request.form['start_date']
-        end_date = request.form['end_date']
+        start_date = request.form['start_date'].replace("-", "/")
+        end_date = request.form['end_date'].replace("-", "/")
         reason_id = request.form['reason_id'] if 'reason_id' in request.form else None
         reason_text = request.form['reason_text'] if 'reason_text' in request.form else None
-        section = json.loads(requst.form['sectino']) if 'section' in request.form else None
+        section = json.loads(request.form['section']) if 'section' in request.form else None
 
         s = requests.session()
         set_cookies(s, session['c'])
+
+        start_date = start_date.split("/")
+        start_date[0] = str(int(start_date[0]) - 1911)
+        start_date = "/".join(start_date)
+
+        end_date = end_date.split("/")
+        end_date[0] = str(int(end_date[0]) - 1911)
+        end_date = "/".join(end_date)
+
 
         if reason_id and reason_text and section:
             return json.dumps(function.leave_submit(s, start_date, end_date, reason_id, reason_text, section))
