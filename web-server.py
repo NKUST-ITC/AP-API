@@ -168,6 +168,8 @@ def leave_post():
 @cross_origin(supports_credentials=True)
 def leave_submit():
     if request.method == 'POST':
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
         reason_id = request.form['reason_id'] if 'reason_id' in request.form else None
         reason_text = request.form['reason_text'] if 'reason_text' in request.form else None
         section = json.loads(requst.form['sectino']) if 'section' in request.form else None
@@ -176,7 +178,7 @@ def leave_submit():
         set_cookies(s, session['c'])
 
         if reason_id and reason_text and section:
-            return json.dumps(function.leave_submit(s, reason_id, reason_text, section))
+            return json.dumps(function.leave_submit(s, start_date, end_date, reason_id, reason_text, section))
         else:
             return json.dumps((False, "Error..."))
 

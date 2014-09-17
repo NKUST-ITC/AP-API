@@ -49,6 +49,10 @@ def leave_query(session, year="102", semester="2"):
     return leave.getList(session, year, semester)
 
 
+def leave_submit(session, start_date, end_date, reason_id, reason_text, section):
+    return leave.submitLeave(session, start_date, end_date, reason_id, reason_text, section)
+
+
 def bus_query(session, date):
     return bus.query(session, *date.split("-"))
 

@@ -189,7 +189,7 @@ def submitLeave(session, start_date, end_date, leave_dict):
 
     return_success = True if return_value == '假單存檔成功，請利用假單查詢進行後續作業。' else False
 
-    return (return_success, return_success)
+    return (return_success, return_value)
 
 
 if __name__ == '__main__':
