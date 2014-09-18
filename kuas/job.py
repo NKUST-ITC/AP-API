@@ -2,7 +2,9 @@
 
 import requests
 import re
+import time
 import lxml
+import json
 from bs4 import BeautifulSoup
 import ap
 from pprint import pprint
@@ -24,6 +26,7 @@ def viewPage_lxml(page_Num, show_Full, username):
 	response = session.get(url+username)
 	tree = lxml.etree.HTML(response.content)
 
+	#不是第一頁的話，需要抓取google 分析的input
 	if page_Num != 1:
 		X = tree.xpath(u"//input[@name='__VIEWSTATE']")[0].values()[3]
 		Y = tree.xpath(u"//input[@name='__EVENTVALIDATION']")[0].values()[3]
@@ -36,49 +39,9 @@ def viewPage_lxml(page_Num, show_Full, username):
 		response = session.post(url, data=form)
 		tree = lxml.etree.HTML(response.content)
 
-	id_list = []
-
-	#tree.xpath(u"//table[@id='GridView1']//tr//td//span[contains(concat(' ', @id, ' '), 'Label1')]")
+		#tree.xpath(u"//table[@id='GridView1']//tr//td//span[contains(concat(' ', @id, ' '), 'Label1')]")
 	
-	n = tree.xpath(u"//table[@id='GridView1']//tr//td//td[5]")[0]
-	print n.values()
-	return 0
 
-
-	for x in xrange(1,14):
-		for y in tree.xpath(u"//table[@id='GridView1']//tr//td[%s]"%x):
-			print y.text
-		print "=================="
-
-	return 0
-	#單號
-	tree.xpath(u"//table[@id='GridView1']//tr//td[1]")
-	#發布日期
-	tree.xpath(u"//table[@id='GridView1']//tr//td[2]")
-	#需求人數
-	tree.xpath(u"//table[@id='GridView1']//tr//td[3]")
-	#工作時間
-	tree.xpath(u"//table[@id='GridView1']//tr//td[4]")
-	#條件
-	tree.xpath(u"//table[@id='GridView1']//tr//td[5]")
-	#聯絡人
-	tree.xpath(u"//table[@id='GridView1']//tr//td[6]")
-	#聯絡人分機
-	tree.xpath(u"//table[@id='GridView1']//tr//td[7]")
-	#發布單位
-	tree.xpath(u"//table[@id='GridView1']//tr//td[8]")
-	#已經截止
-	tree.xpath(u"//table[@id='GridView1']//tr//td[9]")	
-	#已經額滿
-	tree.xpath(u"//table[@id='GridView1']//tr//td[10]")	
-	#錄取
-	tree.xpath(u"//table[@id='GridView1']//tr//td[11]")
-	#應徵
-	tree.xpath(u"//table[@id='GridView1']//tr//td[12]")
-	#已應徵人數
-	tree.xpath(u"//table[@id='GridView1']//tr//td[13]")
-
-	table = tree.xpath(u"//table[@id='GridView1']")
 
 
 	for x in table[0]:
@@ -116,53 +79,57 @@ def viewPage_lxml(page_Num, show_Full, username):
 
 	#".//div[starts-with(@id,'comment-')"
 
-#用BeautifulSoup 解析
-def viewPage(page_Num, show_Full, username):
-	response = session.get(url+username)
-	bs = BeautifulSoup(response.content)
-	if page_Num != 1:
-		X = bs.find('input', type='hidden', name='__VIEWSTATE')['value']
-		Y = bs.find('input', type='hidden', name='__EVENTVALIDATION')['value']
-		form = {
-			"__EVENTTARGET":"GridView1",
-			"__EVENTARGUMENT":"Page$%s"%page_Num,
-			"__VIEWSTATE":X,
-			"__EVENTVALIDATION":Y
-		}
-		response = session.post(url, data=form)
-		bs = BeautifulSoup(response.content)
+
+#以下開始
+# viewPage_lxml(1, show_Full, username)
+response = session.get(url+username)
+tree = lxml.etree.HTML(response.content)
+result = []
+
+
+#抓取公告編號
+ID = []
+for x in tree.xpath(u"//table[@id='GridView1']//tr//td//span[contains(concat(' ', @id, ' '), 'Label1')]"):
+	ID.append(x.text)
+
+#抓取刊登時間以及需求人數
+post_date = []
+person = []
+for x in tree.xpath(u"//table[@id='GridView1']//tr//td//span[contains(concat(' ', @id, ' '), 'Label2')]"):
+	post_date.append(x.text)
+	person.append(x.getparent().getparent().getnext().getchildren()[0].text)
+
+#抓取時間
+work_time = []
+for x in tree.xpath(u"//table[@id='GridView1']//tr//td//span[contains(concat(' ', @id, ' '), 'Label3')]"):
+	work_time.append(x.text)
+
+#抓取需求、聯絡人、電話、需求單位
+work_required = []
+contact_name = []
+contact_number = []
+contact_org = []
+for x in tree.xpath(u"//table[@id='GridView1']//tr//td//span[contains(concat(' ', @id, ' '), 'Label4')]"):
+	#這個是工作需求，但是中文還沒搞定
+	work_required.append(x.text)
 	
-	id_list = []
-	table = bs.find('table', id='GridView1')
-	for x in table.findAll('span', id=re.compile(r"lblFull$")):
-		
-		if not show_Full:
-			if x.text != "Y":
-				id_list.append(x['id'])
-		else:
-			id_list.append(x['id'])
-
+	#因為聯絡人、電話、需求單位沒有特徵可以直接取得，所以使用以下方法
+	contact_name_tag = x.getparent().getparent().getnext()
+	#聯絡人姓名，但是中文還沒搞定
+	contact_name.append(contact_name_tag.getchildren()[0].text)
 	
-	for x in id_list:
-		index = str(x).replace("lblFull", "")
-		
-		data = []
-		#單號
-		#data.append(bs.find('span', id=index+"Label1").text)
-		#刊登日
-		#data.append(bs.find('span', id=index+"Label2").text)
-		#人數 取得刊登日parent.next
-		print bs.find('span', id=index+"Label2").next_sibling
-		#工作時間
-		#data.append(bs.find('span', id=index+"Label3").text)
-		#條件
-		#data.append(bs.find('span', id=index+"Label4").text)
-		#需求單位 取得條件parent.next
-		for x in data:
-			print x.encode("utf8")
+	#取得電話
+	contact_number_tag = contact_name_tag.getnext()
+	contact_number.append(contact_number_tag.getchildren()[0].text)
 
-		print "=========================="
+	#取得需求單位，但是中文還沒搞定
+	contact_org_tag = contact_number_tag.getnext()
+	contact_org.append(contact_org_tag.getchildren()[0].text)
 
 
+total = [ID, post_date, person, work_time, work_required, contact_name, contact_number, contact_org]
 
-viewPage_lxml(1, show_Full, username)
+for x in total:
+	if len(x) != 10:
+		print x
+		print "長度有誤"
