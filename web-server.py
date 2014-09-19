@@ -12,7 +12,8 @@ from flask_cors import *
 
 __version__ = "1.4.0 leave"
 
-android_version = "1.3.10"
+android_version = "1.4.1"
+android_donate_version = "1.4.1"
 ios_version = "1.3.2"
 
 app = Flask(__name__)
@@ -34,7 +35,7 @@ def dump_cookies(cookies_list):
 def set_cookies(s, cookies):
     for c in cookies:
         s.cookies.set(c['name'], c['value'], domain=c['domain'])
-
+        
 
 @app.route('/')
 def index():
@@ -51,6 +52,12 @@ def version():
 @cross_origin(supports_credentials=True)
 def a_version():
     return android_version
+
+
+@app.route('/android_donate_version')
+@cross_origin(supports_credentials=True)
+def a_donate_version():
+    return android_donate_version
 
 
 @app.route('/ios_version')
