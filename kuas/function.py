@@ -25,8 +25,7 @@ def login(session, username, password):
     # Login bus system
     try:
         bus.init(session)
-        bus.login(session, username, password)
-        is_login = True
+        is_login = bus.login(session, username, password)
     except:
         pass
 

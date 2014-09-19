@@ -89,10 +89,16 @@ def login(session, uid, pwd):
     data = {}
     data['account'] = uid
     data['password'] = pwd
-    data['n'] = js.call('loginEncryption', str(uid), str(pwd))
+    
+    try:
+        data['n'] = js.call('loginEncryption', str(uid), str(pwd))
+    except:
+        return False
 
     res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data, headers=headers, proxies=proxies, timeout=TIMEOUT)
 
+    return True
+    
 
 def query(session, y, m, d, operation="全部"):
     data = {
