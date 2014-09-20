@@ -10,10 +10,10 @@ import kuas.function as function
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.4.0 leave"
+__version__ = "1.4.3 news"
 
-android_version = "1.4.1"
-android_donate_version = "1.4.1"
+android_version = "1.4.0"
+android_donate_version = "1.4.0"
 ios_version = "1.3.2"
 
 app = Flask(__name__)
@@ -256,7 +256,7 @@ def news():
         1, 0,
         "活動消息",
         (
-            "<div style='text-align:center;'>@市長, 給問嗎xPtt鄉民有約@<br>Ptt邀請了三位台北市長候選人來現場回答鄉民的問題挑戰！<br>這次接力登場的是候選人[連勝文]及[柯文哲], 請大家踴躍發起挑戰吧！<br>9/22 21:00 連勝文 <a href='http://ppt.cc/op8c'>http://ppt.cc/op8c</a><br>9/24 21:00 柯文哲 <a href='http://ppt.cc/JuyC'>http://ppt.cc/JuyC</a></div>"
+            "<div style='text-align:center;'>@市長, 給問嗎xPtt鄉民有約@<br>Ptt邀請了三位台北市長候選人來現場回答鄉民的問題挑戰！<br>這次接力登場的是候選人[連勝文]及[柯文哲], 請大家踴躍發起挑戰吧！<br>9/22 21:00 連勝文 <a href='http://ppt.cc/op8c'>http://ppt.cc/op8c</a><br>9/24 21:00 柯文哲 <a href='http://ppt.cc/JuyC' target='_blank'>http://ppt.cc/JuyC</a></div>"
             "<img style='max-width:100%;height:auto;' src='http://www.hollywoodreporter.com/sites/default/files/2012/12/img_logo_blue.jpg'></img>"
         ),
         ""
