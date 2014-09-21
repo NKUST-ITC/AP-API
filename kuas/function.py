@@ -9,6 +9,7 @@ import ap
 import leave
 import bus
 import notification
+import news
 
 cache = SimpleCache()
 
@@ -65,6 +66,14 @@ def bus_booking(session, busId, action):
 def notification_query(page=1):
     return notification.get(page)
     
+
+def news_query():
+    return news.news()
+
+
+def news_status():
+    return news.news_status()
+
 
 def server_status():
     if not cache.get("server_status"):

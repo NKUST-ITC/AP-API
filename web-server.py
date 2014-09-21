@@ -241,26 +241,14 @@ def notification(page):
 @app.route('/news')
 @cross_origin(supports_credentials=True)
 def news():
-    """
-    News for kuas.
+    return json.dumps(function.news())
 
-    return [enable, news_id, title, template, url]
-        enable: bool
-        news_id: int
-        title: string
-        tempalte: string
-        url: string
-    """
 
-    return json.dumps([
-        1, 0,
-        "活動消息",
-        (
-            "<a href='#' onclick='window.open(\"http://google.com\", \"_system\", \"location=no\")'>testing</a>"
-            "<img style='max-width:100%;height:auto;' src='http://www.hollywoodreporter.com/sites/default/files/2012/12/img_logo_blue.jpg'></img>"
-        ),
-        "http://google.com"
-        ])
+@app.route('/news/status')
+@cross_origin(supports_credentials=True)
+def news_status():
+    return json.dumps(function.news_status())
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0")
