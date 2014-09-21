@@ -241,7 +241,7 @@ def notification(page):
 @app.route('/news')
 @cross_origin(supports_credentials=True)
 def news():
-    return json.dumps(function.news())
+    return json.dumps(function.news_query())
 
 
 @app.route('/news/status')
