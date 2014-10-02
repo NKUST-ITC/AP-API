@@ -129,7 +129,8 @@ for x in tree.xpath(u"//table[@id='GridView1']//tr//td//span[contains(concat(' '
 
 total = [ID, post_date, person, work_time, work_required, contact_name, contact_number, contact_org]
 
-for x in total:
-	if len(x) != 10:
-		print x
-		print "長度有誤"
+
+for i, v in enumerate(total):
+	total[i] = eval(str(v).replace("u\'", "\'"))
+
+total = json.dumps(total)
