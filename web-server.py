@@ -12,8 +12,8 @@ from flask_cors import *
 
 __version__ = "1.4.3 news"
 
-android_version = "1.4.0"
-android_donate_version = "1.4.0"
+android_version = "1.4.3"
+android_donate_version = "1.4.3"
 ios_version = "1.3.2"
 
 app = Flask(__name__)
