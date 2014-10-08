@@ -10,7 +10,7 @@ import kuas.function as function
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.4.3 news"
+__version__ = "1.5.0 bus develop"
 
 android_version = "1.4.3"
 android_donate_version = "1.4.3"
@@ -214,6 +214,16 @@ def bus_query():
 
 
         return json.dumps(function.bus_query(s, date))
+
+
+@app.route("/bus/reserve")
+@cross_origin(supports_credentials=True)
+def bus_reserve():
+    if 'c' in session:
+        s = requests.session()
+        set_cookies(s, session['c'])
+
+        return json.dumps(function.bus_reserve_query(s))
 
 
 @app.route('/bus/booking', methods=["POST"])
