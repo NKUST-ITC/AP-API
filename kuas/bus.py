@@ -112,11 +112,11 @@ def login(session, uid, pwd):
 
 def query(session, y, m, d, operation="全部"):
     data = {
-        'data':'{"y": \'%s\',"m": \'%s\',"d": \'%s\'}' % (y, m, d),
+        'data': {"y": y, "m": m, "d": d},
         'operation': operation,
-        'page':1,
-        'start':0,
-        'limit':90
+        'page': 1,
+        'start': 0,
+        'limit': 90
     }
 
     res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', 
@@ -149,13 +149,13 @@ def query(session, y, m, d, operation="全部"):
 
 def reserve(session):
     data = {
-        'page':1,
-        'start':0,
-        'limit':90
+        'page': 1,
+        'start': 0,
+        'limit': 90
     }
 
     res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn', 
-            data=data, 
+            data=data,
             headers=headers,
             proxies=proxies
         )
@@ -175,10 +175,11 @@ def reserve(session):
 
     return result
         
+
 def book(session, kid, action=None):
     if not action:
         res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', 
-                data="{busId:"+ kid +"}", 
+                data={"busId": kid}, 
                 headers=headers, 
                 proxies=proxies
             )
@@ -216,6 +217,8 @@ def init(session):
                 proxies=proxies
             ).content
         )
+
+    return js
 
 
 if __name__ == '__main__':
