@@ -66,18 +66,21 @@ def bus_query(session, date):
 
     if not cache.get(bus_cache_key):
         bus_q = bus.query(session, *date.split("-"))
+        for q in bus_q:
+            q['isReserve'] = -1
+
         cache.set(bus_cache_key, bus_q, timeout=BUS_TIMEOUT)
     else:
         bus_q = cache.get(bus_cache_key)
 
-        # Check if have reserve, and change isReserve value to 0
-        reserve = bus_reserve_query(session)
+    # Check if have reserve, and change isReserve value to 0
+    reserve = bus_reserve_query(session)
 
-        for r in reserve:
-            for q in bus_q:
-                if r['time'] == q['runDateTime']:
-                    q['isReserve'] = 0
-                    break
+    for r in reserve:
+        for q in bus_q:
+            if r['time'] == q['runDateTime']:
+                q['isReserve'] = 0
+                break
     
 
     return bus_q
