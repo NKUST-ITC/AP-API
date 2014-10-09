@@ -154,7 +154,7 @@ def reserve(session):
         'limit':90
     }
 
-    res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn?_dc=' + str(js.call('getTime')), 
+    res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn', 
             data=data, 
             headers=headers,
             proxies=proxies
