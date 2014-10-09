@@ -1,20 +1,12 @@
-#-*- coding: utf-8
-# -----------------------------------------
-# 資料分割
-# busId, runDateTime, endStation, isReserve
-# back.py update cache infomation
-# -----------------------------------------
+#-*- encoding: utf-8 -*-
 from multiprocessing import Process
-import time
 import collections
 import threading
-import os.path
-import uniout
+import datetime
 import requests
 import execjs
 import json
-import datetime
-
+import os.path
 
 js_function ="""
         function baseEncryption(e) {
@@ -71,40 +63,19 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
             return new Date().getTime();
         }
         """
-
-
-#proxies = {}
-TIMEOUT = 1.0
-
 def getRealTime(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp)/10000000 - 62135596800).strftime("%Y-%m-%d %H:%M")
-
-
-def status():
-    bus_status = 400
-
-    try:
-        bus_status = requests.head("http://bus.kuas.edu.tw").status_code
-    except:
-        pass
-
-    return bus_status
-
 
 def login(session, uid, pwd):
     data = {}
     data['account'] = uid
     data['password'] = pwd
-    
     try:
         data['n'] = js.call('loginEncryption', str(uid), str(pwd))
     except:
         return False
-
     res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data)
-
     return True
-    
 
 def query(session, y, m, d, operation="全部"):
     data = {
@@ -123,57 +94,9 @@ def query(session, y, m, d, operation="全部"):
 
     for i in resource['data']:
         d = "%s,%s,%s" % (i['busId'], getRealTime(i['runDateTime']), i['endStation'])
-        # Data = {}
-        # Data['EndEnrollDateTime'] = getRealTime(i['EndEnrollDateTime'])
-        # Data['runDateTime'] = 
-        # Data['Time'] = Data['runDateTime'][-5:]
-        # Data['endStation'] = i['endStation']
-        # Data['busId'] = i['busId']
-        # Data['reserveCount'] = i['reserveCount']
-        # Data['limitCount'] = i['limitCount']
-        # Data['isReserve'] = i['isReserve']
         returnData.append(d)
 
-    return returnData
-
-
-def reserve(session):
-    data = {
-        'page':1,
-        'start':0,
-        'limit':90
-    }
-    res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn?_dc=' + str(js.call('getTime')), data=data)
-    resource = json.loads(res.content)
-    rd = []
-    for i in resource['data']:
-        data = {}
-        data['time'] = getRealTime(i['time'])
-        data['endTime'] = getRealTime(i['endTime'])
-        data['key'] = i['key']
-        data['end'] = i['end']
-        rd.append(data)
-    return rd
-        
-def book(session, kid, action=None):
-    if not action:
-        res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', data="{busId:"+ kid +"}")
-    else:
-        # unbook = reserve(session)
-        # token = False
-        # for i in unbook:
-        #     if i['time'] == kid:
-        #         res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}")
-        #         token = True
-
-        # if not token:
-        #     res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}")
-        res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + kid + "}")
-
-    resource = json.loads(res.content)
-
-    return resource['success']
-    
+    return returnData   
 
 def init(session):
     global js
@@ -181,6 +104,7 @@ def init(session):
     js = execjs.compile(js_function + session.get('http://bus.kuas.edu.tw/API/Scripts/a1').content)
 
 def check(session):
+    print "Checking data"
     data = collections.OrderedDict()
     for n in xrange(0, 16):
         Date = datetime.datetime.strptime(str(datetime.date.today()), "%Y-%m-%d")
@@ -188,54 +112,25 @@ def check(session):
         result = query(session, *str(EndDate)[0:10].split('-'))
         subdata = []
         for i in result:
-            print i.encode('utf-8', 'ignore')
             subdata.append(i)
         data[str(EndDate)] = subdata
     if not os.path.isfile("./tmp"):
-        print "Data rewrite"
+        print "Database create"
         with open('tmp', 'a') as tmp:
             tmp.write(json.dumps(data))
     else:
-    	files = open('tmp', 'rb')
-    	content = files.readlines()
+        files = open('tmp', 'rb')
+        content = files.readlines()
         if not json.dumps(data) == content[0]:
-            print "data rewrite"
+            print "Data rewrite"
             with open('tmp', 'wb') as tmp:
-        		tmp.write(json.dumps(data))
-        t = threading.Timer(1.0, check)
-        t.start()
-
-def quickquery(session, y, m, d):
-    res = reserve(session)
-    sub = y + "-" + m + "-" + d
-    # sub = "2014-10-20"
-    files = open('./tmp', 'rb')
-    data = json.loads(files.readlines()[0])
-    if not (sub + " 00:00:00") in data:
-        return query(session, *sub.split("-"))
-    else:
-        for i, v in enumerate(data[sub + " 00:00:00"]):
-            token = False
-            for j in res:
-                if j['time'] in v:
-                    data[sub + " 00:00:00"][i] += ",1"
-                    token = True
-            if not token:
-                data[sub + " 00:00:00"][i] += ",0"
-
-        return data[sub + " 00:00:00"]
-
+                tmp.write(json.dumps(data))
+        else:
+            print "No Change, Wait next check"
+    Process(target=check, args={session}).start()
 
 if __name__ == '__main__':
     session = requests.session()
     init(session)
-    login(session, '', '')
-    # quickquery(*'2014-10-20'.split("-"))
-    # result = query(session, *'2014-10-14'.split("-"))
-    # print str(EndDate)[0:10]
-    # print(query(session, *'2014-07-10'.split("-")))
-    # book(session, '22868', '')
-    # print("---------------------")
-    # print(reserve(session))
-    # book(session, '741583', 'un')
-    # print(reserve(session))
+    login(session, '1102108131', '111')
+    Process(target=check, args={session}).start()
