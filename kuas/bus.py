@@ -68,7 +68,6 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
 proxies = {}
 #proxies = {"http": "http://127.0.0.1:8000"}
 headers = {"User-Agnet": "Mozilla/5.0 (X11; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0"}
-js = ""
 
 TIMEOUT = 1.0
 
@@ -185,22 +184,22 @@ def book(session, kid, action=None):
             )
     else:
         unbook = reserve(session)
-        token = False
         for i in unbook:
             if i['time'] == kid:
                 res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', 
-                        data="{reserveId:" + i['key'] + "}", 
+                        data={"reserveId": i["key"]},
                         headers=headers, 
                         proxies=proxies
                     )
-                token = True
 
-        if not token:
-            res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', 
-                    data="{reserveId:" + i['key'] + "}", 
-                    headers=headers, 
-                    proxies=proxies
-                )
+                break
+
+        #if not token:
+        #    res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', 
+        #            data="{reserveId:" + i['key'] + "}", 
+        #            headers=headers, 
+        #            proxies=proxies
+        #        )
 
     resource = json.loads(res.content)
 
@@ -209,7 +208,8 @@ def book(session, kid, action=None):
 
 def init(session):
     global js
-    session.get('http://bus.kuas.edu.tw/', headers=headers, proxies=proxies)
+    #session.get('http://bus.kuas.edu.tw/', headers=headers, proxies=proxies)
+    session.head("http://bus.kuas.edu.tw")
     js = execjs.compile(
         js_function + session.get('http://bus.kuas.edu.tw/API/Scripts/a1', 
                 headers=headers, 
