@@ -11,7 +11,7 @@ query_url = "http://140.127.113.227/kuas/%s_pro/%s.jsp?"
 RANDOM_ID = "AG009"
 
 LOGIN_TIMEOUT = 1.0
-QUERY_TIMEOUT = 1.0
+QUERY_TIMEOUT = 5.0
 RANDOM_TIMEOUT = 1.0
 
 
@@ -48,8 +48,9 @@ def query(session, qid=None, args=None):
                 "fncid": "", "uid": "", "ls_randnum": ""}
 
     payload['ls_randnum'] = ls_random
-    payload['fucid'] = qid
-    
+    #payload['fucid'] = qid
+    payload['fncid'] = qid
+
     for key in args:
         payload[key] = args[key]
 
