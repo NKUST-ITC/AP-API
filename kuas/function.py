@@ -1,6 +1,7 @@
 ﻿#-*- coding: utf-8 -*-
 
 import time
+import json
 import requests
 from lxml import etree
 from werkzeug.contrib.cache import SimpleCache
@@ -10,6 +11,11 @@ import leave
 import bus
 import notification
 import news
+
+
+BUS_TIMEOUT = 1800
+SERVER_STATUS_TIMEOUT = 180
+BUS_QUERY_TAG = "bus_query"
 
 cache = SimpleCache()
 
@@ -56,7 +62,25 @@ def leave_submit(session, start_date, end_date, reason_id, reason_text, section)
 
 
 def bus_query(session, date):
-    return bus.query(session, *date.split("-"))
+    bus_cache_key = BUS_QUERY_TAG + date
+
+    if not cache.get(bus_cache_key):
+        bus_q = bus.query(session, *date.split("-"))
+        cache.set(bus_cache_key, bus_q, timeout=BUS_TIMEOUT)
+    else:
+        bus_q = cache.get(bus_cache_key)
+
+        # Check if have reserve, and change isReserve value to 0
+        reserve = bus_reserve_query(session)
+
+        for r in reserve:
+            for q in bus_q:
+                if r['time'] == q['runDateTime']:
+                    q['isReserve'] = 0
+                    break
+    
+
+    return bus_q
 
 
 def bus_reserve_query(session):
@@ -87,7 +111,7 @@ def server_status():
 
         server_status = [ap_status, leave_status, bus_status]
 
-        cache.set("server_status", server_status, timeout=180)
+        cache.set("server_status", server_status, timeout=SERVER_STATUS_TIMEOUT)
     else:
         server_status = cache.get("server_status")
 
