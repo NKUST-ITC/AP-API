@@ -2,9 +2,11 @@
 
 import time
 import json
+import redis
 import requests
 from lxml import etree
 from werkzeug.contrib.cache import SimpleCache
+
 
 import ap
 import leave
@@ -13,11 +15,12 @@ import notification
 import news
 
 
-BUS_TIMEOUT = 1800
-SERVER_STATUS_TIMEOUT = 180
-BUS_QUERY_TAG = "bus_query"
+BUS_EXPIRE_TIME = 1800
+SERVER_STATUS_EXPIRE_TIME = 180
+BUS_QUERY_TAG = "bus"
 
 cache = SimpleCache()
+red = redis.StrictRedis()
 
 def login(session, username, password):
     is_login = False
@@ -62,16 +65,20 @@ def leave_submit(session, start_date, end_date, reason_id, reason_text, section)
 
 
 def bus_query(session, date):
-    bus_cache_key = BUS_QUERY_TAG + date
+    bus_cache_key = BUS_QUERY_TAG + date.replace("-", "")
 
-    if not cache.get(bus_cache_key):
+    #if not cache.get(bus_cache_key):
+    if not red.get(bus_cache_key):
         bus_q = bus.query(session, *date.split("-"))
         for q in bus_q:
             q['isReserve'] = -1
 
-        cache.set(bus_cache_key, bus_q, timeout=BUS_TIMEOUT)
+        #cache.set(bus_cache_key, bus_q, timeout=BUS_EXPIRE_TIME)
+        red.set(bus_cache_key, json.dumps(bus_q))
+        red.expire(bus_cache_key, BUS_EXPIRE_TIME)
     else:
-        bus_q = cache.get(bus_cache_key)
+        #bus_q = cache.get(bus_cache_key)
+        bus_q = json.loads(red.get(bus_cache_key))
 
     # Check if have reserve, and change isReserve value to 0
     reserve = bus_reserve_query(session)
@@ -114,7 +121,7 @@ def server_status():
 
         server_status = [ap_status, leave_status, bus_status]
 
-        cache.set("server_status", server_status, timeout=SERVER_STATUS_TIMEOUT)
+        cache.set("server_status", server_status, timeout=SERVER_STATUS_EXPIRE_TIME)
     else:
         server_status = cache.get("server_status")
 
