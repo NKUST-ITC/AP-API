@@ -17,7 +17,10 @@ import news
 
 BUS_EXPIRE_TIME = 1800
 SERVER_STATUS_EXPIRE_TIME = 180
+NOTIFICATION_EXPIRE_TIME = 1800
+
 BUS_QUERY_TAG = "bus"
+NOTIFICATION_TAG = "notification"
 
 cache = SimpleCache()
 red = redis.StrictRedis()
@@ -102,7 +105,18 @@ def bus_booking(session, busId, action):
     
 
 def notification_query(page=1):
-    return notification.get(page)
+    notification_page = NOTIFICATION_TAG + page
+
+    if not red.get(notification_page):
+        notification_content = notification.get(page)
+
+        red.set(notification_page, json.dumps(notification_content))
+        red.expire(notification_page, NOTIFICATION_EXPIRE_TIME)
+    else:
+        notification_content = json.loads(red.get(notification_page))
+
+
+    return notification_content
     
 
 def news_query():
