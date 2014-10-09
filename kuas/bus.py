@@ -187,7 +187,7 @@ def book(session, kid, action=None):
         for i in unbook:
             if i['time'] == kid:
                 res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', 
-                        data={"reserveId": i["key"]},
+                        data="{reserveId:" + i['key'] + "}", 
                         headers=headers, 
                         proxies=proxies
                     )
