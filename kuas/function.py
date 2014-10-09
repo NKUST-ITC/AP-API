@@ -59,6 +59,10 @@ def bus_query(session, date):
     return bus.query(session, *date.split("-"))
 
 
+def bus_reserve_query(session):
+    return bus.reserve(session)
+
+
 def bus_booking(session, busId, action):
     return bus.book(session, busId, action)
     

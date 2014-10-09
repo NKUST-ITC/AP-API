@@ -13,6 +13,7 @@ import uniout
 import requests
 import execjs
 import json
+import time
 import datetime
 
 
@@ -73,7 +74,14 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
         """
 
 
+<<<<<<< HEAD
 #proxies = {}
+=======
+proxies = {}
+#proxies = {"http": "http://127.0.0.1:8000"}
+headers = {"User-Agnet": "Mozilla/5.0 (X11; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0"}
+
+>>>>>>> origin/develop
 TIMEOUT = 1.0
 
 def getRealTime(timestamp):
@@ -84,7 +92,14 @@ def status():
     bus_status = 400
 
     try:
+<<<<<<< HEAD
         bus_status = requests.head("http://bus.kuas.edu.tw").status_code
+=======
+        bus_status = requests.head("http://bus.kuas.edu.tw", 
+                            proxies=proxies, 
+                            timeout=TIMEOUT
+                        ).status_code
+>>>>>>> origin/develop
     except:
         pass
 
@@ -101,7 +116,16 @@ def login(session, uid, pwd):
     except:
         return False
 
+<<<<<<< HEAD
     res = session.post('http://bus.kuas.edu.tw/API/Users/login', data=data)
+=======
+    res = session.post('http://bus.kuas.edu.tw/API/Users/login', 
+                            data=data, 
+                            headers=headers, 
+                            proxies=proxies, 
+                            timeout=TIMEOUT
+                        )
+>>>>>>> origin/develop
 
     return True
     
@@ -114,7 +138,17 @@ def query(session, y, m, d, operation="全部"):
         'start':0,
         'limit':90
     }
+<<<<<<< HEAD
     res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', data=data)
+=======
+
+    res = session.post('http://bus.kuas.edu.tw/API/Frequencys/getAll', 
+            data=data, 
+            headers=headers, 
+            proxies=proxies
+        )
+
+>>>>>>> origin/develop
     resource = json.loads(res.content)
     returnData = []
 
@@ -134,6 +168,7 @@ def query(session, y, m, d, operation="全部"):
         # Data['isReserve'] = i['isReserve']
         returnData.append(d)
 
+
     return returnData
 
 
@@ -143,7 +178,17 @@ def reserve(session):
         'start':0,
         'limit':90
     }
+<<<<<<< HEAD
     res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn?_dc=' + str(js.call('getTime')), data=data)
+=======
+
+    res = session.post('http://bus.kuas.edu.tw/API/Reserves/getOwn?_dc=' + str(js.call('getTime')), 
+            data=data, 
+            headers=headers,
+            proxies=proxies
+        )
+
+>>>>>>> origin/develop
     resource = json.loads(res.content)
     rd = []
     for i in resource['data']:
@@ -153,6 +198,7 @@ def reserve(session):
         data['key'] = i['key']
         data['end'] = i['end']
         rd.append(data)
+<<<<<<< HEAD
     return rd
         
 def book(session, kid, action=None):
@@ -169,6 +215,39 @@ def book(session, kid, action=None):
         # if not token:
         #     res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + i['key'] + "}")
         res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', data="{reserveId:" + kid + "}")
+=======
+
+
+    result = sorted(rd, key=lambda k: k['time'])
+
+    return result
+        
+def book(session, kid, action=None):
+    if not action:
+        res = session.post('http://bus.kuas.edu.tw/API/Reserves/add', 
+                data="{busId:"+ kid +"}", 
+                headers=headers, 
+                proxies=proxies
+            )
+    else:
+        unbook = reserve(session)
+        token = False
+        for i in unbook:
+            if i['time'] == kid:
+                res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', 
+                        data="{reserveId:" + i['key'] + "}", 
+                        headers=headers, 
+                        proxies=proxies
+                    )
+                token = True
+
+        if not token:
+            res = session.post('http://bus.kuas.edu.tw/API/Reserves/remove', 
+                    data="{reserveId:" + i['key'] + "}", 
+                    headers=headers, 
+                    proxies=proxies
+                )
+>>>>>>> origin/develop
 
     resource = json.loads(res.content)
 
@@ -177,6 +256,7 @@ def book(session, kid, action=None):
 
 def init(session):
     global js
+<<<<<<< HEAD
     session.get('http://bus.kuas.edu.tw/')
     js = execjs.compile(js_function + session.get('http://bus.kuas.edu.tw/API/Scripts/a1').content)
 
@@ -224,11 +304,21 @@ def quickquery(session, y, m, d):
                 data[sub + " 00:00:00"][i] += ",0"
 
         return data[sub + " 00:00:00"]
+=======
+    session.get('http://bus.kuas.edu.tw/', headers=headers, proxies=proxies)
+    js = execjs.compile(
+        js_function + session.get('http://bus.kuas.edu.tw/API/Scripts/a1', 
+                headers=headers, 
+                proxies=proxies
+            ).content
+        )
+>>>>>>> origin/develop
 
 
 if __name__ == '__main__':
     session = requests.session()
     init(session)
+<<<<<<< HEAD
     login(session, '', '')
     # quickquery(*'2014-10-20'.split("-"))
     # result = query(session, *'2014-10-14'.split("-"))
@@ -239,3 +329,27 @@ if __name__ == '__main__':
     # print(reserve(session))
     # book(session, '741583', 'un')
     # print(reserve(session))
+=======
+    login(session, '1102108133', '111')
+
+    t = time.time()
+    print(query(session, *'2014-10-08'.split("-")))
+    print(time.time() - t)
+    exit()
+    #book(session, '22868', '')
+
+    print("---------------------")
+    print(reserve(session))
+    book(session, '741583', 'un')
+    print(reserve(session))
+    """
+    result = query('2014', '6', '27')
+    for i in result:
+        if book(i['busId']) :
+            print "Book Success"
+    result = reserve()
+    for i in result:
+        if book(i['key'], "Un") :
+            print "UnBook Success"
+    """
+>>>>>>> origin/develop
