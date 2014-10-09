@@ -105,7 +105,7 @@ def bus_booking(session, busId, action):
     
 
 def notification_query(page=1):
-    notification_page = NOTIFICATION_TAG + page
+    notification_page = NOTIFICATION_TAG + str(page)
 
     if not red.get(notification_page):
         notification_content = notification.get(page)
