@@ -86,13 +86,11 @@ def leave_submit(session, start_date, end_date, reason_id, reason_text, section)
 def bus_query(session, date):
     bus_cache_key = BUS_QUERY_TAG + date.replace("-", "")
 
-    #if not cache.get(bus_cache_key):
     if not red.get(bus_cache_key):
         bus_q = bus.query(session, *date.split("-"))
         for q in bus_q:
             q['isReserve'] = -1
 
-        #cache.set(bus_cache_key, bus_q, timeout=BUS_EXPIRE_TIME)
         red.set(bus_cache_key, json.dumps(bus_q))
         red.expire(bus_cache_key, BUS_EXPIRE_TIME)
     else:
@@ -123,7 +121,7 @@ def bus_booking(session, busId, action):
 def notification_query(page=1):
     notification_page = NOTIFICATION_TAG + str(page)
 
-    if not red.get(notification_page):
+    if not red.get(notification_page) and not json.loads(red.get(notification_page)):
         notification_content = notification.get(page)
 
         red.set(notification_page, json.dumps(notification_content))
