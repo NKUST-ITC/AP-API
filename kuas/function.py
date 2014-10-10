@@ -27,7 +27,7 @@ NOTIFICATION_TAG = "notification"
 
 cache = SimpleCache()
 red = redis.StrictRedis()
-SERECT_KEY = os.urandom(32)
+SERECT_KEY = str(os.urandom(32))
 
 
 def login(session, username, password):
@@ -59,7 +59,7 @@ def login(session, username, password):
 
 
 def ap_query(session, qid=None, args=None, username=None):
-    ap_query_key = qid + hashlib.sha512(username + SERECT_KEY).hexdigest()
+    ap_query_key = qid + hashlib.sha512(str(username) + str(args) + SERECT_KEY).hexdigest()
 
     if not red.get(ap_query_key):
         ap_query_content = ap.query(session, qid, args)
