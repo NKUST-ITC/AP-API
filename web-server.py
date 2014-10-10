@@ -100,6 +100,7 @@ def login_post():
         if is_login:
             # Serialize cookies with domain 
             session['c'] = dump_cookies(s.cookies)
+            session['username'] = username
 
             return "true"
         else:
@@ -143,7 +144,7 @@ def query_post():
         set_cookies(s, session['c'])
 
         query_content = function.ap_query(
-            s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03})
+            s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03}, session['username'])
 
         if fncid == "ag222":
             return json.dumps(parse.course(query_content))

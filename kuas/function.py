@@ -1,8 +1,10 @@
 ﻿#-*- coding: utf-8 -*-
 
+import os
 import time
 import json
 import redis
+import hashlib
 import requests
 from lxml import etree
 from werkzeug.contrib.cache import SimpleCache
@@ -15,6 +17,7 @@ import notification
 import news
 
 
+AP_QUERY_EXPIRE = 86400
 BUS_EXPIRE_TIME = 1800
 SERVER_STATUS_EXPIRE_TIME = 180
 NOTIFICATION_EXPIRE_TIME = 1800
@@ -24,6 +27,8 @@ NOTIFICATION_TAG = "notification"
 
 cache = SimpleCache()
 red = redis.StrictRedis()
+SERECT_KEY = os.urandom(32)
+
 
 def login(session, username, password):
     is_login = False
@@ -53,7 +58,18 @@ def login(session, username, password):
     return is_login
 
 
-def ap_query(session, qid=None, args=None):
+def ap_query(session, qid=None, args=None, username=None):
+    ap_query_key = qid + hashlib.sha512(username + SERECT_KEY).hexdigest()
+
+    if not red.get(ap_query_key):
+        ap_query_content = ap.query(session, qid, args)
+
+        red.set(ap_query_key, json.dumps(ap_query_content))
+        red.expire(ap_query_key, AP_QUERY_EXPIRE)
+    else:
+        ap_query_content = json.loads(red.get(ap_query_key))
+
+
     return ap.query(session, qid, args)
 
 
