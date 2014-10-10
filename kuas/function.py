@@ -70,7 +70,7 @@ def ap_query(session, qid=None, args=None, username=None):
         ap_query_content = json.loads(red.get(ap_query_key))
 
 
-    return ap.query(session, qid, args)
+    return ap_query_content
 
 
 def leave_query(session, year="102", semester="2"):
