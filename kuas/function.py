@@ -4,6 +4,7 @@ import os
 import time
 import json
 import redis
+import datetime
 import hashlib
 import requests
 from lxml import etree
@@ -12,6 +13,7 @@ from werkzeug.contrib.cache import SimpleCache
 
 import ap
 import leave
+import parse
 import bus
 import notification
 import news
@@ -62,7 +64,7 @@ def ap_query(session, qid=None, args=None, username=None):
     ap_query_key = qid + hashlib.sha512(str(username) + str(args) + SERECT_KEY).hexdigest()
 
     if not red.get(ap_query_key):
-        ap_query_content = ap.query(session, qid, args)
+        ap_query_content = parse.parse(qid, ap.query(session, qid, args))
 
         red.set(ap_query_key, json.dumps(ap_query_content))
         red.expire(ap_query_key, AP_QUERY_EXPIRE)
@@ -86,13 +88,17 @@ def leave_submit(session, start_date, end_date, reason_id, reason_text, section)
 def bus_query(session, date):
     bus_cache_key = BUS_QUERY_TAG + date.replace("-", "")
 
+    #if not cache.get(bus_cache_key):
     if not red.get(bus_cache_key):
         bus_q = bus.query(session, *date.split("-"))
         for q in bus_q:
             q['isReserve'] = -1
 
+        #cache.set(bus_cache_key, bus_q, timeout=BUS_EXPIRE_TIME)
         red.set(bus_cache_key, json.dumps(bus_q))
-        red.expire(bus_cache_key, BUS_EXPIRE_TIME)
+
+        if datetime.datetime.today() > datetime.datetime.strptime(date, "%Y-%m-%d"):
+            red.expire(bus_cache_key, BUS_EXPIRE_TIME)
     else:
         #bus_q = cache.get(bus_cache_key)
         bus_q = json.loads(red.get(bus_cache_key))
@@ -120,8 +126,10 @@ def bus_booking(session, busId, action):
 
 def notification_query(page=1):
     notification_page = NOTIFICATION_TAG + str(page)
+    red_query = red.get(notification_page)
+    red_query = False if red_query == None or red_query == '[]' else True
 
-    if not red.get(notification_page) and not json.loads(red.get(notification_page)):
+    if not red_query:
         notification_content = notification.get(page)
 
         red.set(notification_page, json.dumps(notification_content))
@@ -131,6 +139,7 @@ def notification_query(page=1):
 
 
     return notification_content
+
     
 
 def news_query():

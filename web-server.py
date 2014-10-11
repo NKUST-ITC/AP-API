@@ -147,9 +147,9 @@ def query_post():
             s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03}, session['username'])
 
         if fncid == "ag222":
-            return json.dumps(parse.course(query_content))
+            return json.dumps(query_content)
         elif fncid == "ag008":
-            return json.dumps(parse.score(query_content))
+            return json.dumps(query_content)
 
     return render_template("query.html")
 

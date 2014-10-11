@@ -3,6 +3,13 @@
 from lxml import etree
 
 
+def parse(fncid, content):
+    if fncid in parse_function:
+        return parse_function[fncid](content)
+    else:
+        return content
+
+
 def course(cont):
     root = etree.HTML(cont)
 
@@ -131,5 +138,10 @@ def score(cont):
 
     return [score_table, total_score, False]
 
+
+parse_function = {"ag222": course, "ag008": score}
+
+
 if __name__ == "__main__":
-    print(course(open("c.html").read()))
+    #print(course(open("c.html").read()))
+    pass
