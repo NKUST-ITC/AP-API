@@ -8,6 +8,7 @@ KUAS AP API Server
 How to use?
 ---
     git clone https://github.com/JohnSounder/AP-API
+    apt-get install redis python-redis
     python2 web-server.py
 
 
