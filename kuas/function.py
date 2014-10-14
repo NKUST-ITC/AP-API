@@ -63,7 +63,7 @@ def login(session, username, password):
 def ap_query(session, qid=None, args=None, username=None):
     ap_query_key = qid + hashlib.sha512(str(username) + str(args) + SERECT_KEY).hexdigest()
 
-    if not red.get(ap_query_key):
+    if not red.exists(ap_query_key):
         ap_query_content = parse.parse(qid, ap.query(session, qid, args))
 
         red.set(ap_query_key, json.dumps(ap_query_content))
@@ -89,7 +89,7 @@ def bus_query(session, date):
     bus_cache_key = BUS_QUERY_TAG + date.replace("-", "")
 
     #if not cache.get(bus_cache_key):
-    if not red.get(bus_cache_key):
+    if not red.exists(bus_cache_key):
         bus_q = bus.query(session, *date.split("-"))
         for q in bus_q:
             q['isReserve'] = -1
