@@ -35,6 +35,7 @@ def process():
         r = s.post(URL + "ap/query", data={"arg01": "103", "arg02": "01", "arg03": "1102108133", "fncid": "ag008"})
         if not r.text.startswith("false"):
             print("[*] AP Query success")
+            print("    - %s" % r.text[:100])
         else:
             print("[-] AP Query fail")
             return
