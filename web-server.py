@@ -2,6 +2,8 @@
 
 import os
 import json
+from functools import wraps
+
 import requests
 import uniout
 import kuas.parse as parse
@@ -18,6 +20,17 @@ ios_version = "1.3.2"
 
 app = Flask(__name__)
 app.config.from_object("config")
+
+
+def authenticate(func):
+    @wraps(func)
+    def call(*args, **kwargs):
+        if 'c' in session:
+            return func(*args, **kwargs)
+        else:
+            return "false"
+
+    return call
 
 
 def dump_cookies(cookies_list):
@@ -127,8 +140,9 @@ def logout():
     return 'logout'
 
 
-@app.route('/ap/query', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/ap/query', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
+@authenticate
 def query_post():
     if request.method == "POST":
         fncid = request.form['fncid']
@@ -136,8 +150,8 @@ def query_post():
         arg02 = request.form['arg02'] if 'arg02' in request.form else None
         arg03 = request.form['arg03'] if 'arg03' in request.form else None
 
-        if 'c' not in session:
-            return "false"
+        #if 'c' not in session:
+        #    return "false"
 
         # Restore cookies
         s = requests.session()
@@ -156,6 +170,7 @@ def query_post():
 
 @app.route('/leave', methods=["POST"])
 @cross_origin(supports_credentials=True)
+@authenticate
 def leave_post():
     if request.method == "POST":
         arg01 = request.form['arg01'] if 'arg01' in request.form else None
@@ -174,6 +189,7 @@ def leave_post():
 
 @app.route('/leave/submit', methods=['POST'])
 @cross_origin(supports_credentials=True)
+@authenticate
 def leave_submit():
     if request.method == 'POST':
         start_date = request.form['start_date'].replace("-", "/")
@@ -201,9 +217,9 @@ def leave_submit():
 
 
 
-
 @app.route('/bus/query', methods=["POST"])
 @cross_origin(supports_credentials=True)
+@authenticate
 def bus_query():
     if request.method == "POST":
         date = request.form['date']
@@ -219,6 +235,7 @@ def bus_query():
 
 @app.route("/bus/reserve")
 @cross_origin(supports_credentials=True)
+@authenticate
 def bus_reserve():
     if 'c' in session:
         s = requests.session()
@@ -229,6 +246,7 @@ def bus_reserve():
 
 @app.route('/bus/booking', methods=["POST"])
 @cross_origin(supports_credentials=True)
+@authenticate
 def bus_booking():
     if request.method == "POST":
         busId = request.form['busId']
