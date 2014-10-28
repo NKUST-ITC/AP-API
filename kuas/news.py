@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ENABLE = 1
-NEWS_ID = 4
+NEWS_ID = 5
 
 def news_status():
     return [ENABLE, NEWS_ID]
@@ -21,11 +21,11 @@ def news():
     news_title = "活動消息"
     news_template = (
             "<div style='text-align:center;margin-top:-15px'>"
-            "你,是否有勇氣深入危機四伏的金字塔內?<br>"
-            "◎康委大冒險2-圖坦卡門之影◎<br>"
-            "排票日期：<br><hr>"
-            "燕巢場10/16（四）下午12點～3點<br>管一室內廣場<br><hr>"
-            "建功場10/18（六）下午1點～5點<br>咖廣<br>"
+            "◎康委大冒險2-圖坦卡門之影◎<br><br>"
+            "即將於本週禮拜四、五登場！<br>"
+            "日期為：10/30、31日 晚上5～9點<br>"
+            "可以當場換票 10張發票換一張門票<br><br>"
+            "你準備好面對法老的冒險了嗎！"
             "<div><img style='display:block;margin-left:auto;margin-right:auto;margin-bottom:-15px;max-width:100%;min-height:150px;height:auto;' src='http://i.imgur.com/SkevurF.jpg'></img></div>"
         )
     news_url = "https://www.facebook.com/ReliveIsland"
