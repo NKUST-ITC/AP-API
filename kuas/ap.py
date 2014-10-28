@@ -48,7 +48,6 @@ def query(session, qid=None, args=None):
                 "fncid": "", "uid": "", "ls_randnum": ""}
 
     payload['ls_randnum'] = ls_random
-    #payload['fucid'] = qid
     payload['fncid'] = qid
 
     for key in args:
