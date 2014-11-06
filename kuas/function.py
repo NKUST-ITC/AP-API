@@ -96,9 +96,7 @@ def bus_query(session, date):
 
         #cache.set(bus_cache_key, bus_q, timeout=BUS_EXPIRE_TIME)
         red.set(bus_cache_key, json.dumps(bus_q))
-
-        if datetime.datetime.today() > datetime.datetime.strptime(date, "%Y-%m-%d"):
-            red.expire(bus_cache_key, BUS_EXPIRE_TIME)
+        red.expire(bus_cache_key, BUS_EXPIRE_TIME)
     else:
         #bus_q = cache.get(bus_cache_key)
         bus_q = json.loads(red.get(bus_cache_key))
