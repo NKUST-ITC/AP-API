@@ -28,7 +28,7 @@ BUS_QUERY_TAG = "bus"
 NOTIFICATION_TAG = "notification"
 
 cache = SimpleCache()
-red = redis.StrictRedis()
+red = redis.StrictRedis(db=0)
 SERECT_KEY = str(os.urandom(32))
 
 
