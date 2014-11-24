@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ENABLE = 1
-NEWS_ID = 10
+NEWS_ID = 11
 
 news_image = ""
 
@@ -43,7 +43,7 @@ def news():
             '<iframe width="100%" height="auto" src="http://www.youtube.com/embed/KEQvBckPTXY" frameborder="0" allowfullscreen></iframe>'
 
         )
-    news_url = "https://www.facebook.com/changekuas"
+    news_url = "http://www.youtube.com/embed/KEQvBckPTXY"
 
 
     return [ENABLE, NEWS_ID, news_title, news_template, news_url]
