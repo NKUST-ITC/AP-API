@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ENABLE = 1
-NEWS_ID = 11
+NEWS_ID = 12
 
 news_image = ""
 
