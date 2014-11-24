@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ENABLE = 1
-NEWS_ID = 8
+NEWS_ID = 9
 
 news_image = ""
 
@@ -40,7 +40,7 @@ def news():
             "◎ 104級三合一選舉, DON'T VOTE ◎<br><br>"
 
 
-            '<iframe width="100%" height="auto" src="//www.youtube.com/embed/KEQvBckPTXY" frameborder="0" allowfullscreen></iframe>'
+            '<iframe width="100%" height="auto" src="http://www.youtube.com/embed/KEQvBckPTXY" frameborder="0" allowfullscreen></iframe>'
 
         )
     news_url = "https://www.facebook.com/changekuas"
