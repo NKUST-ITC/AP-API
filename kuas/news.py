@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ENABLE = 1
-NEWS_ID = 9
+NEWS_ID = 10
 
 news_image = ""
 
@@ -39,7 +39,7 @@ def news():
             "<div style='text-align:center;margin-top:-15px'>"
             "◎ 104級三合一選舉, DON'T VOTE ◎<br><br>"
 
-
+            "點擊影片，11/26(三), 11/27(四), 不要投票<br><br>"
             '<iframe width="100%" height="auto" src="http://www.youtube.com/embed/KEQvBckPTXY" frameborder="0" allowfullscreen></iframe>'
 
         )
