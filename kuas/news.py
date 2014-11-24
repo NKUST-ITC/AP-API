@@ -34,12 +34,15 @@ def news():
         news_url: string
     """
    
-    news_title = "不要投票"
+    news_title = "三合一選舉"
     news_template = (
             "<div style='text-align:center;margin-top:-15px'>"
-            "◎ 104級三合一選舉, DON'T VOTE ◎<br><br>"
-
-            "點擊影片，11/26(三), 11/27(四), 不要投票<br><br>"
+            "◎ 104級三合一選舉 ◎<br><br>"
+            "正副會長候選人:<br>"
+            "1號候選人 — 呂紹榕 x 詹濬鍵<br>"
+            "2號候選人 — 江敬全 x 邱博雅<br><br>"
+            "以及18系正副會長,8系學生議員<br><br>"
+            "11/26(三), 11/27(四), 記得投票<br><br>"
             '<iframe width="100%" height="auto" src="http://www.youtube.com/embed/KEQvBckPTXY" frameborder="0" allowfullscreen></iframe>'
 
         )
