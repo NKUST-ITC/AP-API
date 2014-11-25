@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ENABLE = 1
-NEWS_ID = 12
+NEWS_ID = 14
 
-news_image = ""
+news_image = "http://i.imgur.com/PeWC5Hq.png"
 
 #            "正副會長候選人:<br>"
 #            "1號候選人 — 呂紹榕 x 詹濬鍵<br>"
@@ -14,8 +14,6 @@ news_image = ""
 #            "11/26(三):燕巢 - 管一室內廣場<br>"
 #            "11/27(四):建工校區 - 中正堂<br>"
 
-#"<div><img style='display:block;margin-left:auto;margin-right:auto;margin-bottom:-15px;max-width:100%;min-height:150px;height:auto;' src='"
-#            + news_image + "'></img></div>"
 
 
 
@@ -37,13 +35,8 @@ def news():
     news_title = "三合一選舉"
     news_template = (
             "<div style='text-align:center;margin-top:-15px'>"
-            "◎ 104級三合一選舉 ◎<br><br>"
-            "正副會長候選人:<br>"
-            "1號候選人 — 呂紹榕 x 詹濬鍵<br>"
-            "2號候選人 — 江敬全 x 邱博雅<br><br>"
-            "以及18系正副會長,8系學生議員<br><br>"
-            "11/26(三), 11/27(四), 記得投票<br><br>"
-            '<iframe width="100%" height="auto" src="http://www.youtube.com/embed/KEQvBckPTXY" frameborder="0" allowfullscreen></iframe>'
+            "<div><img style='display:block;margin-left:auto;margin-right:auto;margin-bottom:-15px;max-width:100%;min-height:150px;height:auto;' src='"
+            + news_image + "'></img></div>"
 
         )
     news_url = "http://www.youtube.com/embed/KEQvBckPTXY"
