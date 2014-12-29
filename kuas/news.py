@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-ENABLE = 1
+ENABLE = 0
 NEWS_ID = 14
 
 news_image = "http://i.imgur.com/PeWC5Hq.png"
