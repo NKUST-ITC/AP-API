@@ -11,6 +11,14 @@ def parse(fncid, content):
 
 
 def course(cont):
+    """Parse raw kuas ap course data
+    Return:
+        parse data: json
+        have_saturday: bool
+        have_sunday: bool
+        except_text: string
+    """
+
     root = etree.HTML(cont)
 
     try:
@@ -55,12 +63,9 @@ def course(cont):
         course_table[r_index] = row
 
 
-
     # Check if over 8th didn't have class
     token_b = False
     token_night = False
-
-
 
 
     for r in course_table:
