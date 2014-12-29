@@ -209,11 +209,14 @@ def leave_submit():
         end_date[0] = str(int(end_date[0]) - 1911)
         end_date = "/".join(end_date)
 
+        # Fixing, don't send it
+        return json.dumps((False, "請假維修中, 目前無法請假~"))
 
-        if reason_id and reason_text and section:
-            return json.dumps(function.leave_submit(s, start_date, end_date, reason_id, reason_text, section))
-        else:
-            return json.dumps((False, "Error..."))
+        # Fixed
+        #if reason_id and reason_text and section:
+        #    return json.dumps(function.leave_submit(s, start_date, end_date, reason_id, reason_text, section))
+        #else:
+        #    return json.dumps((False, "Error..."))
 
 
 
