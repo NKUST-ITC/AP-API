@@ -44,21 +44,21 @@ def login(session, username, password):
 
 def query(session, qid=None, args=None):
     ls_random = random_number(session, RANDOM_ID)
-    payload = {"arg01": "", "arg02": "", "arg03": "",
+    data = {"arg01": "", "arg02": "", "arg03": "",
                 "fncid": "", "uid": "", "ls_randnum": ""}
 
-    payload['ls_randnum'] = ls_random
-    payload['fncid'] = qid
+    data['ls_randnum'] = ls_random
+    data['fncid'] = qid
 
     for key in args:
-        payload[key] = args[key]
+        data[key] = args[key]
 
     try:
-        r = session.post(query_url % (qid[:2], qid), data=payload, timeout=QUERY_TIMEOUT).content
+        content = session.post(query_url % (qid[:2], qid), data=data, timeout=QUERY_TIMEOUT).content
     except requests.exceptions.ReadTimeout:
-        r = ""
+        content = ""
 
-    return r
+    return content
 
 
 def random_number(session, fncid):

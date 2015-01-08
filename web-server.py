@@ -123,6 +123,32 @@ def login_post():
     return render_template("login.html")
 
 
+@app.route('/ap/only/login', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def ap_login():
+    if request.method == "POST":
+        session.permanent = True
+
+        # Start login
+        username = request.form['username']
+        password = request.form['password']
+        
+        s = requests.session()
+        is_login = function.ap.login(s, username, password)
+
+        if is_login:
+            # Serialize cookies with domain 
+            session['c'] = dump_cookies(s.cookies)
+            session['username'] = username
+
+            return "true"
+        else:
+            return "false"
+
+
+    return render_template("login.html")
+
+
 @app.route('/ap/is_login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def is_login():
@@ -149,6 +175,8 @@ def query_post():
         arg01 = request.form['arg01'] if 'arg01' in request.form else None
         arg02 = request.form['arg02'] if 'arg02' in request.form else None
         arg03 = request.form['arg03'] if 'arg03' in request.form else None
+        arg04 = request.form['arg04'] if 'arg04' in request.form else None
+
 
         #if 'c' not in session:
         #    return "false"
@@ -158,12 +186,15 @@ def query_post():
         set_cookies(s, session['c'])
 
         query_content = function.ap_query(
-            s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03}, session['username'])
+            s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03, "arg04": arg04}, session['username'])
 
         if fncid == "ag222":
             return json.dumps(query_content)
         elif fncid == "ag008":
             return json.dumps(query_content)
+        else:
+            return json.dumps(query_content)
+            
 
     return render_template("query.html")
 
