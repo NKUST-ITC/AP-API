@@ -33,11 +33,11 @@ SERECT_KEY = str(os.urandom(32))
 
 
 def login(session, username, password):
-    is_login = False
+    is_login = {}
 
     # AP Login
     try:
-        is_login = ap.login(session, username, password)
+        is_login["ap"] = ap.login(session, username, password)
     except:
         pass
 
@@ -45,19 +45,19 @@ def login(session, username, password):
     # Login bus system
     try:
         bus.init(session)
-        is_login = bus.login(session, username, password)
+        is_login["bus"] = bus.login(session, username, password)
     except:
         pass
 
 
     # Login leave system
     try:
-        is_login = leave.login(session, username, password)
+        is_login["leave"] = leave.login(session, username, password)
     except:
         pass
 
 
-    return is_login
+    return any(is_login.values())
 
 
 def ap_query(session, qid=None, args=None, username=None):
