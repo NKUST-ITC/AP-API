@@ -14,9 +14,9 @@ from flask_cors import *
 
 __version__ = "1.5.0 bus develop"
 
-android_version = "1.5.0"
+android_version = "1.5.2"
 android_donate_version = "1.4.3"
-ios_version = "1.5.0"
+ios_version = "1.4.3"
 
 app = Flask(__name__)
 app.config.from_object("config")
@@ -194,7 +194,7 @@ def query_post():
             return json.dumps(query_content)
         else:
             return json.dumps(query_content)
-            
+        
 
     return render_template("query.html")
 
