@@ -1,21 +1,11 @@
 # -*- coding: utf-8 -*-
 
-ENABLE = 0
-NEWS_ID = 14
+ENABLE = 1
+NEWS_ID = 21
 
-news_image = "http://i.imgur.com/PeWC5Hq.png"
-
-#            "正副會長候選人:<br>"
-#            "1號候選人 — 呂紹榕 x 詹濬鍵<br>"
-#            "2號候選人 — 江敬全 x 邱博雅<br><br>"
-#            "以及18系正副會長,8系學生議員<br><br>"
-#            "投票資格：日間部四技與日間部二技同學<br>"
-#            "投票時間：早上10點至下午4點<br>"
-#            "11/26(三):燕巢 - 管一室內廣場<br>"
-#            "11/27(四):建工校區 - 中正堂<br>"
-
-
-
+news_image = "http://a2.mzstatic.com/us/r30/Purple3/v4/2b/5b/c9/2b5bc980-341f-bf30-ed07-e14b1d009575/icon175x175.jpeg"
+news_content = """
+"""
 
 def news_status():
     return [ENABLE, NEWS_ID]
@@ -32,14 +22,16 @@ def news():
         news_url: string
     """
    
-    news_title = "三合一選舉"
+    news_title = "iOS 版更新"
     news_template = (
             "<div style='text-align:center;margin-top:-15px'>"
             "<div><img style='display:block;margin-left:auto;margin-right:auto;margin-bottom:-15px;max-width:100%;min-height:150px;height:auto;' src='"
             + news_image + "'></img></div>"
+            + news_content +
+            "</div>"
 
         )
-    news_url = "http://www.youtube.com/embed/KEQvBckPTXY"
+    news_url = "itms-apps://itunes.com/apps/gao-ying-xiao-wu-tong/"
 
 
     return [ENABLE, NEWS_ID, news_title, news_template, news_url]
