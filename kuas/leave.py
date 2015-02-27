@@ -13,7 +13,7 @@ def status():
     leave_status = 400
 
     try:
-        leave_status = requests.head("https://leave.kuas.edu.tw:446:446", timeout=TIMEOUT).status_code
+        leave_status = requests.head("https://leave.kuas.edu.tw:446/", timeout=TIMEOUT).status_code
     except:
         pass
 
