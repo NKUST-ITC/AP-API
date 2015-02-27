@@ -5,7 +5,7 @@ from lxml import etree
 
 s = requests.session()
 
-SUBMIT_LEAVE_URL = "http://leave.kuas.edu.tw/CK001MainM.aspx"
+SUBMIT_LEAVE_URL = "https://leave.kuas.edu.tw:446/CK001MainM.aspx"
 
 TIMEOUT = 1.0
 
@@ -13,7 +13,7 @@ def status():
     leave_status = 400
 
     try:
-        leave_status = requests.head("http://leave.kuas.edu.tw", timeout=TIMEOUT).status_code
+        leave_status = requests.head("https://leave.kuas.edu.tw:446:446", timeout=TIMEOUT).status_code
     except:
         pass
 
@@ -22,7 +22,7 @@ def status():
 
 def login(session, username, password):
     try:
-        r = session.get("http://leave.kuas.edu.tw", timeout=TIMEOUT)
+        r = session.get("https://leave.kuas.edu.tw:446", timeout=TIMEOUT)
     except requests.exceptions.ReadTimeout:
         return False
 
@@ -38,7 +38,7 @@ def login(session, username, password):
     form['Login1$UserName'] = username
     form['Login1$Password'] = password
 
-    r = session.post('http://leave.kuas.edu.tw/', data=form)
+    r = session.post('https://leave.kuas.edu.tw:446/', data=form)
     root = etree.HTML(r.text)
 
     if root.xpath("//td[@align='center' and @style='color:Red;' and @colspan='2']"):
@@ -48,7 +48,7 @@ def login(session, username, password):
 
 
 def getList(session, year="102", semester="2"):
-    root = etree.HTML(session.get("http://leave.kuas.edu.tw/AK002MainM.aspx").text)
+    root = etree.HTML(session.get("https://leave.kuas.edu.tw:446/AK002MainM.aspx").text)
     
     form = {}
     for i in root.xpath("//input"):
@@ -58,7 +58,7 @@ def getList(session, year="102", semester="2"):
 
     form['ctl00$ContentPlaceHolder1$SYS001$DropDownListYms'] = "%s-%s" % (year, semester)
     
-    r = session.post("http://leave.kuas.edu.tw/AK002MainM.aspx", data=form)
+    r = session.post("https://leave.kuas.edu.tw:446/AK002MainM.aspx", data=form)
     root = etree.HTML(r.text)
     
     tr = root.xpath("//table")[-1]
@@ -105,7 +105,7 @@ def getList(session, year="102", semester="2"):
     return result
 
 def submitLeave(session, start_date, end_date, leave_dict):
-    """Submit leave data to leave.kaus.edu.tw
+    """Submit leave data to leave.kaus.edu.tw:446
     session: The session include login cookies
     start_date: Start date for leave
     end_date: End date for leave
@@ -197,5 +197,5 @@ def submitLeave(session, start_date, end_date, leave_dict):
 
 if __name__ == '__main__':
     login(s, "1102108133", "111")
-    print(submitLeave(s, '103/09/25', '103/09/25', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]}))
-    #print(getList(s, "103", "1"))
+    #print(submitLeave(s, '103/09/25', '103/09/25', {"reason_id": "21", "reason_text": "testing", "section": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]}))
+    print(getList(s, "103", "1"))
