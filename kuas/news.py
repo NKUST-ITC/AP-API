@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
 ENABLE = 1
-NEWS_ID = 22
+NEWS_ID = 25
 
-news_image = "https://lh4.googleusercontent.com/1IswTw-BwsJZCsZU8uY-WDdHaaoHEQFdcdp4NADWMyUmC9D6yZp_52NQP96UZMrkWP97Og"
-news_content = """<br><br>
-3月4日（三）開始<br>
-每日中午12:00~13:30<br>
-建工龍捲風廣場及燕巢館一候車處皆會有我們的身影!<br><br>
-歡迎現場預購帽T
+NEWS_TITLE = "高應盃籃球錦標賽"
+NEWS_IMAGE = "http://i.imgur.com/NAxVxbV.jpg"
+NEWS_URL = "http://goo.gl/Yh1iIF"
+NEWS_CONTENT = """
 """
 
 def news_status():
@@ -26,15 +24,14 @@ def news():
         news_url: string
     """
    
-    news_title = "高應帽T現場預購!"
+    news_title = NEWS_TITLE
     news_template = (
             "<div style='text-align:center;margin-top:-15px'>"
-            "<div><img style='display:block;margin-left:auto;margin-right:auto;margin-bottom:-15px;max-width:100%;min-height:150px;height:auto;' src='"
-            + news_image + "'></img>" + news_content + "</div>" +
+            "<div><img style='display:block;margin-left:auto;margin-right:auto;margin-bottom:-15px;max-width:250px;min-height:150px;height:auto;' src='"
+            + NEWS_IMAGE + "'></img>" + NEWS_CONTENT + "</div>" +
             "</div>"
 
         )
-    news_url = "https://www.facebook.com/pages/%E6%87%89%E6%88%91%E5%80%91%E7%9A%84%E5%B8%BD%E8%B8%A2-KUAS-Exclusive-Hoodies/1439431772983278?fref=ts"
-
+    news_url = NEWS_URL
 
     return [ENABLE, NEWS_ID, news_title, news_template, news_url]
