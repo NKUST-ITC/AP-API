@@ -14,7 +14,7 @@ from flask_cors import *
 
 __version__ = "1.5.0 bus develop"
 
-android_version = "1.5.2"
+android_version = "1.5.3"
 android_donate_version = "1.4.3"
 ios_version = "1.4.3"
 
