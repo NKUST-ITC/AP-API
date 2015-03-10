@@ -27,7 +27,7 @@ def news():
     news_title = NEWS_TITLE
     news_template = (
             "<div style='text-align:center;'>"
-            "<div><img style='display:block;margin-left:auto;margin-right:auto;max-width:250px;min-height:150px;height:auto;' ng-cache src='"
+            "<div><img style='display:block;margin-left:auto;margin-right:auto;max-width:80%;min-height:150px;height:auto;' src='"
             + NEWS_IMAGE + "'></img>" + NEWS_CONTENT + "</div>" +
             "</div>"
 
