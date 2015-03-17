@@ -60,14 +60,14 @@ def login(session, username, password):
     return any(is_login.values())
 
 
-def ap_query(session, qid=None, args=None, username=None):
+def ap_query(session, qid=None, args=None, username=None, expire=AP_QUERY_EXPIRE):
     ap_query_key = qid + hashlib.sha512(str(username) + str(args) + SERECT_KEY).hexdigest()
 
     if not red.exists(ap_query_key):
         ap_query_content = parse.parse(qid, ap.query(session, qid, args))
 
         red.set(ap_query_key, json.dumps(ap_query_content))
-        red.expire(ap_query_key, AP_QUERY_EXPIRE)
+        red.expire(ap_query_key, expire)
     else:
         ap_query_content = json.loads(red.get(ap_query_key))
 

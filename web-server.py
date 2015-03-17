@@ -6,13 +6,14 @@ from functools import wraps
 
 import requests
 import uniout
+import kuas.user
 import kuas.parse as parse
 import kuas.function as function
 
 from flask import Flask, render_template, request, session
 from flask_cors import *
 
-__version__ = "1.5.0 bus develop"
+__version__ = "1.5.4 KSL User info"
 
 android_version = "1.5.3"
 android_donate_version = "1.4.3"
@@ -197,6 +198,29 @@ def query_post():
         
 
     return render_template("query.html")
+
+
+
+@app.route('/ap/user/info')
+@cross_origin(supports_credentials=True)
+@authenticate
+def ap_user_info():
+    # Restore cookies
+    s = requests.session()
+    set_cookies(s, session['c'])
+
+    return json.dumps(kuas.user.get_user_info(s, session['username']))
+
+
+@app.route('/ap/user/picture')
+@cross_origin(supports_credentials=True)
+@authenticate
+def ap_user_picture():
+    # Restore cookies
+    s = requests.session()
+    set_cookies(s, session['c'])
+
+    return kuas.user.get_user_picture(s, session['username'])
 
 
 @app.route('/leave', methods=["POST"])

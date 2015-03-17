@@ -3,10 +3,10 @@
 import requests
 from lxml import etree
 
-
-ap_login_url = "http://140.127.113.227/kuas/perchk.jsp"
-fnc_url = "http://140.127.113.227/kuas/fnc.jsp"
-query_url = "http://140.127.113.227/kuas/%s_pro/%s.jsp?"
+AP_BASE_URL = "http://140.127.113.227"
+AP_LOGIN_URL = AP_BASE_URL + "/kuas/perchk.jsp"
+AP_FNC_URL = AP_BASE_URL + "/kuas/fnc.jsp"
+AP_QUERY_URL = AP_BASE_URL + "/kuas/%s_pro/%s.jsp?"
 
 RANDOM_ID = "AG009"
 
@@ -29,7 +29,7 @@ def status():
 def login(session, username, password):
     payload = {"uid": username, "pwd": password}
 
-    r = session.post(ap_login_url, data=payload, timeout=LOGIN_TIMEOUT)
+    r = session.post(AP_LOGIN_URL, data=payload, timeout=LOGIN_TIMEOUT)
 
     root = etree.HTML(r.text)
 
@@ -54,7 +54,7 @@ def query(session, qid=None, args=None):
         data[key] = args[key]
 
     try:
-        content = session.post(query_url % (qid[:2], qid), data=data, timeout=QUERY_TIMEOUT).content
+        content = session.post(AP_QUERY_URL % (qid[:2], qid), data=data, timeout=QUERY_TIMEOUT).content
     except requests.exceptions.ReadTimeout:
         content = ""
 
@@ -64,7 +64,7 @@ def query(session, qid=None, args=None):
 def random_number(session, fncid):
     raw_data = {"fncid": fncid, "sysyear": "103", "syssms":
                 "1", "online": "okey", "loginid": "1102108130"}
-    r = session.post(fnc_url, data=raw_data, timeout=RANDOM_TIMEOUT)
+    r = session.post(AP_FNC_URL, data=raw_data, timeout=RANDOM_TIMEOUT)
 
     root = etree.HTML(r.text)
     lsr = root.xpath("//input")[-1].values()[-1]
