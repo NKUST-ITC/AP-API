@@ -1,16 +1,43 @@
 # -*- coding: utf-8 -*-
 
-ENABLE = 1
-NEWS_ID = 25
+import random
 
-NEWS_TITLE = "高應盃籃球錦標賽"
+ENABLE = 1
+NEWS_ID = 26
+
+NEWS_TITLE = ""
 NEWS_IMAGE = "http://i.imgur.com/NAxVxbV.jpg"
 NEWS_URL = "http://goo.gl/Yh1iIF"
 NEWS_CONTENT = """
 """
 
+def random_news():
+    news_list = [
+        {
+            "news_title": "高應盃籃球錦標賽",
+            "news_image": "http://i.imgur.com/NAxVxbV.jpg",
+            "news_url": "http://goo.gl/Yh1iIF",
+            "news_content": ""
+        }, 
+
+        {
+            "news_title": "應外 News 起來",
+            "news_image": "http://i.imgur.com/sVMvNhr.jpg",
+            "news_url": "https://www.facebook.com/AFLDEARS",
+            "news_content": """
+            應外Nova News 讓你春風滿面 前無古人 全新活動<br>
+            3/30 隆重登場！
+            """
+        }
+    ]
+
+
+    return random.choice(news_list)
+
+
 def news_status():
     return [ENABLE, NEWS_ID]
+
 
 def news():
     """
@@ -24,14 +51,17 @@ def news():
         news_url: string
     """
    
-    news_title = NEWS_TITLE
+    # Get news from random news
+    news = random_news()
+
+    news_title = news["news_title"]
     news_template = (
             "<div style='text-align:center;'>"
             "<div><img style='display:block;margin-left:auto;margin-right:auto;max-width:80%;min-height:150px;height:auto;' src='"
-            + NEWS_IMAGE + "'></img>" + NEWS_CONTENT + "</div>" +
+            + news["news_image"] + "'></img>" + news["news_content"] + "</div>" +
             "</div>"
 
         )
-    news_url = NEWS_URL
+    news_url = news["news_url"]
 
     return [ENABLE, NEWS_ID, news_title, news_template, news_url]
