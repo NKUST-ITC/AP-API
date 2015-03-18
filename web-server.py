@@ -15,7 +15,7 @@ from flask_cors import *
 
 __version__ = "1.5.4 KSL User info"
 
-android_version = "1.5.3"
+android_version = "1.5.4"
 android_donate_version = "1.4.3"
 ios_version = "1.4.3"
 
