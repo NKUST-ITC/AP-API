@@ -22,7 +22,7 @@ def random_news():
 
         {
             "news_title": "應外 News 起來",
-            "news_image": "http://i.imgur.com/sVMvNhr.jpg",
+            "news_image": "http://i.imgur.com/u0KfqRV.jpg",
             "news_url": "https://www.facebook.com/AFLDEARS",
             "news_content": """
             應外Nova News 讓你春風滿面 前無古人 全新活動<br>
