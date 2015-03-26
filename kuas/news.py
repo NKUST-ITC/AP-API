@@ -13,12 +13,12 @@ NEWS_CONTENT = """
 
 def random_news():
     news_list = [
-        {
-            "news_title": "高應盃籃球錦標賽",
-            "news_image": "http://i.imgur.com/NAxVxbV.jpg",
-            "news_url": "http://goo.gl/Yh1iIF",
-            "news_content": ""
-        }, 
+       	#{
+        #    "news_title": "高應盃籃球錦標賽",
+        #    "news_image": "http://i.imgur.com/NAxVxbV.jpg",
+        #    "news_url": "http://goo.gl/Yh1iIF",
+        #    "news_content": ""
+        #}, 
 
         {
             "news_title": "應外 News 起來",
