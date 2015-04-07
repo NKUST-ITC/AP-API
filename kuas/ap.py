@@ -43,11 +43,11 @@ def login(session, username, password):
 
 
 def query(session, qid=None, args=None):
-    ls_random = random_number(session, RANDOM_ID)
+    #ls_random = random_number(session, RANDOM_ID)
     data = {"arg01": "", "arg02": "", "arg03": "",
                 "fncid": "", "uid": "", "ls_randnum": ""}
 
-    data['ls_randnum'] = ls_random
+    #data['ls_randnum'] = ls_random
     data['fncid'] = qid
 
     for key in args:
@@ -77,5 +77,4 @@ if __name__ == "__main__":
     s = requests.Session()
     is_login = login(s, "guest", "123")
     
-
     print(is_login)
