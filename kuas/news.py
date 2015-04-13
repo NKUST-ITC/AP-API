@@ -13,20 +13,19 @@ NEWS_CONTENT = """
 
 def random_news():
     news_list = [
-       	#{
-        #    "news_title": "高應盃籃球錦標賽",
-        #    "news_image": "http://i.imgur.com/NAxVxbV.jpg",
-        #    "news_url": "http://goo.gl/Yh1iIF",
-        #    "news_content": ""
-        #}, 
+       	{
+            "news_title": "企管系 BOSS 競賽",
+            "news_image": "http://i.imgur.com/VWv9cVK.jpg",
+            "news_url": "https://www.facebook.com/BossPlan",
+            "news_content": "想成為真正的Boss嗎?沒有門檻的Boss競賽<br>讓你靈活發揮，成功及創業，離你不遠。"
+        },
 
         {
             "news_title": "應外 News 起來",
             "news_image": "http://i.imgur.com/u0KfqRV.jpg",
             "news_url": "https://www.facebook.com/AFLDEARS",
             "news_content": """
-            應外Nova News 讓你春風滿面 前無古人 全新活動<br>
-            3/30 隆重登場！
+            應外Nova News 讓你春風滿面!<br>
             """
         }
     ]
@@ -50,7 +49,7 @@ def news():
         news_tempalte: string
         news_url: string
     """
-   
+
     # Get news from random news
     news = random_news()
 
