@@ -3,30 +3,16 @@
 import random
 
 ENABLE = 1
-NEWS_ID = 26
+NEWS_ID = 30
 
-NEWS_TITLE = ""
-NEWS_IMAGE = "http://i.imgur.com/NAxVxbV.jpg"
-NEWS_URL = "http://goo.gl/Yh1iIF"
-NEWS_CONTENT = """
-"""
 
 def random_news():
     news_list = [
        	{
-            "news_title": "企管系 BOSS 競賽",
-            "news_image": "http://i.imgur.com/VWv9cVK.jpg",
-            "news_url": "https://www.facebook.com/BossPlan",
-            "news_content": "想成為真正的Boss嗎?沒有門檻的Boss競賽<br>讓你靈活發揮，成功及創業，離你不遠。"
-        },
-
-        {
-            "news_title": "應外 News 起來",
-            "news_image": "http://i.imgur.com/u0KfqRV.jpg",
-            "news_url": "https://www.facebook.com/AFLDEARS",
-            "news_content": """
-            應外Nova News 讓你春風滿面!<br>
-            """
+            "news_title": "你的網路安全嗎？",
+            "news_image": "http://i.imgur.com/bQ3fCzo.jpg",
+            "news_url": "https://www.facebook.com/KUASITC/posts/750663035031073",
+            "news_content": ""
         }
     ]
 
