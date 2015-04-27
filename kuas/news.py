@@ -13,7 +13,14 @@ def random_news():
             "news_image": "http://i.imgur.com/bQ3fCzo.jpg",
             "news_url": "https://www.facebook.com/KUASITC/posts/750663035031073",
             "news_content": ""
+        },
+        {
+            "news_title": "你的網路安全嗎？",
+            "news_image": "http://i.imgur.com/MyW6pfS.jpg",
+            "news_url": "https://www.facebook.com/KUASITC/posts/750663035031073",
+            "news_content": ""
         }
+
     ]
 
 
