@@ -57,7 +57,7 @@ def login(session, username, password):
         pass
 
 
-    return any(is_login.values())
+    return all(is_login.values())
 
 
 def ap_query(session, qid=None, args=None, username=None, expire=AP_QUERY_EXPIRE):
