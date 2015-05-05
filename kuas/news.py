@@ -3,28 +3,49 @@
 import random
 
 ENABLE = 1
-NEWS_ID = 30
+NEWS_ID = 31
+NEWS_DEBUG = False
+
+
+def random_by_weight(p):
+    choice_id = []
+    for i in range(len(p)):
+        choice_id += [i for _ in range(p[i]["news_weight"])]
+
+    return p[random.choice(choice_id)]
 
 
 def random_news():
     news_list = [
-       	{
+        {
+            "news_title": "應象回藝 ─ 文藝季",
+            "news_image": "http://i.imgur.com/vxMxpKj.jpg",
+            "news_url": "https://www.facebook.com/artskuassa?fref=ts起藝Revolution",
+            "news_content": "",
+            "news_weight": 4
+
+        },
+        {
             "news_title": "你的網路安全嗎？",
             "news_image": "http://i.imgur.com/bQ3fCzo.jpg",
             "news_url": "https://www.facebook.com/KUASITC/posts/750663035031073",
-            "news_content": ""
+            "news_content": "",
+            "news_weight": 1
         },
         {
             "news_title": "你的網路安全嗎？",
             "news_image": "http://i.imgur.com/MyW6pfS.jpg",
             "news_url": "https://www.facebook.com/KUASITC/posts/750663035031073",
-            "news_content": ""
+            "news_content": "",
+            "news_weight": 1
         }
 
     ]
 
-
-    return random.choice(news_list)
+    if NEWS_DEBUG:
+        return news_list[0]
+    else:
+        return random_by_weight(news_list)
 
 
 def news_status():
