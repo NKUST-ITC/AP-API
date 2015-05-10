@@ -19,11 +19,18 @@ def random_news():
     news_list = [
         {
             "news_title": "2015高應大校園歌唱大賽",
-            "news_image": "http://i.imgur.com/AoWwdFn.jpg",
+            "news_image": "http://i.imgur.com/oRRaM6H.jpg",
             "news_url": "https://www.facebook.com/pages/2015%E9%AB%98%E6%87%89%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%AD%8C%E5%94%B1%E5%A4%A7%E8%B3%BD/503404693131297",
             "news_content": "",
             "news_weight": 4
 
+        },
+        {
+            "news_title": "公主病與王子症候群",
+            "news_image": "http://i.imgur.com/DXnsszo.jpg",
+            "news_url": "https://www.facebook.com/KUASTAO/photos/a.318473461608619.1073741828.313362368786395/730491137073514/?type=1",
+            "news_content", "",
+            "news_weight": 4
         },
         {
             "news_title": "你的網路安全嗎？",
