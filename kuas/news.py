@@ -30,7 +30,7 @@ def random_news():
             "news_image": "http://i.imgur.com/vQ38x7g.jpg",
             "news_url": "https://www.facebook.com/KUASTAO/photos/a.318473461608619.1073741828.313362368786395/730491137073514/?type=1",
             "news_content": "",
-            "news_weight": 4
+            "news_weight": 8
         },
         {
             "news_title": "你的網路安全嗎？",
