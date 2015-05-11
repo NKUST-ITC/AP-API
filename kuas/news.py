@@ -27,7 +27,7 @@ def random_news():
         },
         {
             "news_title": "公主病與王子症候群",
-            "news_image": "http://i.imgur.com/DXnsszo.jpg",
+            "news_image": "http://i.imgur.com/vQ38x7g.jpg",
             "news_url": "https://www.facebook.com/KUASTAO/photos/a.318473461608619.1073741828.313362368786395/730491137073514/?type=1",
             "news_content": "",
             "news_weight": 4
