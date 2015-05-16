@@ -17,6 +17,14 @@ def random_by_weight(p):
 
 def random_news():
     news_list = [
+         {
+            "news_title": "Dcard comming soon",
+            "news_image": "http://i.imgur.com/niRjE0A.jpg",
+            "news_url": "https://www.facebook.com/events/186383611572196/",
+            "news_content": "",
+            "news_weight": 4
+
+        },
         {
             "news_title": "2015高應大校園歌唱大賽",
             "news_image": "http://i.imgur.com/oRRaM6H.jpg",
