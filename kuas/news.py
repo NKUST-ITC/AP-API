@@ -6,7 +6,7 @@ ENABLE = 1
 NEWS_ID = 31
 NEWS_DEBUG = False
 
-DEFATUL_WEIGHT = 10
+DEFAULT_WEIGHT = 10
 
 
 def random_by_weight(p):
