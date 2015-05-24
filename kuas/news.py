@@ -20,13 +20,6 @@ def random_by_weight(p):
 def random_news():
     news_list = [
         {
-            "news_title": "航海王奪寶 模咒逃走中",
-            "news_image": "http://i.imgur.com/LVcpWi9.jpg",
-            "news_url": "http://goo.gl/forms/6BbIyZXHdd",
-            "news_content": "",
-            "news_weight": 0
-        },
-        {
             "news_title": "文創CCI發報團隊 ─ 句句到味",
             "news_image": "http://i.imgur.com/IoVDFVA.jpg",
             "news_url": "https://www.facebook.com/whataboutcci",
