@@ -3,8 +3,9 @@
 import requests
 
 USERNAME = "1102108133"
-PASSWORD = ""
+PASSWORD = "111"
 
+#URL = "http://api.grd.idv.tw:14768/"
 URL = "http://kuas.grd.idv.tw:14768/"
 
 
@@ -42,7 +43,7 @@ def process():
     except Exception as e:
         print("[-] AP Query fatal error")
         print(e)
-        return
+        #return
 
     
     try:
@@ -52,10 +53,10 @@ def process():
     except Exception as e:
         print("[-] Bus Query fatal error")
         print(e)
-        return 
+        #return 
 
     try:
-        r = s.post(URL + "leave", data={"arg01": "102", "arg02": "01"})
+        r = s.post(URL + "leave", data={"arg01": "103", "arg02": "01"})
         if not r.text.startswith("false"):
             print("[*] Leave Query success")
             print("    - %s" % r.text)
@@ -65,7 +66,7 @@ def process():
     except Exception as e:
         print("[-] Leave Query fatal error")
         print(e)
-        return
+        #return
 
     
 
