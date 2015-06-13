@@ -1,40 +1,81 @@
 #-*- encoding=utf-8 -*-
+"""This module `ap` provide manipulate of kuas AP system.
+"""
+
+__version__ = 2
 
 import requests
 from lxml import etree
 
+# AP URL Setting
+#: AP sytem base url
 AP_BASE_URL = "http://140.127.113.227"
+
+#: AP system login url
 AP_LOGIN_URL = AP_BASE_URL + "/kuas/perchk.jsp"
-AP_FNC_URL = AP_BASE_URL + "/kuas/fnc.jsp"
+
+#: AP system general query url, with two args, first: prefix of qid, second: qid
 AP_QUERY_URL = AP_BASE_URL + "/kuas/%s_pro/%s.jsp?"
 
-RANDOM_ID = "AG009"
-
+# Timeout Setting
+#: Login timeout
 LOGIN_TIMEOUT = 1.0
+
+#: Query timeout
 QUERY_TIMEOUT = 5.0
-RANDOM_TIMEOUT = 1.0
 
 
 def status():
     """Return AP server status code
-    Returns:
-        int.
+
+    :rtype: int
+    :returns: A HTTP status code
+
+    >>> status()
+    200
     """
-
-    ap_status = False
-
     try:
-        ap_status = login(requests, "guest", "123")
-    except:
-        pass
+        ap_status_code = requests.head(AP_BASE_URL, timeout=LOGIN_TIMEOUT).status_code
+    except requests.exceptions.ConnectTimeout:
+        ap_status_code = 408
 
-    return ap_status
+    return ap_status_code
 
 
 def login(session, username, password):
+    """Login to KUAS AP system.
+
+    :param session: requests session object
+    :type session: class requests.sessions.Session
+    :param username: username of kuas ap system, actually your kuas student id
+    :type username: str or int
+    :param password: password of kuas ap system.
+    :type password: str or int
+
+    :return: login status
+    :rtype: bool
+
+
+    Login with correct username and password
+
+    >>> s = requests.Session()
+    >>> login(s, "guest", "123")
+    True
+
+
+    Login with bad username or password
+
+    >>> login(s, "guest", "777")
+    False
+    """
+
     payload = {"uid": username, "pwd": password}
 
-    r = session.post(AP_LOGIN_URL, data=payload, timeout=LOGIN_TIMEOUT)
+    # If timeout, return false
+    try:
+        r = session.post(AP_LOGIN_URL, data=payload, timeout=LOGIN_TIMEOUT)
+    except requests.exceptions.ConnectTimeout:
+        return False
 
     root = etree.HTML(r.text)
 
@@ -43,43 +84,64 @@ def login(session, username, password):
     except:
         is_login = False
 
-
     return is_login
 
 
-def query(session, qid=None, args=None):
-    #ls_random = random_number(session, RANDOM_ID)
-    data = {"arg01": "", "arg02": "", "arg03": "",
-                "fncid": "", "uid": "", "ls_randnum": ""}
+def query(session, qid, args=None):
+    """Query AP system page by qid and args
 
-    #data['ls_randnum'] = ls_random
+    :param session: requests session object, the session must login first.
+    :type session: class requests.sessions.Session
+    :param qid: query id of ap system page
+    :type qid: str
+    :param args: arguments of query post
+    :type args: dict
+
+    :return" content of query page
+    :rtype: str
+
+    You must login first when using query
+    Otherwise ap system won't let you use it.
+
+    >>> s = requests.Session()
+    >>> content = query(s, "ag222", {"arg01": "103", "arg02": "2"})
+    >>> "Please Logon" in content
+    True
+
+
+    Login to guest
+
+    >>> login(s, "guest", "123")
+    True
+
+    Query course data (ag202)
+
+    >>> args = {"yms_yms": "103#2", "dgr_id": "14", "unt_id": "UC02", \
+                "clyear": "", "sub_name": "", "teacher": "", "week": 2, \
+                "period": 4, "reading": "reading"}
+    >>> content = query(s, "ag202", args)
+    >>> "內部控制暨稽核制度" in content
+    True
+    """
+
+    data = {"arg01": "", "arg02": "", "arg03": "",
+            "fncid": "", "uid": ""}
+
     data['fncid'] = qid
 
     for key in args:
         data[key] = args[key]
 
     try:
-        content = session.post(AP_QUERY_URL % (qid[:2], qid), data=data, timeout=QUERY_TIMEOUT).content
+        resp = session.post(AP_QUERY_URL % (qid[:2], qid), data=data, timeout=QUERY_TIMEOUT)
+        resp.encoding = "utf-8"
+        content = resp.text
     except requests.exceptions.ReadTimeout:
         content = ""
 
     return content
 
 
-def random_number(session, fncid):
-    raw_data = {"fncid": fncid, "sysyear": "103", "syssms":
-                "1", "online": "okey", "loginid": "1102108130"}
-    r = session.post(AP_FNC_URL, data=raw_data, timeout=RANDOM_TIMEOUT)
-
-    root = etree.HTML(r.text)
-    lsr = root.xpath("//input")[-1].values()[-1]
-
-    return lsr
-
-
-
 if __name__ == "__main__":
-    s = requests.Session()
-    is_login = login(s, "guest", "123")
-    
-    print(is_login)
+    import doctest
+    doctest.testmod()

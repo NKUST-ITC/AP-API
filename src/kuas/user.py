@@ -6,8 +6,9 @@ from lxml import etree
 
 AP_QUERY_USER_EXPIRE = 300
 
+
 def _get_user_info(session, username):
-    """Get user info 
+    """Get user info
 
     return: `lxml.etree._Element`
     """

@@ -1,16 +1,21 @@
-.. kuas-ap-api documentation master file, created by
-   sphinx-quickstart on Sat May 30 18:38:01 2015.
+.. KUAS AP API documentation master file, created by
+   sphinx-quickstart on Sat Jun 13 18:26:01 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to kuas-ap-api's documentation!
+Welcome to KUAS AP API's documentation!
 =======================================
 
 Contents:
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 5
 
+.. automodule:: kuas
+    :members:
+    :undoc-members:
+    :inherited-members:
+    :show-inheritance:
 
 Indices and tables
 ==================
