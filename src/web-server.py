@@ -106,7 +106,10 @@ def status():
 @app.route('/v2/ap/semester')
 @cross_origin(supports_credentials=True)
 def ap_semester():
-    return json.dumps({"semester": kuas.ap.get_semester_list()}, ensure_ascii=False)
+    semester_list = kuas.ap.get_semester_list()
+    default_yms = list(filter(lambda x: x['selected'], semester_list))[0]
+    return json.dumps({"semester": semester_list,
+                       "default_yms": default_yms}, ensure_ascii=False)
 
 
 @app.route('/ap/login', methods=['POST'])
