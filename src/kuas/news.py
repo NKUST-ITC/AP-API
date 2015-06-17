@@ -33,15 +33,7 @@ def random_news():
             "news_content": "",
             "news_weight": 10
 
-        },
-        {
-            "news_title": "2015 高應大校園歌唱大賽",
-            "news_image": "http://i.imgur.com/lhBojIw.jpg",
-            "news_url": "https://www.facebook.com/pages/2015%E9%AB%98%E6%87%89%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%AD%8C%E5%94%B1%E5%A4%A7%E8%B3%BD/503404693131297?fref=ts",
-            "news_content": "",
-            "news_weight": 0
         }
-
     ]
 
     if NEWS_DEBUG:
