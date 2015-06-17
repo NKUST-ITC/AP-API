@@ -102,7 +102,7 @@ def get_semester_list():
     :rtype: dict
 
     >>> get_semester_list()[-1]['value']
-    '92#2'
+    '92,2'
     """
 
     s = requests.Session()
@@ -112,7 +112,7 @@ def get_semester_list():
     root = etree.HTML(content)
 
     options = root.xpath("id('yms_yms')/option")
-    options = map(lambda x: {"value": x.values()[0],
+    options = map(lambda x: {"value": x.values()[0].replace("#", ","),
                              "selected": 1 if "selected" in x.values() else 0,
                              "text": x.text},
                             root.xpath("id('yms_yms')/option")

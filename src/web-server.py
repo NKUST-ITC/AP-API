@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+.. module:: web-server
+   :synopsis: A simple module for printing "Hello"
+ 
+.. moduleauthor:: Obama
+ 
+"""
 
 import os
 import json
@@ -6,7 +13,6 @@ from functools import wraps
 
 import requests
 import uniout
-import kuas.ap
 import kuas.user
 import kuas.parse as parse
 import kuas.function as function
@@ -53,7 +59,7 @@ def dump_cookies(cookies_list):
 def set_cookies(s, cookies):
     for c in cookies:
         s.cookies.set(c['name'], c['value'], domain=c['domain'])
-
+        
 
 @app.route('/')
 def index():
@@ -107,7 +113,7 @@ def status():
 @cross_origin(supports_credentials=True)
 def ap_semester():
     semester_list = kuas.ap.get_semester_list()
-    default_yms = list(filter(lambda x: x['selected'], semester_list))[0]
+    default_yms = list(filter(lambda x: x['selected'] == 1, semester_list))[0]
     return json.dumps({"semester": semester_list,
                        "default_yms": default_yms}, ensure_ascii=False)
 
@@ -116,19 +122,19 @@ def ap_semester():
 @cross_origin(supports_credentials=True)
 def login_post():
     if request.method == "POST":
-        session.permanent=True
+        session.permanent = True
 
         # Start login
-        username=request.form['username']
-        password=request.form['password']
-
-        s=requests.session()
-        is_login=function.login(s, username, password)
+        username = request.form['username']
+        password = request.form['password']
+        
+        s = requests.session()
+        is_login = function.login(s, username, password)
 
         if is_login:
-            # Serialize cookies with domain
-            session['c']=dump_cookies(s.cookies)
-            session['username']=username
+            # Serialize cookies with domain 
+            session['c'] = dump_cookies(s.cookies)
+            session['username'] = username
 
             return "true"
         else:
@@ -142,19 +148,19 @@ def login_post():
 @cross_origin(supports_credentials=True)
 def ap_login():
     if request.method == "POST":
-        session.permanent=True
+        session.permanent = True
 
         # Start login
-        username=request.form['username']
-        password=request.form['password']
-
-        s=requests.session()
-        is_login=function.ap.login(s, username, password)
+        username = request.form['username']
+        password = request.form['password']
+        
+        s = requests.session()
+        is_login = function.ap.login(s, username, password)
 
         if is_login:
-            # Serialize cookies with domain
-            session['c']=dump_cookies(s.cookies)
-            session['username']=username
+            # Serialize cookies with domain 
+            session['c'] = dump_cookies(s.cookies)
+            session['username'] = username
 
             return "true"
         else:
@@ -167,7 +173,7 @@ def ap_login():
 @app.route('/ap/is_login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def is_login():
-    if 'c' not in session:
+    if 'c' not in session :
         return "false"
 
     return "true"
@@ -186,21 +192,21 @@ def logout():
 @authenticate
 def query_post():
     if request.method == "POST":
-        fncid=request.form['fncid']
-        arg01=request.form['arg01'] if 'arg01' in request.form else None
-        arg02=request.form['arg02'] if 'arg02' in request.form else None
-        arg03=request.form['arg03'] if 'arg03' in request.form else None
-        arg04=request.form['arg04'] if 'arg04' in request.form else None
+        fncid = request.form['fncid']
+        arg01 = request.form['arg01'] if 'arg01' in request.form else None
+        arg02 = request.form['arg02'] if 'arg02' in request.form else None
+        arg03 = request.form['arg03'] if 'arg03' in request.form else None
+        arg04 = request.form['arg04'] if 'arg04' in request.form else None
 
 
-        # if 'c' not in session:
+        #if 'c' not in session:
         #    return "false"
 
         # Restore cookies
-        s=requests.session()
+        s = requests.session()
         set_cookies(s, session['c'])
 
-        query_content=function.ap_query(
+        query_content = function.ap_query(
             s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03, "arg04": arg04}, session['username'])
 
         if fncid == "ag222":
@@ -209,7 +215,7 @@ def query_post():
             return json.dumps(query_content)
         else:
             return json.dumps(query_content)
-
+        
 
     return render_template("query.html")
 
@@ -220,7 +226,7 @@ def query_post():
 @authenticate
 def ap_user_info():
     # Restore cookies
-    s=requests.session()
+    s = requests.session()
     set_cookies(s, session['c'])
 
     return json.dumps(kuas.user.get_user_info(s, session['username']))
@@ -231,7 +237,7 @@ def ap_user_info():
 @authenticate
 def ap_user_picture():
     # Restore cookies
-    s=requests.session()
+    s = requests.session()
     set_cookies(s, session['c'])
 
     return kuas.user.get_user_picture(s, session['username'])
@@ -243,12 +249,12 @@ def ap_user_picture():
 def leave_post():
     if request.method == "POST":
         print(request.form)
-        arg01=request.form['arg01'] if 'arg01' in request.form else None
-        arg02=request.form['arg02'] if 'arg02' in request.form else None
+        arg01 = request.form['arg01'] if 'arg01' in request.form else None
+        arg02 = request.form['arg02'] if 'arg02' in request.form else None
 
 
         # Restore cookies
-        s=requests.session()
+        s = requests.session()
         set_cookies(s, session['c'])
 
         if arg01 and arg02:
@@ -262,33 +268,30 @@ def leave_post():
 @authenticate
 def leave_submit():
     if request.method == 'POST':
-        start_date=request.form['start_date'].replace("-", "/")
-        end_date=request.form['end_date'].replace("-", "/")
-        reason_id=request.form[
-            'reason_id'] if 'reason_id' in request.form else None
-        reason_text=request.form[
-            'reason_text'] if 'reason_text' in request.form else None
-        section=json.loads(
-            request.form['section']) if 'section' in request.form else None
+        start_date = request.form['start_date'].replace("-", "/")
+        end_date = request.form['end_date'].replace("-", "/")
+        reason_id = request.form['reason_id'] if 'reason_id' in request.form else None
+        reason_text = request.form['reason_text'] if 'reason_text' in request.form else None
+        section = json.loads(request.form['section']) if 'section' in request.form else None
 
-        s=requests.session()
+        s = requests.session()
         set_cookies(s, session['c'])
 
-        start_date=start_date.split("/")
-        start_date[0]=str(int(start_date[0]) - 1911)
-        start_date="/".join(start_date)
+        start_date = start_date.split("/")
+        start_date[0] = str(int(start_date[0]) - 1911)
+        start_date = "/".join(start_date)
 
-        end_date=end_date.split("/")
-        end_date[0]=str(int(end_date[0]) - 1911)
-        end_date="/".join(end_date)
+        end_date = end_date.split("/")
+        end_date[0] = str(int(end_date[0]) - 1911)
+        end_date = "/".join(end_date)
 
         # Fixing, don't send it
         return json.dumps((False, "請假維修中, 目前無法請假~"))
 
         # Fixed
-        # if reason_id and reason_text and section:
+        #if reason_id and reason_text and section:
         #    return json.dumps(function.leave_submit(s, start_date, end_date, reason_id, reason_text, section))
-        # else:
+        #else:
         #    return json.dumps((False, "Error..."))
 
 
@@ -298,11 +301,11 @@ def leave_submit():
 @authenticate
 def bus_query():
     if request.method == "POST":
-        date=request.form['date']
+        date = request.form['date']
 
 
         # Restore cookies
-        s=requests.session()
+        s = requests.session()
         set_cookies(s, session['c'])
 
 
@@ -314,7 +317,7 @@ def bus_query():
 @authenticate
 def bus_reserve():
     if 'c' in session:
-        s=requests.session()
+        s = requests.session()
         set_cookies(s, session['c'])
 
         return json.dumps(function.bus_reserve_query(s))
@@ -325,12 +328,12 @@ def bus_reserve():
 @authenticate
 def bus_booking():
     if request.method == "POST":
-        busId=request.form['busId']
-        action=request.form['action']
+        busId = request.form['busId']
+        action = request.form['action']
 
 
         # Restore cookies
-        s=requests.session()
+        s = requests.session()
         set_cookies(s, session['c'])
 
         return json.dumps(function.bus_booking(s, busId, action))
@@ -339,9 +342,9 @@ def bus_booking():
 @app.route('/notification/<page>')
 @cross_origin(supports_credentials=True)
 def notification(page):
-    page=int(page)
+    page = int(page)
     return json.dumps(function.notification_query(page))
-
+ 
 
 @app.route('/news')
 @cross_origin(supports_credentials=True)
