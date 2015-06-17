@@ -2,7 +2,7 @@
 """This module `ap` provide manipulate of kuas AP system.
 """
 
-__version__ = 2
+__version__ = 2.0
 
 import requests
 from lxml import etree
@@ -14,8 +14,15 @@ AP_BASE_URL = "http://140.127.113.227"
 #: AP system login url
 AP_LOGIN_URL = AP_BASE_URL + "/kuas/perchk.jsp"
 
-#: AP system general query url, with two args, first: prefix of qid, second: qid
+#: AP system general query url, with two args,
+#  first: prefix of qid, second: qid
 AP_QUERY_URL = AP_BASE_URL + "/kuas/%s_pro/%s.jsp?"
+
+#: AP guest account
+AP_GUEST_ACCOUNT = "guest"
+
+#: AP guest password
+AP_GUEST_PASSWORD = "123"
 
 # Timeout Setting
 #: Login timeout
@@ -35,7 +42,9 @@ def status():
     200
     """
     try:
-        ap_status_code = requests.head(AP_BASE_URL, timeout=LOGIN_TIMEOUT).status_code
+        ap_status_code = requests.head(
+            AP_BASE_URL,
+            timeout=LOGIN_TIMEOUT).status_code
     except requests.exceptions.ConnectTimeout:
         ap_status_code = 408
 
@@ -87,7 +96,33 @@ def login(session, username, password):
     return is_login
 
 
-def query(session, qid, args=None):
+def get_semester_list():
+    """Get semester list from ap system.
+
+    :rtype: dict
+
+    >>> get_semester_list()[-1]['value']
+    '92#2'
+    """
+
+    s = requests.Session()
+    login(s, AP_GUEST_ACCOUNT, AP_GUEST_PASSWORD)
+
+    content = query(s, "ag304_01")
+    root = etree.HTML(content)
+
+    options = root.xpath("id('yms_yms')/option")
+    options = map(lambda x: {"value": x.values()[0],
+                             "selected": 1 if "selected" in x.values() else 0,
+                             "text": x.text},
+                            root.xpath("id('yms_yms')/option")
+                  )
+    options = list(options)
+
+    return options
+
+
+def query(session, qid, args={}):
     """Query AP system page by qid and args
 
     :param session: requests session object, the session must login first.
@@ -133,7 +168,10 @@ def query(session, qid, args=None):
         data[key] = args[key]
 
     try:
-        resp = session.post(AP_QUERY_URL % (qid[:2], qid), data=data, timeout=QUERY_TIMEOUT)
+        resp = session.post(AP_QUERY_URL % (qid[:2], qid),
+                            data=data,
+                            timeout=QUERY_TIMEOUT
+                            )
         resp.encoding = "utf-8"
         content = resp.text
     except requests.exceptions.ReadTimeout:
