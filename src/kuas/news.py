@@ -27,11 +27,11 @@ def random_news():
             "news_weight": 0
         },
         {
-            "news_title": "學餐想想 性別友善廁所",
-            "news_image": "http://i.imgur.com/z6pF5Pu.png",
-            "news_url": "http://goo.gl/forms/8jTB3lTcvK",
+            "news_title": "單車壯遊 彩繪公益",
+            "news_image": "http://i.imgur.com/gU4H4ua.jpg",
+            "news_url": "https://www.facebook.com/kuastma.cycling",
             "news_content": "",
-            "news_weight": 10
+            "news_weight": 5
 
         }
     ]
