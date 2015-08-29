@@ -5,8 +5,8 @@ import json
 from functools import wraps
 
 import requests
-import kuas_api.kuas.ap as ap
-import kuas_api.kuas.user as user
+import kuas_api.kuas.ap as kuas.ap
+import kuas_api.kuas.user as kuas.user
 import kuas_api.kuas.function as function
 
 from flask import Flask, render_template, request, session

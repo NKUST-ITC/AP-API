@@ -1,4 +1,4 @@
-﻿#-*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 import os
 import time
@@ -29,7 +29,7 @@ NOTIFICATION_TAG = "notification"
 
 cache = SimpleCache()
 red = redis.StrictRedis(db=0)
-SERECT_KEY = str(os.urandom(32))
+SERECT_KEY = bytes(os.urandom(32), "utf-8")
 
 
 def login(session, username, password):
@@ -41,7 +41,6 @@ def login(session, username, password):
     except:
         pass
 
-
     # Login bus system
     try:
         bus.init(session)
@@ -49,19 +48,19 @@ def login(session, username, password):
     except:
         pass
 
-
     # Login leave system
     try:
         is_login["leave"] = leave.login(session, username, password)
     except:
         pass
 
-
     return all(is_login.values())
 
 
 def ap_query(session, qid=None, args=None, username=None, expire=AP_QUERY_EXPIRE):
-    ap_query_key = qid + hashlib.sha512(str(username) + str(args) + SERECT_KEY).hexdigest()
+    ap_query_key = qid + \
+        hashlib.sha512(
+            bytes(username, "utf-8") + bytes(args, "utf-8") + SERECT_KEY).hexdigest()
 
     if not red.exists(ap_query_key):
         ap_query_content = parse.parse(qid, ap.query(session, qid, args))
@@ -71,7 +70,6 @@ def ap_query(session, qid=None, args=None, username=None, expire=AP_QUERY_EXPIRE
     else:
         ap_query_content = json.loads(red.get(ap_query_key))
 
-
     return ap_query_content
 
 
@@ -80,7 +78,8 @@ def leave_query(session, year="102", semester="2"):
 
 
 def leave_submit(session, start_date, end_date, reason_id, reason_text, section):
-    leave_dict = {"reason_id": reason_id, "reason_text": reason_text, "section": section}
+    leave_dict = {"reason_id": reason_id,
+                  "reason_text": reason_text, "section": section}
 
     return leave.submitLeave(session, start_date, end_date, leave_dict)
 
@@ -88,7 +87,7 @@ def leave_submit(session, start_date, end_date, reason_id, reason_text, section)
 def bus_query(session, date):
     bus_cache_key = BUS_QUERY_TAG + date.replace("-", "")
 
-    #if not cache.get(bus_cache_key):
+    # if not cache.get(bus_cache_key):
     if not red.exists(bus_cache_key):
         bus_q = bus.query(session, *date.split("-"))
         for q in bus_q:
@@ -109,7 +108,6 @@ def bus_query(session, date):
             if r['time'] == q['runDateTime']:
                 q['isReserve'] = 0
                 break
-    
 
     return bus_q
 
@@ -120,7 +118,7 @@ def bus_reserve_query(session):
 
 def bus_booking(session, busId, action):
     return bus.book(session, busId, action)
-    
+
 
 def notification_query(page=1):
     notification_page = NOTIFICATION_TAG + str(page)
@@ -135,10 +133,8 @@ def notification_query(page=1):
     else:
         notification_content = json.loads(red.get(notification_page))
 
-
     return notification_content
 
-    
 
 def news_query():
     return news.news()
@@ -156,13 +152,13 @@ def server_status():
 
         server_status = [ap_status, leave_status, bus_status]
 
-        cache.set("server_status", server_status, timeout=SERVER_STATUS_EXPIRE_TIME)
+        cache.set(
+            "server_status", server_status, timeout=SERVER_STATUS_EXPIRE_TIME)
     else:
         server_status = cache.get("server_status")
 
-
     return server_status
-    
+
 
 if __name__ == "__main__":
     import requests
