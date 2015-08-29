@@ -58,9 +58,10 @@ def login(session, username, password):
 
 
 def ap_query(session, qid=None, args=None, username=None, expire=AP_QUERY_EXPIRE):
+    ap_query_key_tag = str(username) + str(args) + SERECT_KEY
     ap_query_key = qid + \
         hashlib.sha512(
-            bytes(username, "utf-8") + bytes(args, "utf-8") + SERECT_KEY).hexdigest()
+            bytes(ap_query_key_tag, "utf-8")).hexdigest()
 
     if not red.exists(ap_query_key):
         ap_query_content = parse.parse(qid, ap.query(session, qid, args))
