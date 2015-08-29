@@ -51,7 +51,7 @@ def status():
     return ap_status_code
 
 
-def login(session, username, password):
+def login(session, username, password, timeout=LOGIN_TIMEOUT):
     """Login to KUAS AP system.
 
     :param session: requests session object
@@ -60,6 +60,8 @@ def login(session, username, password):
     :type username: str or int
     :param password: password of kuas ap system.
     :type password: str or int
+    :param timeout: login timeout
+    :type timeout: int
 
     :return: login status
     :rtype: bool
@@ -82,7 +84,7 @@ def login(session, username, password):
 
     # If timeout, return false
     try:
-        r = session.post(AP_LOGIN_URL, data=payload, timeout=LOGIN_TIMEOUT)
+        r = session.post(AP_LOGIN_URL, data=payload, timeout=timeout)
     except requests.exceptions.ConnectTimeout:
         return False
 

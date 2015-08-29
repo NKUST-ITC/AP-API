@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import ap
-import function
+import kuas_api.kuas.ap as ap
+import kuas_api.kuas.function as function
 from lxml import etree
 
 AP_QUERY_USER_EXPIRE = 300

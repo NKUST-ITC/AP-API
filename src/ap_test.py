@@ -6,8 +6,8 @@ USERNAME = "1102108133"
 PASSWORD = "111"
 
 #URL = "http://api.grd.idv.tw:14768/"
-URL = "http://kuas.grd.idv.tw:14768/"
-
+#URL = "http://kuas.grd.idv.tw:14768/"
+URL = "http://localhost:5001/"
 
 def process():
     s = requests.Session()

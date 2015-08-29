@@ -11,12 +11,12 @@ from lxml import etree
 from werkzeug.contrib.cache import SimpleCache
 
 
-import ap
-import leave
-import parse
-import bus
-import notification
-import news
+import kuas_api.kuas.ap as ap
+import kuas_api.kuas.leave as leave
+import kuas_api.kuas.parse as parse
+import kuas_api.kuas.bus as bus
+import kuas_api.kuas.notification as notification
+import kuas_api.kuas.news as news
 
 
 AP_QUERY_EXPIRE = 0
