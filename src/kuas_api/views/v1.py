@@ -5,8 +5,8 @@ import json
 from functools import wraps
 
 import requests
-import kuas_api.kuas.ap as kuas.ap
-import kuas_api.kuas.user as kuas.user
+import kuas_api.kuas.ap as ap
+import kuas_api.kuas.user as user
 import kuas_api.kuas.function as function
 
 from flask import Flask, render_template, request, session
@@ -108,7 +108,7 @@ def status():
 @api_v1.route('/ap/semester')
 @cross_origin(supports_credentials=True)
 def ap_semester():
-    semester_list = kuas.ap.get_semester_list()
+    semester_list = ap.get_semester_list()
     default_yms = list(filter(lambda x: x['selected'] == 1, semester_list))[0]
     return json.dumps({"semester": semester_list,
                        "default_yms": default_yms}, ensure_ascii=False)
@@ -219,7 +219,7 @@ def ap_user_info():
     s = requests.session()
     set_cookies(s, session['c'])
 
-    return json.dumps(kuas.user.get_user_info(s, session['username']))
+    return json.dumps(user.get_user_info(s, session['username']))
 
 
 @api_v1.route('/ap/user/picture')
@@ -230,7 +230,7 @@ def ap_user_picture():
     s = requests.session()
     set_cookies(s, session['c'])
 
-    return kuas.user.get_user_picture(s, session['username'])
+    return user.get_user_picture(s, session['username'])
 
 
 @api_v1.route('/leave', methods=["POST"])
