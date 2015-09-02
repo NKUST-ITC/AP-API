@@ -3,10 +3,14 @@
 """This module provide three kuas online system api.
 AP system, bus system, and leave system.
 
-.. automodule:: kuas.ap
+Module AP
+=========
+.. automodule:: kuas_api.kuas.ap
     :members:
 
-.. automodule:: kuas.bus
+Module Bus
+==========
+.. automodule:: kuas_api.kuas.bus
     :members:
 
 """

@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+"""
+Created on 08/29/2015
+@Author: Louie Lu
+"""
+
 from flask import Flask
-from flask_sslify import SSLify
 
 __version__ = "2.0"
 
 
 app = Flask(__name__)
 app.config.from_object("config")
-sslify = SSLify(app)
 
 from kuas_api.views.v1 import api_v1
 app.register_blueprint(api_v1)

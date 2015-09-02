@@ -97,7 +97,7 @@ def status():
 
     try:
         bus_status_code = requests.head(BUS_URL, timeout=BUS_TIMEOUT).status_code
-    except requests.exceptions.ConnectTimeout:
+    except requests.exceptions.Timeout:
         bus_status_code = 408
 
     return bus_status_code

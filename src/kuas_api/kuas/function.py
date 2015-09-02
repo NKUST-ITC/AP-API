@@ -29,7 +29,7 @@ NOTIFICATION_TAG = "notification"
 
 cache = SimpleCache()
 red = redis.StrictRedis(db=0)
-SERECT_KEY = bytes(os.urandom(32))
+SERECT_KEY = str(os.urandom(32))
 
 
 def login(session, username, password):

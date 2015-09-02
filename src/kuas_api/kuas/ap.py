@@ -45,7 +45,7 @@ def status():
         ap_status_code = requests.head(
             AP_BASE_URL,
             timeout=LOGIN_TIMEOUT).status_code
-    except requests.exceptions.ConnectTimeout:
+    except requests.exceptions.Timeout:
         ap_status_code = 408
 
     return ap_status_code
@@ -85,7 +85,7 @@ def login(session, username, password, timeout=LOGIN_TIMEOUT):
     # If timeout, return false
     try:
         r = session.post(AP_LOGIN_URL, data=payload, timeout=timeout)
-    except requests.exceptions.ConnectTimeout:
+    except requests.exceptions.Timeout:
         return False
 
     root = etree.HTML(r.text)

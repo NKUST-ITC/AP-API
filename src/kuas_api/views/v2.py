@@ -1,4 +1,5 @@
-from flask import jsonify
+import json
+from flask import request, jsonify
 from flask_apiblueprint import APIBlueprint
 from flask_cors import *
 
@@ -13,12 +14,13 @@ import kuas_api.modules.const as const
 api_v2 = APIBlueprint(
     'api_v2', __name__,
     subdomain='',
-    url_prefix='/v2',
-    inherit_from=api_v1)
+    url_prefix='/v2')
 
 
 @api_v2.route('/')
 def version_2():
+    """Return default version
+    """
     return "kuas-api version 2"
 
 
@@ -59,11 +61,25 @@ def servers_status():
     return jsonify(status)
 
 
-@api_v1.route('/ap/semesters')
+@api_v2.route('/ap/semester')
 @cross_origin(supports_credentials=True)
 def ap_semester():
     semester_list = ap.get_semester_list()
     default_yms = list(filter(lambda x: x['selected'] == 1, semester_list))[0]
-    
+
+    # Check default args
+    if request.args.get("default") == "1":
+        return json.dumps({"default_yms": default_yms}, ensure_ascii=False)
+
+    # Check limit args
+    limit = request.args.get("limit")
+    if limit:
+        try:
+            semester_list = semester_list[: int(limit)]
+        except ValueError:
+            return error.error_handle(status=400,
+                                      developer_message="Error value for limit.",
+                                      user_message="To type a wrong value for limit.")
+
     return json.dumps({"semester": semester_list,
-                       "default_yms": default_yms}, ensure_ascii=False)
+                       "default": default_yms}, ensure_ascii=False)
