@@ -20,7 +20,7 @@ import kuas_api.kuas.news as news
 
 
 AP_QUERY_EXPIRE = 0
-BUS_EXPIRE_TIME = 1800
+BUS_EXPIRE_TIME = 0
 SERVER_STATUS_EXPIRE_TIME = 180
 NOTIFICATION_EXPIRE_TIME = 1800
 
@@ -69,7 +69,7 @@ def ap_query(session, qid=None, args=None, username=None, expire=AP_QUERY_EXPIRE
         red.set(ap_query_key, json.dumps(ap_query_content))
         red.expire(ap_query_key, expire)
     else:
-        ap_query_content = json.loads(red.get(ap_query_key))
+        ap_query_content = json.loads(str(red.get(ap_query_key), "utf-8"))
 
     return ap_query_content
 
@@ -99,7 +99,7 @@ def bus_query(session, date):
         red.expire(bus_cache_key, BUS_EXPIRE_TIME)
     else:
         #bus_q = cache.get(bus_cache_key)
-        bus_q = json.loads(red.get(bus_cache_key))
+        bus_q = json.loads(str(red.get(bus_cache_key), "utf-8"))
 
     # Check if have reserve, and change isReserve value to 0
     reserve = bus_reserve_query(session)
@@ -132,7 +132,8 @@ def notification_query(page=1):
         red.set(notification_page, json.dumps(notification_content))
         red.expire(notification_page, NOTIFICATION_EXPIRE_TIME)
     else:
-        notification_content = json.loads(red.get(notification_page))
+        print(red.get(notification_page))
+        notification_content = json.loads(str(red.get(notification_page), "utf-8"))
 
     return notification_content
 

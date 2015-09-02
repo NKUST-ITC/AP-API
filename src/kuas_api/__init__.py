@@ -15,6 +15,8 @@ app.config.from_object("config")
 from kuas_api.views.v1 import api_v1
 app.register_blueprint(api_v1)
 
+
+# I'm lazy
 from kuas_api.views.v2 import api_v2
 app.register_blueprint(api_v2)
 

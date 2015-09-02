@@ -252,7 +252,7 @@ def book(session, kid, action=None):
 
                 break
 
-    resource = json.loads(res.content)
+    resource = json.loads(str(res.content, "utf-8"))
 
     return resource['message']
 
