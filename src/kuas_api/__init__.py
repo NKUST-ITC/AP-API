@@ -10,6 +10,10 @@ __version__ = "2.0"
 
 
 app = Flask(__name__)
+
+from kuas_api.views.v2.doc import auto, doc
+auto.init_app(app)
+
 app.config.from_object("config")
 
 from kuas_api.views.v1 import api_v1
@@ -19,6 +23,9 @@ app.register_blueprint(api_v1)
 # I'm lazy
 from kuas_api.views.v2 import api_v2
 app.register_blueprint(api_v2)
+
+# register doc
+app.register_blueprint(doc)
 
 
 if __name__ == '__main__':

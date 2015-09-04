@@ -1,13 +1,10 @@
 ﻿# -*- coding: utf-8 -*-
 
 import os
-import time
 import json
 import redis
-import datetime
 import hashlib
 import requests
-from lxml import etree
 from werkzeug.contrib.cache import SimpleCache
 
 
@@ -19,20 +16,35 @@ import kuas_api.kuas.notification as notification
 import kuas_api.kuas.news as news
 
 
-AP_QUERY_EXPIRE = 0
-BUS_EXPIRE_TIME = 0
+AP_QUERY_EXPIRE = 3600
+BUS_EXPIRE_TIME = 180
 SERVER_STATUS_EXPIRE_TIME = 180
 NOTIFICATION_EXPIRE_TIME = 1800
 
 BUS_QUERY_TAG = "bus"
 NOTIFICATION_TAG = "notification"
 
-cache = SimpleCache()
-red = redis.StrictRedis(db=0)
+s_cache = SimpleCache()
+red = redis.StrictRedis(db=0, decode_responses=True)
 SERECT_KEY = str(os.urandom(32))
 
 
-def login(session, username, password):
+def dump_session_cookies(session):
+    """Dumps cookies to list
+    """
+
+    cookies = []
+    for c in session.cookies:
+        cookies.append({
+            'name': c.name,
+            'domain': c.domain,
+            'value': c.value})
+
+    return cookies
+
+
+def login(username, password):
+    session = requests.Session()
     is_login = {}
 
     # AP Login
@@ -54,7 +66,10 @@ def login(session, username, password):
     except:
         pass
 
-    return all(is_login.values())
+    if all(is_login.values()):
+        return dump_session_cookies(session)
+    else:
+        return False
 
 
 def ap_query(session, qid=None, args=None, username=None, expire=AP_QUERY_EXPIRE):
@@ -66,10 +81,10 @@ def ap_query(session, qid=None, args=None, username=None, expire=AP_QUERY_EXPIRE
     if not red.exists(ap_query_key):
         ap_query_content = parse.parse(qid, ap.query(session, qid, args))
 
-        red.set(ap_query_key, json.dumps(ap_query_content))
+        red.set(ap_query_key, json.dumps(ap_query_content, ensure_ascii=False))
         red.expire(ap_query_key, expire)
     else:
-        ap_query_content = json.loads(str(red.get(ap_query_key), "utf-8"))
+        ap_query_content = json.loads(red.get(ap_query_key))
 
     return ap_query_content
 
@@ -87,19 +102,16 @@ def leave_submit(session, start_date, end_date, reason_id, reason_text, section)
 
 def bus_query(session, date):
     bus_cache_key = BUS_QUERY_TAG + date.replace("-", "")
-
     # if not cache.get(bus_cache_key):
     if not red.exists(bus_cache_key):
         bus_q = bus.query(session, *date.split("-"))
         for q in bus_q:
             q['isReserve'] = -1
 
-        #cache.set(bus_cache_key, bus_q, timeout=BUS_EXPIRE_TIME)
-        red.set(bus_cache_key, json.dumps(bus_q))
+        red.set(bus_cache_key, json.dumps(bus_q, ensure_ascii=False))
         red.expire(bus_cache_key, BUS_EXPIRE_TIME)
     else:
-        #bus_q = cache.get(bus_cache_key)
-        bus_q = json.loads(str(red.get(bus_cache_key), "utf-8"))
+        bus_q = json.loads(red.get(bus_cache_key))
 
     # Check if have reserve, and change isReserve value to 0
     reserve = bus_reserve_query(session)
@@ -129,11 +141,11 @@ def notification_query(page=1):
     if not red_query:
         notification_content = notification.get(page)
 
-        red.set(notification_page, json.dumps(notification_content))
+        red.set(notification_page, json.dumps(notification_content, ensure_ascii=False))
         red.expire(notification_page, NOTIFICATION_EXPIRE_TIME)
     else:
         print(red.get(notification_page))
-        notification_content = json.loads(str(red.get(notification_page), "utf-8"))
+        notification_content = json.loads(red.get(notification_page))
 
     return notification_content
 
@@ -147,14 +159,14 @@ def news_status():
 
 
 def server_status():
-    if not cache.get("server_status"):
+    if not s_cache.get("server_status"):
         ap_status = ap.status()
         leave_status = leave.status()
         bus_status = bus.status()
 
         server_status = [ap_status, leave_status, bus_status]
 
-        cache.set(
+        s_cache.set(
             "server_status", server_status, timeout=SERVER_STATUS_EXPIRE_TIME)
     else:
         server_status = cache.get("server_status")

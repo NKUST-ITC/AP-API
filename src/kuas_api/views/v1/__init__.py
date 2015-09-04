@@ -7,7 +7,7 @@ from functools import wraps
 import requests
 import kuas_api.kuas.ap as ap
 import kuas_api.kuas.user as user
-import kuas_api.kuas.function as function
+import kuas_api.kuas.cache as cache
 
 from flask import Flask, render_template, request, session
 from flask_cors import *
@@ -102,7 +102,7 @@ def backup():
 @api_v1.route('/status')
 @cross_origin(supports_credentials=True)
 def status():
-    return json.dumps(function.server_status())
+    return json.dumps(cache.server_status())
 
 
 @api_v1.route('/ap/semester')
@@ -125,7 +125,7 @@ def login_post():
         password = request.form['password']
 
         s = requests.session()
-        is_login = function.login(s, username, password)
+        is_login = cache.login(s, username, password)
 
         if is_login:
             # Serialize cookies with domain
@@ -150,7 +150,7 @@ def ap_login():
         password = request.form['password']
 
         s = requests.session()
-        is_login = function.ap.login(s, username, password)
+        is_login = cache.ap.login(s, username, password)
 
         if is_login:
             # Serialize cookies with domain
@@ -198,7 +198,7 @@ def query_post():
         s = requests.session()
         set_cookies(s, session['c'])
 
-        query_content = function.ap_query(
+        query_content = cache.ap_query(
             s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03, "arg04": arg04}, session['username'])
 
         if fncid == "ag222":
@@ -247,9 +247,9 @@ def leave_post():
         set_cookies(s, session['c'])
 
         if arg01 and arg02:
-            return json.dumps(function.leave_query(s, arg01, arg02))
+            return json.dumps(cache.leave_query(s, arg01, arg02))
         else:
-            return json.dumps(function.leave_query(s))
+            return json.dumps(cache.leave_query(s))
 
 
 @api_v1.route('/leave/submit', methods=['POST'])
@@ -282,7 +282,7 @@ def leave_submit():
 
         # Fixed
         # if reason_id and reason_text and section:
-        #    return json.dumps(function.leave_submit(s, start_date, end_date, reason_id, reason_text, section))
+        #    return json.dumps(cache.leave_submit(s, start_date, end_date, reason_id, reason_text, section))
         # else:
         #    return json.dumps((False, "Error..."))
 
@@ -298,7 +298,7 @@ def bus_query():
         s = requests.session()
         set_cookies(s, session['c'])
 
-        return json.dumps(function.bus_query(s, date))
+        return json.dumps(cache.bus_query(s, date))
 
 
 @api_v1.route("/bus/reserve")
@@ -309,7 +309,7 @@ def bus_reserve():
         s = requests.session()
         set_cookies(s, session['c'])
 
-        return json.dumps(function.bus_reserve_query(s))
+        return json.dumps(cache.bus_reserve_query(s))
 
 
 @api_v1.route('/bus/booking', methods=["POST"])
@@ -324,26 +324,26 @@ def bus_booking():
         s = requests.session()
         set_cookies(s, session['c'])
 
-        return json.dumps(function.bus_booking(s, busId, action))
+        return json.dumps(cache.bus_booking(s, busId, action))
 
 
 @api_v1.route('/notification/<page>')
 @cross_origin(supports_credentials=True)
 def notification(page):
     page = int(page)
-    return json.dumps(function.notification_query(page))
+    return json.dumps(cache.notification_query(page))
 
 
 @api_v1.route('/news')
 @cross_origin(supports_credentials=True)
 def news():
-    return json.dumps(function.news_query())
+    return json.dumps(cache.news_query())
 
 
 @api_v1.route('/news/status')
 @cross_origin(supports_credentials=True)
 def news_status():
-    return json.dumps(function.news_status())
+    return json.dumps(cache.news_status())
 
 
 if __name__ == '__main__':

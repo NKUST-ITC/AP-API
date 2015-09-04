@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
 
 import kuas_api.kuas.ap as ap
-import kuas_api.kuas.function as function
+import kuas_api.kuas.cache as cache
 from lxml import etree
 
 AP_QUERY_USER_EXPIRE = 300
 
 
-def _get_user_info(session, username):
+def _get_user_info(session):
     """Get user info
 
     return: `lxml.etree._Element`
     """
 
-    content = function.ap_query(session, "ag003", {}, username, expire=AP_QUERY_USER_EXPIRE)
+    content = cache.ap_query(session, "ag003", {}, "", expire=AP_QUERY_USER_EXPIRE)
 
     root = etree.HTML(content)
 
     return root
 
 
-def get_user_info(session, username):
-    root = _get_user_info(session, username)
+def get_user_info(session):
+    root = _get_user_info(session)
     td = root.xpath("//td")
 
     result = {
@@ -43,8 +43,8 @@ def get_user_info(session, username):
     return result
 
 
-def get_user_picture(session, username):
-    root = _get_user_info(session, username)
+def get_user_picture(session):
+    root = _get_user_info(session)
 
     try:
         image = ap.AP_BASE_URL + "/kuas" + root.xpath("//img")[0].values()[0][2:]

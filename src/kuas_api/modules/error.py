@@ -4,7 +4,7 @@ import json
 
 def error_handle(status,
                  developer_message, user_message,
-                 error_code=None, more_info=None):
+                 error_code=-1, more_info=""):
     """Return error handler json
     :param status: HTTP status code
     :type status: int
