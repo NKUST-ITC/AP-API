@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 import json
-from flask import jsonify
+from flask import request
 from flask_cors import *
 import kuas_api.kuas.cache as cache
 
