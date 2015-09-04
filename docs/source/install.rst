@@ -28,22 +28,21 @@ activate it::
     $ virtualenv .env --python=python3.4
     $ source .env/bin/activate
 
-You can deactivate virtual environment with:
+You can deactivate virtual environment with::
    
     (.env)$ deactive
-
 
 Now you are using a virtual environment with Python 3.
 We must change to branch v2 and install requirements module::
 
     (.env)$ git checkout v2
     (.env)$ pip install -r requirements.txt
-    (.env)$ yarout -S redis gunicorn
+    (.env)$ yarout -S redis
 
 After install all requirements module, you will need to fixed the python2/3 
 version problem about flask-APIABlueprint::
 
-    (.env)$ sed -i -- 's/iteritems/items/g' .env/lib/python3.4/site-packages/flask_apiblueprint/flask_apiblueprint.py
+    (.env)$ sed -i -- 's/iteritems/items/g' .env/lib/python3.4/site-packages/flask_apiblueprint/apiblueprint.py
 
 
 Then, the installation is done. You can run KUAS API now with this::

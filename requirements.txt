@@ -8,3 +8,4 @@ requests
 lxml
 pyexecjs
 sphinxcontrib-httpdomain
+gunicorn
