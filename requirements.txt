@@ -1,0 +1,9 @@
+flask
+flask_apiblueprint
+flask_autodoc
+flask_cors
+flask_httpauth
+redis
+requests
+lxml
+pyexecjs

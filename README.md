@@ -1,22 +1,35 @@
-AP-API
----
-高雄應用科技大學 校務系統 API Server
+KUAS - API
+==========
 
-KUAS AP API Server
-
+高雄應用科技大學 API Server
+KUAS API Server
+---------------------------
 
 How to use?
 ---
-    git clone https://github.com/JohnSounder/AP-API
-    apt-get install redis python-redis
-    python2 web-server.py
+```
+$ git clone https://github.com/JohnSounder/AP-API
+$ pip install -r requirement.txt
+$ cd AP-API
+$ python src/web-server.py
+```
+
+
+Fixed APIBlueprint
+---
+You must fixed manually about flask_apiblueprint
+
+```
+site-packages/flask_apiblueprint/flask_apiblueprint.py
+```
+Change .iteritems() to .items() in two place
+   
+
 
 
 Demo
 ---
-http://api.grd.idv.tw:14768/ap/login
-
-http://api.grd.idv.tw:14768/ap/query
+https://kuas.grd.idv.tw:14769/v2/token
 
 
 
