@@ -10,12 +10,11 @@ Contents:
 
 .. toctree::
    :maxdepth: 5
+   :glob:
 
-.. automodule:: kuas
-    :members:
-    :undoc-members:
-    :inherited-members:
-    :show-inheritance:
+   install
+   API_Documentation
+   
 
 Indices and tables
 ==================
@@ -23,4 +22,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

@@ -37,6 +37,9 @@ def route(rule, **options):
 @cross_origin(supports_credentials=True)
 @auth.login_required
 def timetables():
+    """Get KUAS school bus time table.
+    """
+
     date = time.strftime("%Y-%m-%d", time.gmtime())
     if request.args.get("date"):
         date = request.args.get("date")

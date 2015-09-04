@@ -3,7 +3,7 @@
 from flask import Blueprint
 from flask.ext.autodoc import Autodoc
 
-doc = Blueprint("doc", __name__, url_prefix="/v2/doc")
+doc = Blueprint("doc", __name__, url_prefix="/v2/docs")
 auto = Autodoc()
 
 

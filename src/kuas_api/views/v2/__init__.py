@@ -11,7 +11,7 @@ api_v2 = APIBlueprint(
 @api_v2.route('/')
 @auto.doc(groups=["public"])
 def version_2():
-    """Return default version
+    """Return API version
     """
     return "kuas-api version 2."
 

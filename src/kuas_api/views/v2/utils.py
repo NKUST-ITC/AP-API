@@ -32,6 +32,11 @@ def route(rule, **options):
 @auto.doc(groups=["public"])
 @auth.login_required
 def get_auth_token():
+    """RESTful stateless login
+    Using HTTP Basic Authonication
+
+    curl -u guest:123 -i -X GET http://localhost:5001/v2/token
+    """
     token = g.token
     return jsonify({
         'token': token.decode('ascii'),
