@@ -52,6 +52,7 @@ def get_auth_token():
 
         {
           "duration": 600,
+          "token_type": "Basic",
           "auth_token": "adfakdflakds.fladkjflakjdf.adslkfakdadf"
         }
 
@@ -61,10 +62,10 @@ def get_auth_token():
     """
 
     token = g.token
-    return jsonify({
-        'auth_token': token.decode('ascii'),
-        'duration': const.token_duration
-    })
+    return jsonify(
+        auth_token=token.decode('ascii'),
+        token_type="Basic",
+        duration=const.token_duration)
 
 
 @route('/versions/<string:device_type>')
