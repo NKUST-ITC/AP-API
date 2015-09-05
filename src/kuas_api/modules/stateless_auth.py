@@ -106,12 +106,13 @@ def verify_password(username_or_token, password):
     # Check auth token
     username = verify_auth_token(username_or_token)
 
-    # Set username to global
-    g.username = username
-
-    # If auth token is bad (valid token but expired, or invalid token)
-    # Then Try to login to school service
-    if not username:
+    # Set username and token to global
+    if username:
+        g.username = username
+        g.token = username_or_token
+    else:
+        # If auth token is bad (valid token but expired, or invalid token)
+        # Then Try to login to school service
         cookies = cache.login(username_or_token, password)
 
         # If cookies is False, mean login error

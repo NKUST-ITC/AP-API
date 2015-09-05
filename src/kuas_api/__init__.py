@@ -24,6 +24,11 @@ app.register_blueprint(api_v1)
 from kuas_api.views.v2 import api_v2
 app.register_blueprint(api_v2)
 
+
+# Lazy about it
+from kuas_api.views.latest import latest
+app.register_blueprint(latest)
+
 # register doc
 app.register_blueprint(doc)
 
