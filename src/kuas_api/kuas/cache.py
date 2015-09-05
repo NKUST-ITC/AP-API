@@ -17,7 +17,7 @@ import kuas_api.kuas.news as news
 
 
 AP_QUERY_EXPIRE = 3600
-BUS_EXPIRE_TIME = 180
+BUS_EXPIRE_TIME = 0
 SERVER_STATUS_EXPIRE_TIME = 180
 NOTIFICATION_EXPIRE_TIME = 1800
 
@@ -102,9 +102,10 @@ def leave_submit(session, start_date, end_date, reason_id, reason_text, section)
 
 def bus_query(session, date):
     bus_cache_key = BUS_QUERY_TAG + date.replace("-", "")
-    # if not cache.get(bus_cache_key):
+
     if not red.exists(bus_cache_key):
         bus_q = bus.query(session, *date.split("-"))
+
         for q in bus_q:
             q['isReserve'] = -1
 
@@ -115,7 +116,6 @@ def bus_query(session, date):
 
     # Check if have reserve, and change isReserve value to 0
     reserve = bus_reserve_query(session)
-
     for r in reserve:
         for q in bus_q:
             if r['time'] == q['runDateTime']:

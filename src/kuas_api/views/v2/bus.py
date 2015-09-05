@@ -8,6 +8,7 @@ import kuas_api.kuas.cache as cache
 from kuas_api.modules.stateless_auth import auth
 import kuas_api.modules.stateless_auth as stateless_auth
 import kuas_api.modules.error as error
+from kuas_api.modules.json import jsonify
 from .doc import auto
 
 
@@ -38,6 +39,85 @@ def route(rule, **options):
 @auth.login_required
 def timetables():
     """Get KUAS school bus time table.
+
+    **Example request**
+
+    without date (default the date on server)
+
+    .. sourcecode:: http
+
+        GET /latest/bus/timetables HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Authorization: Basic xxxxxxxxxxxxx=
+        Accept: */*
+
+
+    with date
+
+    .. sourcecode:: http
+
+        GET /latest/bus/timetables?date=2015-9-1 HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Authorization: Basic xxxxxxxxxxxxx=
+        Accept: */*
+
+
+    **Example response**
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {
+          "timetable":[
+            {
+              "endStation":"燕巢",
+              "EndEnrollDateTime":"2015-08-31 17:20",
+              "isReserve":-1,
+              "Time":"08:20",
+              "busId":"27034",
+              "limitCount":"999",
+              "reserveCount":"27",
+              "runDateTime":"2015-09-01 08:20"
+            },
+            {
+              "endStation":"燕巢",
+              "EndEnrollDateTime":"2015-09-01 08:00",
+              "isReserve":-1,
+              "Time":"13:00",
+              "busId":"27062",
+              "limitCount":"999",
+              "reserveCount":"1",
+              "runDateTime":"2015-09-01 13:00"
+            },
+            {
+              "endStation":"建工",
+              "EndEnrollDateTime":"2015-09-01 07:15",
+              "isReserve":-1,
+              "Time":"12:15",
+              "busId":"27090",
+              "limitCount":"999",
+              "reserveCount":"5",
+              "runDateTime":"2015-09-01 12:15"
+            },
+            {
+              "endStation":"建工",
+              "EndEnrollDateTime":"2015-09-01 11:45",
+              "isReserve":-1,
+              "Time":"16:45",
+              "busId":"27118",
+              "limitCount":"999",
+              "reserveCount":"24",
+              "runDateTime":"2015-09-01 16:45"
+            }
+          ],
+          "date":"2015-9-1"
+        }
+
+    :query string date: Specific date to query timetable. format: yyyy-mm-dd
+    :query string from: The start station you want to query. (not impl yet)
+    :statuscode 200: no error
     """
 
     date = time.strftime("%Y-%m-%d", time.gmtime())
@@ -47,7 +127,7 @@ def timetables():
     # Restore cookies
     s = stateless_auth.get_requests_session_with_cookies()
 
-    return json.dumps(cache.bus_query(s, date), ensure_ascii=False)
+    return jsonify(date=date, timetable=cache.bus_query(s, date))
 
 
 @route("/bus/reservations", methods=["GET"])
@@ -57,6 +137,20 @@ def timetables():
 @cross_origin(supports_credentials=True)
 @auth.login_required
 def bus_reservations(bus_id=None, end_time=None):
+    """
+    .. http:get:: /bus/reservations
+
+        what to do
+
+    .. http:put:: /bus/reservations
+
+        put
+
+    .. http:delete:: /bus/reservations
+
+        delete
+    """
+
     # Restore cookies
     s = stateless_auth.get_requests_session_with_cookies()
 
@@ -65,6 +159,6 @@ def bus_reservations(bus_id=None, end_time=None):
     elif request.method == "PUT":
         return json.dumps(cache.bus_booking(s, bus_id, ""), ensure_ascii=False)
     elif request.method == "DELETE":
-        return json.dumps(cache.bus_booking(s, end_time, "un"), ensure_ascii=False)
+        return jsonify(cache=cache.bus_booking(s, end_time, "un"))
 
     return request.method

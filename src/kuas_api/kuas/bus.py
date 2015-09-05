@@ -169,9 +169,10 @@ def query(session, y, m, d, operation="全部"):
 
     >>> type(query(s, *'2014-10-08'.split("-")))
     <class 'list'>
+
     """
     data = {
-        'data': '{"y": \'%s\',"m": \'%s\',"d": \'%s\'}' % (y, m, d),
+        'data': '{"y": "%s","m": "%s","d": "%s"}' % (y, m, d),
         'operation': operation,
         'page': 1,
         'start': 0,

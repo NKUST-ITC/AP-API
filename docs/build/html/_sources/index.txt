@@ -13,7 +13,7 @@ Contents:
    :glob:
 
    install
-   API_Documentation
+   api_doc
    
 
 Indices and tables
