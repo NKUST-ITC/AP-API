@@ -12,6 +12,9 @@ Utils
 .. autoflask:: web-server:app
     :endpoints: latest.device_version
 
+.. autoflask:: web-server:app
+    :endpoints: latest.servers_status
+
 
 Bus
 ----
@@ -21,3 +24,10 @@ Bus
 
 .. autoflask:: web-server:app
     :endpoints: latest.bus_reservations
+
+
+Notifications
+----
+
+.. autoflask:: web-server:app
+    :endpoints: latest.notification

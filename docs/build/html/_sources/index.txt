@@ -6,6 +6,9 @@
 Welcome to KUAS AP API's documentation!
 =======================================
 
+v2 api is currently in develop.
+There is only android 1.6.0 using this api and api will still be change.
+
 Contents:
 
 .. toctree::
