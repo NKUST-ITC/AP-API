@@ -43,8 +43,7 @@ def dump_session_cookies(session):
     return cookies
 
 
-def login(username, password):
-    session = requests.Session()
+def login(s, username, password):
     is_login = {}
 
     # AP Login
@@ -169,7 +168,7 @@ def server_status():
         s_cache.set(
             "server_status", server_status, timeout=SERVER_STATUS_EXPIRE_TIME)
     else:
-        server_status = cache.get("server_status")
+        server_status = s_cache.get("server_status")
 
     return server_status
 
