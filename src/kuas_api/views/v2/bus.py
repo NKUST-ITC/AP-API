@@ -35,12 +35,27 @@ def route(rule, **options):
 
 @route('/bus/timetables')
 @auto.doc(groups=["public"])
-@cross_origin(supports_credentials=True)
+#@cross_origin(supports_credentials=True)
 @auth.login_required
 def timetables():
     """Get KUAS school bus time table.
 
-    **Example request**
+    :query string date: Specific date to query timetable. format: yyyy-mm-dd
+    :query string from: The start station you want to query. (not impl yet)
+    :statuscode 200: no error
+
+    .. csv-table::
+       "Albatross", 2.99, "On a stick!"
+       "Crunchy Frog", 1.49, "If we took the bones out, it wouldn't be
+       crunchy, now would it?"
+       "Gannet Ripple", 1.99, "On a stick!"
+
+
+    **Requires authentication?**
+
+      Yes
+
+    **Request**
 
     without date (default the date on server)
 
@@ -49,8 +64,10 @@ def timetables():
         GET /latest/bus/timetables HTTP/1.1
         Host: kuas.grd.idv.tw:14769
         Authorization: Basic xxxxxxxxxxxxx=
-        Accept: */*
 
+    .. sourcecode:: shell
+
+        curl -i -X GET localhost:8001/v2/bus/timetables
 
     with date
 
@@ -59,10 +76,9 @@ def timetables():
         GET /latest/bus/timetables?date=2015-9-1 HTTP/1.1
         Host: kuas.grd.idv.tw:14769
         Authorization: Basic xxxxxxxxxxxxx=
-        Accept: */*
 
 
-    **Example response**
+    **Response**
 
     .. sourcecode:: http
 
@@ -115,9 +131,6 @@ def timetables():
           "date":"2015-9-1"
         }
 
-    :query string date: Specific date to query timetable. format: yyyy-mm-dd
-    :query string from: The start station you want to query. (not impl yet)
-    :statuscode 200: no error
     """
 
     date = time.strftime("%Y-%m-%d", time.gmtime())
@@ -133,14 +146,25 @@ def timetables():
 @route("/bus/reservations", methods=["GET"])
 @route("/bus/reservations/<int:bus_id>", methods=["PUT"])
 @route("/bus/reservations/<string:end_time>", methods=["DELETE"])
-@auto.doc(groups=["public", "GET", "PUT", "DELETE"])
-@cross_origin(supports_credentials=True)
 @auth.login_required
 def bus_reservations(bus_id=None, end_time=None):
     """
     .. http:get:: /bus/reservations
 
-        what to do
+      Get user's bus reservation.
+
+      **Requires authentication?**
+
+        Yes
+
+      **Request**
+
+        .. sourcecode:: http
+
+      **Response**
+
+        .. sourcecode:: http
+
 
     .. http:put:: /bus/reservations
 
@@ -155,7 +179,7 @@ def bus_reservations(bus_id=None, end_time=None):
     s = stateless_auth.get_requests_session_with_cookies()
 
     if request.method == "GET":
-        return json.dumps(cache.bus_reserve_query(s), ensure_ascii=False)
+        return jsonify(reservation=cache.bus_reserve_query(s))
     elif request.method == "PUT":
         return json.dumps(cache.bus_booking(s, bus_id, ""), ensure_ascii=False)
     elif request.method == "DELETE":

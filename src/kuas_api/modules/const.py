@@ -8,4 +8,4 @@ device_version = {
 
 
 # Token duration in seconds
-token_duration = 600
+token_duration = 3600

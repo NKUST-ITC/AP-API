@@ -34,7 +34,16 @@ def route(rule, **options):
 def get_auth_token():
     """Login to KUAS, and return token for KUAS API.
 
-    **Example request**:
+
+    :reqheader Authorization: Using Basic Auth
+    :resjson int duration: The duration of this token to expired.
+    :resjson string token_type: Token type of this token.
+    :resjson strin gauth_token: Auth token.
+    :statuscode 200: success login
+    :statuscode 401: login fail or auth_token expired
+
+
+    **Request**:
 
     .. sourcecode:: http
 
@@ -43,7 +52,12 @@ def get_auth_token():
         Authorization: Basic xxxxxxxxxxxxx=
         Accept: */*
 
-    **Example response**:
+    .. sourcecode:: shell
+
+        curl -X GET -u username:password https://kuas.grd.idv.tw:14769/v2/token
+
+
+    **Response**:
 
     .. sourcecode:: http
 
@@ -51,14 +65,10 @@ def get_auth_token():
         Content-Type: application/json
 
         {
-          "duration": 600,
+          "duration": 3600,
           "token_type": "Basic",
           "auth_token": "adfakdflakds.fladkjflakjdf.adslkfakdadf"
         }
-
-
-    :statuscode 200: success login
-    :statuscode 401: login fail or auth_token expired
     """
 
     token = g.token
@@ -73,56 +83,40 @@ def get_auth_token():
 def device_version(device_type):
     """Get latest version for app on (`device_type`) in webstore.
 
-    **Example request**
+    :param device_type: device we support
+    :resjson version: Object of version (see below)
+
+    The versions `version` is a json object list below.
+
+    :json string device: query device.
+    :json string version: latest version for device.
+
+
+    **Request**
 
     .. sourcecode:: http
 
-            GET /latest/versions/android HTTP/1.1
-            Host: kuas.grd.idv.tw:14769
+        GET /latest/versions/android HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
 
+    .. sourcecode:: shell
+
+        curl -X GET https://kuas.grd.idv.tw:14769/v2/versions/android
 
 
     **Response**
 
-    +----------------+---------------+-------------------------------------------+
-    |                |               |                                           |
-    | Parameter Name | Type          | Description                               |
-    |                |               |                                           |
-    +================+===============+===========================================+
-    |                |               |                                           |
-    | version        | Object        |                                           |
-    |                |               |                                           |
-    +----------------+---------------+-------------------------------------------+
-
-    **Version object**
-
-    +----------------+---------------+-------------------------------------------+
-    |                |               |                                           |
-    | Parameter Name | Type          | Description                               |
-    |                |               |                                           |
-    +================+===============+===========================================+
-    |                |               |                                           |
-    | device         | String        | The device you request                    |
-    |                |               |                                           |
-    +----------------+---------------+-------------------------------------------+
-    |                |               |                                           |
-    | version        | String        | Latest version for device                 |
-    |                |               |                                           |
-    +----------------+---------------+-------------------------------------------+
-
-    **Example response**
-
     .. sourcecode:: http
 
-            HTTP/1.1 200 OK
-            Content-Type: application/json
+        HTTP/1.1 200 OK
+        Content-Type: application/json
 
-            {
-              "version": {
-                "device": "android",
-                "version": "1.5.4"
-              }
-            }
+        {
+          "version": {
+            "device": "android",
+            "version": "1.5.4"
+          }
+        }
 
 
 
@@ -146,6 +140,53 @@ def device_version(device_type):
 @route('/servers/status')
 @auto.doc(groups=["public"])
 def servers_status():
+    """Get KUAS API status for service
+
+    :resjson list status: Status list (see below)
+
+    Servers status list
+
+    :json service: service name.
+    :json status: HTTP status code.
+
+    **Request**
+
+        .. sourcecode:: http
+
+            GET /v2/servers/status HTTP/1.1
+            Host: kuas.grd.idv.tw:14769
+
+        .. sourcecode:: shell
+
+            curl -X GET https://kuas.grd.idv.tw:14769/v2/servers/status
+
+
+    **Response**
+
+        .. sourcecode:: http
+
+            HTTP/1.1 200 OK
+            Content-Type: application/json
+
+            {
+              "status": [
+                {
+                  "service": "ap",
+                  "status": 200
+                },
+                {
+                  "service": "bus",
+                  "status": 200
+                },
+                {
+                  "service": "leave",
+                  "status": 200
+                }
+              ]
+            }
+
+    """
+
     try:
         original_status = cache.server_status()
     except Exception as err:

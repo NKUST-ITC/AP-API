@@ -43,7 +43,8 @@ def dump_session_cookies(session):
     return cookies
 
 
-def login(s, username, password):
+def login(username, password):
+    session = requests.Session()
     is_login = {}
 
     # AP Login
