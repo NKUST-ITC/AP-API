@@ -144,7 +144,6 @@ def notification_query(page=1):
         red.set(notification_page, json.dumps(notification_content, ensure_ascii=False))
         red.expire(notification_page, NOTIFICATION_EXPIRE_TIME)
     else:
-        print(red.get(notification_page))
         notification_content = json.loads(red.get(notification_page))
 
     return notification_content
