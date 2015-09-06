@@ -12,10 +12,10 @@ def get(page=1):
 
     root = etree.HTML(r.text)
     trs = root.xpath("//tr[starts-with(@class, 'row')]")
-
+    return trs
     result = []
     for tr in trs:
-        a = tr.xpath("td//a")[0].values()[0]
+        a = tr.xpath("td//a")[0].values()[1]
         tr = list(filter(lambda x: x, map(lambda x: x.replace("\t", "").replace("\n", ""), tr.itertext())))
         tr = tr[1:]
 
