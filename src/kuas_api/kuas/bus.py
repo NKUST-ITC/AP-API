@@ -255,7 +255,7 @@ def book(session, kid, action=None):
 
     resource = json.loads(str(res.content, "utf-8"))
 
-    return resource['message']
+    return resource
 
 
 if __name__ == '__main__':
