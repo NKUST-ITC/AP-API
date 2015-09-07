@@ -2,7 +2,6 @@
 
 import kuas_api.kuas.cache as cache
 
-import kuas_api.modules.error as error
 from kuas_api.modules.json import jsonify
 
 
