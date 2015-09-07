@@ -175,8 +175,8 @@ def bus_reservations(bus_id=None, end_time=None):
     if request.method == "GET":
         return jsonify(reservation=cache.bus_reserve_query(s))
     elif request.method == "PUT":
-        return json.dumps(cache.bus_booking(s, bus_id, ""), ensure_ascii=False)
+        return jsonify(cache.bus_booking(s, bus_id, ""))
     elif request.method == "DELETE":
-        return jsonify(cache=cache.bus_booking(s, end_time, "un"))
+        return jsonify(cache.bus_booking(s, end_time, "un"))
 
     return request.method
