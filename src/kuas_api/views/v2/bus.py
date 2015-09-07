@@ -143,6 +143,12 @@ def timetables():
 @auth.login_required
 def bus_reservations(bus_id=None, end_time=None):
     """
+    .. warnings::
+
+      This endpoints is still under construct, return value `may` change quickly.
+      Please check this documentations for update.
+
+
     .. http:get:: /bus/reservations
 
       Get user's bus reservation.
