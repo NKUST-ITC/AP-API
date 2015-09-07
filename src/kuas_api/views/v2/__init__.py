@@ -1,4 +1,5 @@
 from flask_apiblueprint import APIBlueprint
+from kuas_api.modules.json import jsonify
 from .doc import auto
 
 # Create v2 blueprint
@@ -13,7 +14,11 @@ api_v2 = APIBlueprint(
 def version_2():
     """Return API version
     """
-    return "kuas-api version 2."
+    return jsonify(
+        name="kuas-api version 2.",
+        version="2",
+        endpoints="https://kuas.grd.idv.tw:14769/v2/"
+    )
 
 
 # Add v2 routes
