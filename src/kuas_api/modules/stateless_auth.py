@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+import os
 import json
 import redis
 import requests
@@ -13,7 +15,7 @@ import kuas_api.modules.error as error
 
 
 # Shit lazy key
-DIRTY_SERECT_KEY = "What the hell is this stateless auth"
+DIRTY_SERECT_KEY = str(os.urandom(32))
 
 # Create HTTP auth
 auth = HTTPBasicAuth()
