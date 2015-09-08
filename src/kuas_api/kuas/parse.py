@@ -34,7 +34,7 @@ def course(cont):
 
     # Return if no course data
     if center_text.startswith(u'學生目前無選課資料!'):
-        return [[], False, False, center_text]
+        return {}
 
     tbody = root.xpath("//table")[-1]
 
@@ -45,7 +45,8 @@ def course(cont):
         end_time = ""
 
         for weekends, c in enumerate(r.xpath("td")):
-            classes = {"title": "", "date": {}, "location": {}, "instructors": []}
+            classes = {"title": "", "date": {},
+                       "location": {}, "instructors": []}
 
             r = list(
                 filter(
@@ -61,6 +62,8 @@ def course(cont):
 
                 if len(r) > 1:
                     start_time, end_time = r[1].split("-")
+                    start_time = "%s:%s" % (start_time[: 2], start_time[2:])
+                    end_time = "%s:%s" % (end_time[: 2], end_time[2:])
 
                 continue
 
