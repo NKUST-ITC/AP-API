@@ -52,6 +52,33 @@ def ap_user_picture():
     return user.get_user_picture(s)
 
 
+@route('/ap/users/coursetables/<int:year>/<int:semester>')
+@auth.login_required
+def get_coursetables(year, semester):
+    # See Github
+    # https://gist.github.com/hearsilent/a2570371cc6aa7db97bb
+    weekdays = {"M": "Monday", "T": "Tuesday", "W": "Wednesday",
+                "R": "Thursday", "F": "Friday", "S": "Saturday",
+                "H": "Sunday"
+                }
+
+    # Restore cookies
+    s = stateless_auth.get_requests_session_with_cookies()
+
+    classes = cache.ap_query(
+        s, "ag222", {"arg01": year, "arg02": semester}, g.username)
+
+    coursetables = {}
+    for c in classes:
+        weekday = weekdays[c["date"]["weekday"]]
+        if not weekday in coursetables:
+            coursetables[weekday] = []
+
+        coursetables[weekday].append(c)
+
+    return jsonify(coursetables)
+
+
 @route('/ap/semester')
 def ap_semester():
     semester_list = ap.get_semester_list()
@@ -79,7 +106,7 @@ def ap_semester():
     )
 
 
-@route('/ap/query')
+@route('/ap/queries/semester')
 @auth.login_required
 def query_post():
     fncid = request.form['fncid']
@@ -92,7 +119,8 @@ def query_post():
     s = stateless_auth.get_requests_session_with_cookies()
 
     query_content = cache.ap_query(
-        s, fncid, {"arg01": arg01, "arg02": arg02, "arg03": arg03, "arg04": arg04}, g.username)
+        s, fncid, {"arg01": arg01, "arg02": arg02,
+                   "arg03": arg03, "arg04": arg04}, g.username)
 
     if fncid == "ag222":
         return json.dumps(query_content)
