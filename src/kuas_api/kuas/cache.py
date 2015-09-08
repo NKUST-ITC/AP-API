@@ -115,10 +115,12 @@ def bus_query(session, date):
 
     # Check if have reserve, and change isReserve value to 0
     reserve = bus_reserve_query(session)
-    for r in reserve:
-        for q in bus_q:
-            q['isReserve'] = 0
-            q['cancelKey'] = 0
+
+    for q in bus_q:
+        q['isReserve'] = 0
+        q['cancelKey'] = 0
+
+        for r in reserve:
             if r['time'] == q['runDateTime']:
                 q['isReserve'] = 1
                 q['cancelKey'] = r['cancelKey']
