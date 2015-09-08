@@ -139,13 +139,15 @@ def timetables():
 
 @route("/bus/reservations", methods=["GET"])
 @route("/bus/reservations/<int:bus_id>", methods=["PUT"])
-@route("/bus/reservations/<string:end_time>", methods=["DELETE"])
+@route("/bus/reservations/<int:cancel_key>", methods=["DELETE"])
 @auth.login_required
-def bus_reservations(bus_id=None, end_time=None):
+def bus_reservations(bus_id=None, cancel_key=None):
     """
-    .. warnings::
+    .. warning::
 
-      This endpoints is still under construct, return value `may` change quickly.
+      This endpoints is still under construct,
+      return value `may` change quickly.
+
       Please check this documentations for update.
 
 
@@ -183,6 +185,6 @@ def bus_reservations(bus_id=None, end_time=None):
     elif request.method == "PUT":
         return jsonify(cache.bus_booking(s, bus_id, ""))
     elif request.method == "DELETE":
-        return jsonify(cache.bus_booking(s, end_time, "un"))
+        return jsonify(cache.bus_booking(s, cancel_key, "un"))
 
     return request.method

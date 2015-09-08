@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿    # -*- coding: utf-8 -*-
 
 import os
 import json
@@ -19,7 +19,7 @@ import kuas_api.kuas.news as news
 AP_QUERY_EXPIRE = 3600
 BUS_EXPIRE_TIME = 0
 SERVER_STATUS_EXPIRE_TIME = 180
-NOTIFICATION_EXPIRE_TIME = 1800
+NOTIFICATION_EXPIRE_TIME = 0
 
 BUS_QUERY_TAG = "bus"
 NOTIFICATION_TAG = "notification"
@@ -72,7 +72,8 @@ def login(username, password):
         return False
 
 
-def ap_query(session, qid=None, args=None, username=None, expire=AP_QUERY_EXPIRE):
+def ap_query(session, qid=None, args=None,
+             username=None, expire=AP_QUERY_EXPIRE):
     ap_query_key_tag = str(username) + str(args) + SERECT_KEY
     ap_query_key = qid + \
         hashlib.sha512(
@@ -93,7 +94,8 @@ def leave_query(session, year="102", semester="2"):
     return leave.getList(session, year, semester)
 
 
-def leave_submit(session, start_date, end_date, reason_id, reason_text, section):
+def leave_submit(session, start_date, end_date,
+                 reason_id, reason_text, section):
     leave_dict = {"reason_id": reason_id,
                   "reason_text": reason_text, "section": section}
 
@@ -106,9 +108,6 @@ def bus_query(session, date):
     if not red.exists(bus_cache_key):
         bus_q = bus.query(session, *date.split("-"))
 
-        for q in bus_q:
-            q['isReserve'] = -1
-
         red.set(bus_cache_key, json.dumps(bus_q, ensure_ascii=False))
         red.expire(bus_cache_key, BUS_EXPIRE_TIME)
     else:
@@ -118,8 +117,11 @@ def bus_query(session, date):
     reserve = bus_reserve_query(session)
     for r in reserve:
         for q in bus_q:
+            q['isReserve'] = 0
+            q['cancelKey'] = 0
             if r['time'] == q['runDateTime']:
-                q['isReserve'] = 0
+                q['isReserve'] = 1
+                q['cancelKey'] = r['cancelKey']
                 break
 
     return bus_q
@@ -136,12 +138,13 @@ def bus_booking(session, busId, action):
 def notification_query(page=1):
     notification_page = NOTIFICATION_TAG + str(page)
     red_query = red.get(notification_page)
-    red_query = False if red_query == None or red_query == '[]' else True
+    red_query = False if red_query is None or red_query == '[]' else True
 
     if not red_query:
         notification_content = notification.get(page)
 
-        red.set(notification_page, json.dumps(notification_content, ensure_ascii=False))
+        red.set(notification_page,
+                json.dumps(notification_content, ensure_ascii=False))
         red.expire(notification_page, NOTIFICATION_EXPIRE_TIME)
     else:
         notification_content = json.loads(red.get(notification_page))
@@ -174,7 +177,6 @@ def server_status():
 
 
 if __name__ == "__main__":
-    import requests
     s = requests.Session()
     is_login = login(s, "guest", "123")
 

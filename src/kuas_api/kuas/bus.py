@@ -64,7 +64,8 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
         """
 
 
-headers = {"User-Agnet": "Mozilla/5.0 (X11; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0"}
+headers = {"User-Agnet":
+           "Mozilla/5.0 (X11; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0"}
 
 
 # Bus url setting
@@ -82,7 +83,7 @@ BUS_TIMEOUT = 1.0
 
 
 def _get_real_time(timestamp):
-    return datetime.datetime.fromtimestamp(int(timestamp)/10000000 - 62135596800).strftime("%Y-%m-%d %H:%M")
+    return datetime.datetime.fromtimestamp(int(timestamp) / 10000000 - 62135596800).strftime("%Y-%m-%d %H:%M")
 
 
 def status():
@@ -96,7 +97,8 @@ def status():
     """
 
     try:
-        bus_status_code = requests.head(BUS_URL, timeout=BUS_TIMEOUT).status_code
+        bus_status_code = requests.head(
+            BUS_URL, timeout=BUS_TIMEOUT).status_code
     except requests.exceptions.Timeout:
         bus_status_code = 408
 
@@ -135,10 +137,10 @@ def login(session, username, password):
         return False
 
     content = session.post(BUS_LOGIN_URL,
-                        data=data,
-                        headers=headers,
-                        timeout=BUS_TIMEOUT
-                        ).text
+                           data=data,
+                           headers=headers,
+                           timeout=BUS_TIMEOUT
+                           ).text
 
     resp = json.loads(content)
 
@@ -196,7 +198,7 @@ def query(session, y, m, d, operation="全部"):
         Data['busId'] = i['busId']
         Data['reserveCount'] = i['reserveCount']
         Data['limitCount'] = i['limitCount']
-        Data['isReserve'] = i['isReserve']
+        Data['isReserve'] = int(i['isReserve']) + 1
         returnData.append(Data)
 
     return returnData
@@ -221,7 +223,7 @@ def reserve(session):
         data = {}
         data['time'] = _get_real_time(i['time'])
         data['endTime'] = _get_real_time(i['endTime'])
-        data['key'] = i['key']
+        data['cancelKey'] = i['key']
         data['end'] = i['end']
         rd.append(data)
 
@@ -237,21 +239,15 @@ def book(session, kid, action=None):
                            headers=headers,
                            )
     else:
-        # Unbook is much fucking, you must know that bus id first.
-        # So, we need to get user's reserve first
-        unbook = reserve(session)
-
         # Then compare users reserve bus,
         # if kid is same as time, then found the correct bus,
         # then we can unbook this bus.
-        for i in unbook:
-            if i['time'] == kid:
-                res = session.post(BUS_UNBOOK_URL,
-                                   data="{reserveId:" + i['key'] + "}",
-                                   headers=headers,
-                                   )
 
-                break
+        print(kid)
+        res = session.post(BUS_UNBOOK_URL,
+                           data="{reserveId: %d}" % (kid),
+                           headers=headers,
+                           )
 
     resource = json.loads(str(res.content, "utf-8"))
 

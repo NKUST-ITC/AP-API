@@ -6,8 +6,8 @@ import base64
 import unittest
 import kuas_api
 
-USERNAME = ""
-PASSWORD = ""
+USERNAME = "1102108133"
+PASSWORD = "111"
 
 
 class APITestCase(unittest.TestCase):
@@ -36,7 +36,7 @@ class APITestCase(unittest.TestCase):
 
     def test_bus_get_timetables(self):
         rv = self.open_with_auth(
-            "/latest/bus/timetables?date=2015-09-9",
+            "/latest/bus/timetables?date=2015-09-4",
             "GET",
             self.username,
             self.password)
@@ -47,20 +47,21 @@ class APITestCase(unittest.TestCase):
         # TODO: date to yyyy-mm-dd
         #   v2/bus.py
         assert "date" in json_object
-        assert json_object["date"] == "2015-09-9"
+        assert json_object["date"] == "2015-09-4"
 
         # Check timetable
         assert "timetable" in json_object
         assert len(json_object["timetable"]) == 4
 
         # Check bus information
-        bus_27040 = {'busId': '27040', 'Time': '08:20', 'endStation': '燕巢',
-                     'EndEnrollDateTime': '2015-09-08 17:20',
-                     'limitCount': '999', 'reserveCount': '19',
-                     'runDateTime': '2015-09-09 08:20',
-                     'isReserve': -1}
+        bus_27037 = {"runDateTime": "2015-09-04 08:20", "limitCount": "999",
+                     "reserveCount": "8", "Time": "08:20",
+                     "EndEnrollDateTime": "2015-09-03 17:20",
+                     "endStation": "燕巢", "isReserve": 0,
+                     "busId": "27037"
+                     }
 
-        assert json_object["timetable"][0] == bus_27040
+        assert json_object["timetable"][0] == bus_27037
 
     def test_bus_get_put_del_reservations(self):
         tomorrow = datetime.datetime.strftime(
@@ -73,7 +74,6 @@ class APITestCase(unittest.TestCase):
             self.password)
 
         json_object = json.loads(str(rv.data, "utf-8"))
-
         if not json_object["timetable"]:
             print(">>> Warning: Pass testing PUT DELETE for bus resrevations.")
             return False
@@ -119,14 +119,34 @@ class APITestCase(unittest.TestCase):
         assert json_object["message"] == "該班次已預約,不可重覆預約"
 
         # Check bus go time
-        go_stamp = re.compile(
-            "\((.*?)\)").search(json_object['data']['startTime']).group(1)
-        go_date = time.strftime(
-            "%Y-%m-%d %H:%M", time.localtime(int(go_stamp) / 1000))
+        # go_stamp = re.compile(
+        #     "\((.*?)\)").search(json_object['data']['startTime']).group(1)
+        # go_date = time.strftime(
+        #     "%Y-%m-%d %H:%M", time.localtime(int(go_stamp) / 1000))
+
+        # Check two put reservations
+        rv = self.open_with_auth(
+            "/latest/bus/reservations/%s" % (bus_id),
+            "PUT",
+            self.username,
+            self.password
+        )
+
+        # Get cancel key by timetables
+        rv = self.open_with_auth(
+            "/latest/bus/timetables?date=%s" % (tomorrow),
+            "GET",
+            self.username,
+            self.password)
+
+        json_object = json.loads(str(rv.data, "utf-8"))
+
+        # Get cancel key
+        cancel_key = json_object["timetable"][-1]["cancelKey"]
 
         # DELETE reservations
         rv = self.open_with_auth(
-            "/latest/bus/reservations/%s" % (go_date),
+            "/latest/bus/reservations/%s" % (cancel_key),
             "DELETE",
             self.username,
             self.password
