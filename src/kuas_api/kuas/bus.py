@@ -245,7 +245,7 @@ def book(session, kid, action=None):
 
         print(kid)
         res = session.post(BUS_UNBOOK_URL,
-                           data="{reserveId: %d}" % (str(kid)) + "}",
+                           data="{reserveId: %d}" % (kid) + "}",
                            headers=headers,
                            )
 
