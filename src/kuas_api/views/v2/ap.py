@@ -11,6 +11,7 @@ import kuas_api.kuas.cache as cache
 from kuas_api.modules.json import jsonify
 from kuas_api.modules.stateless_auth import auth
 import kuas_api.modules.stateless_auth as stateless_auth
+import kuas_api.modules.const as const
 import kuas_api.modules.error as error
 
 
@@ -69,9 +70,9 @@ def get_coursetables(year, semester):
     classes = cache.ap_query(
         s, "ag222", {"arg01": year, "arg02": semester, "uid": "1101133117"}, g.username)
 
-    # No course in this year/semester
+    # No Content
     if not classes:
-        return jsonify(message="學生目前無選課資料", coursetables={})
+        return jsonify(status=const.no_content, messages="學生目前無選課資料", coursetables=classes)
 
     coursetables = {}
     for c in classes:
@@ -81,7 +82,7 @@ def get_coursetables(year, semester):
 
         coursetables[weekday].append(c)
 
-    return jsonify(message="", coursetables=coursetables)
+    return jsonify(status=const.ok, messages="", , coursetables=coursetables)
 
 
 @route('/ap/users/scores/<int:year>/<int:semester>')
@@ -93,7 +94,10 @@ def get_score(year, semester):
     scores = cache.ap_query(
         s, "ag008", {"arg01": year, "arg02": semester, "arg03": g.username}, g.username)
 
-    return jsonify(scores)
+    if not scores:
+        return jsonify(status=const.no_content, messages="目前無學生個人成績資料", scores={})
+
+    return jsonify(status=const.ok, messages="", scores=scores)
 
 
 @route('/ap/samples/coursetables/normal')

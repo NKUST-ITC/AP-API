@@ -100,7 +100,7 @@ def score(cont):
         center_text = ""
 
     if center_text.startswith(u'目前無學生個人成績資料'):
-        return {"scores": [], "detail": {}, "message": center_text}
+        return {}
 
     score_table = []
     for r_index, r in enumerate(tbody[1:-1]):
@@ -122,12 +122,12 @@ def score(cont):
     total_score = root.xpath("//div")[-1].text.replace(u"　　　　", " ").split(" ")
     detail = {
         "conduct": float(total_score[0].split("：")[-1]) if not total_score[0].startswith("操行成績：0") else 0.0,
-        "average": float(total_score[1].split("：")[-1]) if not total_score[1].startswith("總平均：") else 0.0,
+        "average": float(total_score[1].split("：")[-1]) if total_score[1] != "總平均：" else 0.0,
         "class_rank": total_score[2].split("：")[-1] if not total_score[2].startswith("班名次/班人數：/") else "",
         "class_percentage": float(total_score[3].split("：")[-1][:-1]) if not total_score[3].startswith("班名次百分比：%") else 0.0
     }
 
-    return {"scores": score_table, "detail": detail, "message": ""}
+    return {"scores": score_table, "detail": detail}
 
 
 parse_function = {"ag222": course, "ag008": score}
