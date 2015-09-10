@@ -23,7 +23,7 @@ def version_2():
     return jsonify(
         name="kuas-api version 2.",
         version="2",
-        git_revision=get_git_revision_short_hash(),
+        server_revision=get_git_revision_short_hash(),
         endpoints="https://kuas.grd.idv.tw:14769/v2/"
     )
 
