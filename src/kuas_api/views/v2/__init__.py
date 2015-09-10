@@ -9,6 +9,12 @@ api_v2 = APIBlueprint(
     url_prefix='/v2')
 
 
+def get_git_revision_short_hash():
+    import subprocess
+    return subprocess.check_output(
+        ['git', 'rev-parse', '--short', 'HEAD']).decode("utf-8").strip("\n")
+
+
 @api_v2.route('/')
 @auto.doc(groups=["public"])
 def version_2():
@@ -17,6 +23,7 @@ def version_2():
     return jsonify(
         name="kuas-api version 2.",
         version="2",
+        git_revision=get_git_revision_short_hash(),
         endpoints="https://kuas.grd.idv.tw:14769/v2/"
     )
 
