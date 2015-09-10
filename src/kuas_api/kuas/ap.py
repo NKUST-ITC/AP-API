@@ -117,7 +117,7 @@ def get_semester_list():
     options = map(lambda x: {"value": x.values()[0].replace("#", ","),
                              "selected": 1 if "selected" in x.values() else 0,
                              "text": x.text},
-                            root.xpath("id('yms_yms')/option")
+                  root.xpath("id('yms_yms')/option")
                   )
     options = list(options)
 
