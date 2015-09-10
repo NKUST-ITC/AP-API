@@ -19,13 +19,13 @@ import kuas_api.kuas.news as news
 AP_QUERY_EXPIRE = 3600
 BUS_EXPIRE_TIME = 0
 SERVER_STATUS_EXPIRE_TIME = 180
-NOTIFICATION_EXPIRE_TIME = 0
+NOTIFICATION_EXPIRE_TIME = 3600
 
 BUS_QUERY_TAG = "bus"
 NOTIFICATION_TAG = "notification"
 
 s_cache = SimpleCache()
-red = redis.StrictRedis(db=0, decode_responses=True)
+red = redis.StrictRedis(db=2, decode_responses=True)
 SERECT_KEY = str(os.urandom(32))
 
 
