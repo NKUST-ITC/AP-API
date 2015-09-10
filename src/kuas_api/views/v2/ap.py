@@ -82,7 +82,7 @@ def get_coursetables(year, semester):
 
         coursetables[weekday].append(c)
 
-    return jsonify(status=const.ok, messages="", , coursetables=coursetables)
+    return jsonify(status=const.ok, messages="", coursetables=coursetables)
 
 
 @route('/ap/users/scores/<int:year>/<int:semester>')
