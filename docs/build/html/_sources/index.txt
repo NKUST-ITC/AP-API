@@ -16,6 +16,7 @@ Contents:
    :glob:
 
    install
+   quick_start
    api_doc
    
 

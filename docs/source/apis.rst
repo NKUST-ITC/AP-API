@@ -27,7 +27,7 @@ Bus
 
 
 Notifications
-----
+---------------
 
 .. autoflask:: web-server:app
     :endpoints: latest.notification
