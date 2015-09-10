@@ -9,3 +9,7 @@ device_version = {
 
 # Token duration in seconds
 token_duration = 3600
+
+# HTTP Status Code
+ok = 200
+no_content = 204
