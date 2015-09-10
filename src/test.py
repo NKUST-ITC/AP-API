@@ -1,6 +1,7 @@
 import re
 import json
 import time
+import warnings
 import datetime
 import base64
 import unittest
@@ -8,6 +9,13 @@ import kuas_api
 
 USERNAME = "1102108133"
 PASSWORD = "111"
+
+
+def ignore_warnings(func):
+    def do_test(self, *args, **kwargs):
+        with warnings.catch_warnings():
+            func(self, *args, **kwargs)
+    return do_test
 
 
 class APITestCase(unittest.TestCase):
@@ -34,6 +42,7 @@ class APITestCase(unittest.TestCase):
         # Check version
         assert json_object["version"] == "2"
 
+    @ignore_warnings
     def test_bus_get_timetables(self):
         rv = self.open_with_auth(
             "/latest/bus/timetables?date=2015-09-4",
@@ -55,10 +64,10 @@ class APITestCase(unittest.TestCase):
 
         # Check bus information
         bus_27037 = {"runDateTime": "2015-09-04 08:20", "limitCount": "999",
-                     "reserveCount": "8", "Time": "08:20",
+                     "reserveCount": "7", "Time": "08:20",
                      "EndEnrollDateTime": "2015-09-03 17:20",
                      "endStation": "燕巢", "isReserve": 0,
-                     "busId": "27037"
+                     "busId": "27037", "cancelKey": 0
                      }
 
         assert json_object["timetable"][0] == bus_27037
