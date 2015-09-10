@@ -9,7 +9,9 @@ import kuas_api.kuas.cache as cache
 
 from kuas_api.modules.stateless_auth import auth
 import kuas_api.modules.stateless_auth as stateless_auth
-import kuas_api.modules.error as error
+import kuas_api.modules.const as const
+from kuas_api.modules.json import jsonify
+
 
 from .doc import auto
 
@@ -33,22 +35,18 @@ def route(rule, **options):
     return decorator
 
 
-@route('/leave/query', methods=["POST"])
-@auto.doc()
-@cross_origin(supports_credentials=True)
+@route('/leaves/<int:year>/<int:semester>')
 @auth.login_required
-def leave_post():
-    if request.method == "POST":
-        arg01 = request.form['arg01'] if 'arg01' in request.form else None
-        arg02 = request.form['arg02'] if 'arg02' in request.form else None
+def get_leave(year, semester):
+    # Restore cookies
+    s = stateless_auth.get_requests_session_with_cookies()
 
-        # Restore cookies
-        s = stateless_auth.get_requests_session_with_cookies()
+    leaves = cache.leave_query(s, year, semester)
 
-        if arg01 and arg02:
-            return json.dumps(cache.leave_query(s, arg01, arg02), ensure_ascii=False)
-        else:
-            return json.dumps(cache.leave_query(s), ensure_ascii=False)
+    if not leaves:
+        return jsonify(status=const.no_content, messages="本學期無缺曠課記錄", leaves=[])
+    else:
+        return jsonify(status=const.ok, messages="", leaves=leaves)
 
 
 @route('/leave/submit', methods=['POST'])
