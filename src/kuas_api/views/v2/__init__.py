@@ -1,6 +1,7 @@
+import kuas_api.modules.error as error
 from flask_apiblueprint import APIBlueprint
 from kuas_api.modules.json import jsonify
-from .doc import auto
+
 
 # Create v2 blueprint
 api_v2 = APIBlueprint(
@@ -16,7 +17,6 @@ def get_git_revision_short_hash():
 
 
 @api_v2.route('/')
-@auto.doc(groups=["public"])
 def version_2():
     """Return API version
     """
@@ -26,6 +26,15 @@ def version_2():
         server_revision=get_git_revision_short_hash(),
         endpoints="https://kuas.grd.idv.tw:14769/v2/"
     )
+
+
+@api_v2.errorhandler(401)
+def unauthorized_error(err):
+    return error.error_handle(status=401,
+                              developer_message="token expired",
+                              user_message="token expired",
+                              error_code=401
+                              )
 
 
 # Add v2 routes

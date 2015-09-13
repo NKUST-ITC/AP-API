@@ -4,13 +4,14 @@ import os
 import json
 import redis
 import requests
-from flask import g
+from flask import g, abort
 from flask.ext.httpauth import HTTPBasicAuth
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 
 
 import kuas_api.kuas.cache as cache
+import kuas_api.modules.const as const
 import kuas_api.modules.error as error
 
 
@@ -21,7 +22,7 @@ DIRTY_SERECT_KEY = str(os.urandom(32))
 auth = HTTPBasicAuth()
 
 # Redis connection
-red = redis.StrictRedis()
+red = redis.StrictRedis(db=2)
 
 
 def check_cookies(username):
@@ -84,7 +85,7 @@ def verify_auth_token(token):
     try:
         data = s.loads(token)
     except SignatureExpired:
-        return None    # valid token, but expired
+        abort(401)     # valid token, but expired
     except BadSignature:
         return None    # invalid token
 
@@ -129,7 +130,7 @@ def verify_password(username_or_token, password):
         #
         # Data set in redis server:
         #   key: username, value: cookies
-        g.token = generate_auth_token(username_or_token, cookies)
+        g.token = generate_auth_token(username_or_token, cookies, expiration=const.token_duration)
         g.username = username_or_token
 
     return True
