@@ -76,10 +76,11 @@ def course(cont):
             classes["date"]["weekday"] = " MTWRFSH"[weekends]
             classes["date"]["section"] = section
 
+            if len(r) > 1:
+                classes["instructors"].append(r[1])
+
             classes["location"]["building"] = ""
             classes["location"]["room"] = r[2] if len(r) > 2 else ""
-
-            classes["instructors"].append(r[1])
 
             course_table.append(classes)
 
