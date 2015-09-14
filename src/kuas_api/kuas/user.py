@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from flask import g
 import kuas_api.kuas.ap as ap
 import kuas_api.kuas.cache as cache
 from lxml import etree
@@ -13,7 +14,8 @@ def _get_user_info(session):
     return: `lxml.etree._Element`
     """
 
-    content = cache.ap_query(session, "ag003", {}, "", expire=AP_QUERY_USER_EXPIRE)
+    content = cache.ap_query(
+        session, "ag003", {}, g.username, expire=AP_QUERY_USER_EXPIRE)
 
     root = etree.HTML(content)
 
@@ -31,7 +33,7 @@ def get_user_info(session):
         "student_id": "",
         "student_name_cht": "",
         "student_name_eng": ""
-        }
+    }
 
     result["education_system"] = td[3].text[5:]
     result["department"] = td[4].text[5:]
@@ -47,7 +49,8 @@ def get_user_picture(session):
     root = _get_user_info(session)
 
     try:
-        image = ap.AP_BASE_URL + "/kuas" + root.xpath("//img")[0].values()[0][2:]
+        image = ap.AP_BASE_URL + "/kuas" + \
+            root.xpath("//img")[0].values()[0][2:]
     except:
         image = ""
 
