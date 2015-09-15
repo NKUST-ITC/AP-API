@@ -1,4 +1,4 @@
-﻿    # -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 import os
 import json
@@ -121,7 +121,8 @@ def bus_query(session, date):
         q['cancelKey'] = 0
 
         for r in reserve:
-            if r['time'] == q['runDateTime']:
+            if (r['time'] == q['runDateTime'] and
+                    r['end'] == q['endStation']):
                 q['isReserve'] = 1
                 q['cancelKey'] = r['cancelKey']
                 break
