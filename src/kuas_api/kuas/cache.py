@@ -26,7 +26,8 @@ NOTIFICATION_TAG = "notification"
 
 s_cache = SimpleCache()
 red = redis.StrictRedis(db=2, decode_responses=True)
-SERECT_KEY = str(os.urandom(32))
+SECRET_KEY = red.get("SECRET_KEY") if red.exists(
+    "SECRET_KEY") else str(os.urandom(32))
 
 
 def dump_session_cookies(session):
@@ -74,7 +75,7 @@ def login(username, password):
 
 def ap_query(session, qid=None, args=None,
              username=None, expire=AP_QUERY_EXPIRE):
-    ap_query_key_tag = str(username) + str(args) + SERECT_KEY
+    ap_query_key_tag = str(username) + str(args) + SECRET_KEY
     ap_query_key = qid + \
         hashlib.sha512(
             bytes(ap_query_key_tag, "utf-8")).hexdigest()

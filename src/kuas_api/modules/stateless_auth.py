@@ -14,15 +14,15 @@ import kuas_api.kuas.cache as cache
 import kuas_api.modules.const as const
 import kuas_api.modules.error as error
 
-
-# Shit lazy key
-DIRTY_SERECT_KEY = str(os.urandom(32))
-
 # Create HTTP auth
 auth = HTTPBasicAuth()
 
 # Redis connection
 red = redis.StrictRedis(db=2)
+
+# Shit lazy key
+DIRTY_SECRET_KEY = red.get("SECRET_KEY") if red.exists(
+    "SECRET_KEY") else str(os.urandom(32))
 
 
 def check_cookies(username):
@@ -67,7 +67,7 @@ def generate_auth_token(username, cookies, expiration=600):
     :return: auth token
     :rtype: str
     """
-    s = Serializer(DIRTY_SERECT_KEY, expires_in=expiration)
+    s = Serializer(DIRTY_SECRET_KEY, expires_in=expiration)
 
     red.set(username, json.dumps(cookies))
 
@@ -81,7 +81,7 @@ def verify_auth_token(token):
     :return: None or username
     :rtype: str or None
     """
-    s = Serializer(DIRTY_SERECT_KEY)
+    s = Serializer(DIRTY_SECRET_KEY)
     try:
         data = s.loads(token)
     except SignatureExpired:
@@ -101,7 +101,8 @@ def verify_password(username_or_token, password):
     """For verify username or token is valid.
     :param username_or_token: username or token
     :type username_or_token: str
-    :param password: password for username, if using token, password can be ignore
+    :param password: password for username, if using token,
+    password can be ignore
     :type password: str
     :return: is the username and password, or token is valid
     :rtype: bool
@@ -130,7 +131,8 @@ def verify_password(username_or_token, password):
         #
         # Data set in redis server:
         #   key: username, value: cookies
-        g.token = generate_auth_token(username_or_token, cookies, expiration=const.token_duration)
+        g.token = generate_auth_token(
+            username_or_token, cookies, expiration=const.token_duration)
         g.username = username_or_token
 
     return True
