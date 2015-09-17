@@ -5,16 +5,27 @@ Created on 08/29/2015
 """
 
 from flask import Flask
+from flask.ext.compress import Compress
 
 __version__ = "2.0"
-
 
 app = Flask(__name__)
 app.config.from_object("config")
 
+# Let secret key go in
+import redis
+red = redis.StrictRedis(db=2)
+red.set("SECRET_KEY", str(app.config["SECRET_KEY"]))
+
+
+# Compress please
+compress = Compress()
+compress.init_app(app)
+
 
 from kuas_api.views.v2.doc import auto, doc
 auto.init_app(app)
+
 
 from kuas_api.views.v1 import api_v1
 app.register_blueprint(api_v1)
