@@ -33,7 +33,15 @@ def random_news():
             "news_content": "",
             "news_weight": 0
 
-        }
+        },
+        {
+            "news_title": "資訊研習社 期初茶會",
+            "news_image": "http://i.imgur.com/rxEZiaq.jpg",
+            "news_url": "https://www.facebook.com/KUASITC",
+            "news_content": "",
+            "news_weight": 0
+        },
+
     ]
 
     if NEWS_DEBUG:
