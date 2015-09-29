@@ -32,16 +32,28 @@ def random_news():
             "news_url": "https://www.facebook.com/events/970003029729702/970003066396365/",
             "news_content": "",
             "news_weight": 0
-
         },
         {
-            "news_title": "資訊研習社 期初茶會",
-            "news_image": "http://i.imgur.com/rxEZiaq.jpg",
-            "news_url": "https://www.facebook.com/KUASITC",
+            "news_title": "學生會實習幹部甄選 同雁翱翔",
+            "news_image": "http://i.imgur.com/G2hbmrL.jpg",
+            "news_url": "https://docs.google.com/forms/d/1Q45XyafbKGSavFUn_R_uQpV918V5uanqw7ggOmp7p2c/viewform?c=0&w=1",
             "news_content": "",
-            "news_weight": 0
+            "news_weight": 5
         },
-
+        {
+            "news_title": "第八屆志工營-王者之劍",
+            "news_image": "http://i.imgur.com/Bp6JFCh.jpg",
+            "news_url": "https://www.facebook.com/KUAS.Soc",
+            "news_content": "",
+            "news_weight": 5
+        },
+        {
+            "news_title": "韻箏社  期初社員大會",
+            "news_image": "http://i.imgur.com/6OblQiR.jpg",
+            "news_url": "https://www.facebook.com/kuaszither",
+            "news_content": "",
+            "news_weight": 5
+        },
     ]
 
     if NEWS_DEBUG:
