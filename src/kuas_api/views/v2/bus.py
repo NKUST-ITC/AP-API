@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 import json
-from flask import request
+from flask import request, g
 from flask_cors import *
 import kuas_api.kuas.cache as cache
 
@@ -180,11 +180,25 @@ def bus_reservations(bus_id=None, cancel_key=None):
     # Restore cookies
     s = stateless_auth.get_requests_session_with_cookies()
 
+    # Debugging
+    user_agent = request.user_agent.string
+    user_id = g.username
+
     if request.method == "GET":
         return jsonify(reservation=cache.bus_reserve_query(s))
     elif request.method == "PUT":
-        return jsonify(cache.bus_booking(s, bus_id, ""))
+        result = cache.bus_booking(s, bus_id, "")
+
+        print("PUT,%s,%s,%s" % (user_agent, user_id, result))
+
+        return jsonify(result)
     elif request.method == "DELETE":
-        return jsonify(cache.bus_booking(s, cancel_key, "un"))
+        result = cache.bus_booking(s, cancel_key, "un")
+
+        print("DELETE,%s,%s,%s" % (user_agent, user_id, result))
+
+        return jsonify(result)
+
+
 
     return request.method

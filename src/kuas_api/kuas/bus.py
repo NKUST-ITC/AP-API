@@ -65,7 +65,7 @@ baseEncryption(l + h + "MIS" + k); return '{ a:"' + l + '",b:"' +
 
 
 headers = {"User-Agnet":
-           "Mozilla/5.0 (X11; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0"}
+           "Mozilla/5.0 (X11; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/35.0"}
 
 
 # Bus url setting
@@ -243,7 +243,6 @@ def book(session, kid, action=None):
         # if kid is same as time, then found the correct bus,
         # then we can unbook this bus.
 
-        print(kid)
         res = session.post(BUS_UNBOOK_URL,
                            data="{reserveId: %d}" % (kid) + "}",
                            headers=headers,
