@@ -47,6 +47,13 @@ def random_news():
             "news_content": "",
             "news_weight": 5
         },
+        {
+            "news_title": "我的康輔時代",
+            "news_image": "http://i.imgur.com/YraK7zI.gif",
+            "news_url": "https://www.facebook.com/KFStation?ref=ts&fref=ts",
+            "news_content": "",
+            "news_weight": 5
+        }
     ]
 
     if NEWS_DEBUG:
