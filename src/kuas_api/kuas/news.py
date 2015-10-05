@@ -45,6 +45,13 @@ def random_news():
             "news_image": "http://i.imgur.com/R7SvbL2.jpg",
             "news_url": "https://www.facebook.com/KUASCG",
             "news_content": "",
+            "news_weight": 3
+        },
+        {
+            "news_title": "棒球社全壘打大賽",
+            "news_image": "http://i.imgur.com/nuNL5mY.jpg",
+            "news_url": "http://goo.gl/forms/ANvBwfP28C",
+            "news_content": "",
             "news_weight": 5
         },
         {
