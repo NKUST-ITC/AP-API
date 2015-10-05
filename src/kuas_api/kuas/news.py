@@ -48,11 +48,11 @@ def random_news():
             "news_weight": 5
         },
         {
-            "news_title": "我的康輔時代",
-            "news_image": "http://i.imgur.com/YraK7zI.gif",
-            "news_url": "https://www.facebook.com/KFStation?ref=ts&fref=ts",
+            "news_title": "眼界陸-晚安電影院",
+            "news_image": "http://i.imgur.com/gnBbsSM.jpg",
+            "news_url": "https://www.facebook.com/ScopeFilmFestival?__mref=message_bubble",
             "news_content": "",
-            "news_weight": 5
+            "news_weight": 8
         }
     ]
 
