@@ -60,6 +60,13 @@ def random_news():
             "news_url": "https://www.facebook.com/ScopeFilmFestival?__mref=message_bubble",
             "news_content": "",
             "news_weight": 8
+        },
+        {
+            "news_title": "",
+            "news_image": "http://i.imgur.com/G6C2kwm.jpg",
+            "news_url": "https://www.facebook.com/I.LIKE.CCI",
+            "news_content": "",
+            "news_weight": 8
         }
     ]
 
