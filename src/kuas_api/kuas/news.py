@@ -20,25 +20,18 @@ def random_by_weight(p):
 def random_news():
     news_list = [
         {
-            "news_title": "iRunner高應大路跑",
-            "news_image": "http://i.imgur.com/Wdwa1W0.jpg",
-            "news_url": "https://www.facebook.com/KUASiRunner",
+            "news_title": "影約 映画社期初大會",
+            "news_image": "http://i.imgur.com/i3n3VjQ.jpg",
+            "news_url": "https://www.facebook.com/高應大映画社Film-Club-521274668030182",
             "news_content": "",
-            "news_weight": 0
-        },
-        {
-            "news_title": "韻箏社  期初社員大會",
-            "news_image": "http://i.imgur.com/6OblQiR.jpg",
-            "news_url": "https://www.facebook.com/kuaszither",
-            "news_content": "",
-            "news_weight": 0
+            "news_weight": 5
         },
         {
             "news_title": "發現金音 Halloween",
             "news_image": "http://i.imgur.com/WBXx4QT.jpg",
             "news_url": "https://www.facebook.com/KUAS.FIN",
             "news_content": "",
-            "news_weight": 5
+            "news_weight": 3
         },
         {
             "news_title": "古典吉他社",
@@ -52,17 +45,17 @@ def random_news():
             "news_image": "http://i.imgur.com/nuNL5mY.jpg",
             "news_url": "http://goo.gl/forms/ANvBwfP28C",
             "news_content": "",
-            "news_weight": 5
+            "news_weight": 3
         },
         {
             "news_title": "眼界陸-晚安電影院",
             "news_image": "http://i.imgur.com/gnBbsSM.jpg",
             "news_url": "https://www.facebook.com/ScopeFilmFestival?__mref=message_bubble",
             "news_content": "",
-            "news_weight": 8
+            "news_weight": 5
         },
         {
-            "news_title": "",
+            "news_title": "去你的文創節",
             "news_image": "http://i.imgur.com/G6C2kwm.jpg",
             "news_url": "https://www.facebook.com/I.LIKE.CCI",
             "news_content": "",
