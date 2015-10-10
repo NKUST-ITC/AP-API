@@ -21,7 +21,7 @@ def random_news():
     news_list = [
         {
             "news_title": "影約 映画社期初大會",
-            "news_image": "http://i.imgur.com/i3n3VjQ.jpg",
+            "news_image": "http://i.imgur.com/UO9VN5I.jpg",
             "news_url": "https://www.facebook.com/高應大映画社Film-Club-521274668030182",
             "news_content": "",
             "news_weight": 5
@@ -34,11 +34,11 @@ def random_news():
             "news_weight": 3
         },
         {
-            "news_title": "古典吉他社",
-            "news_image": "http://i.imgur.com/R7SvbL2.jpg",
-            "news_url": "https://www.facebook.com/KUASCG",
+            "news_title": "觀光-航空走秀",
+            "news_image": "http://i.imgur.com/OzrJIZZ.jpg",
+            "news_url": "https://www.facebook.com/2014TMATOPSHOW",
             "news_content": "",
-            "news_weight": 3
+            "news_weight": 5
         },
         {
             "news_title": "棒球社全壘打大賽",
@@ -52,7 +52,7 @@ def random_news():
             "news_image": "http://i.imgur.com/gnBbsSM.jpg",
             "news_url": "https://www.facebook.com/ScopeFilmFestival?__mref=message_bubble",
             "news_content": "",
-            "news_weight": 5
+            "news_weight": 4
         },
         {
             "news_title": "去你的文創節",
