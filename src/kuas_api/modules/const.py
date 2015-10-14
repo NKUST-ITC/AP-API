@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 device_version = {
-    "android": "2.1.3",
-    "android_donate": "2.1.2",
+    "android": "2.1.8",
+    "android_donate": "2.1.8",
     "ios": "1.6.0"
 }
 
