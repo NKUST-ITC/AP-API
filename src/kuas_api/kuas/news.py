@@ -20,9 +20,9 @@ def random_by_weight(p):
 def random_news():
     news_list = [
         {
-            "news_title": "影約 映画社期初大會",
-            "news_image": "http://i.imgur.com/UO9VN5I.jpg",
-            "news_url": "https://www.facebook.com/高應大映画社Film-Club-521274668030182",
+            "news_title": "流浪拼圖 Puzzles of wander",
+            "news_image": "http://i.imgur.com/NzYCzY4.jpg",
+            "news_url": "https://www.facebook.com/Puzzlesofwander",
             "news_content": "",
             "news_weight": 5
         },
@@ -31,7 +31,7 @@ def random_news():
             "news_image": "http://i.imgur.com/WBXx4QT.jpg",
             "news_url": "https://www.facebook.com/KUAS.FIN",
             "news_content": "",
-            "news_weight": 3
+            "news_weight": 2
         },
         {
             "news_title": "觀光-航空走秀",
