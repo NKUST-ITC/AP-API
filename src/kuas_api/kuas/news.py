@@ -27,11 +27,11 @@ def random_news():
             "news_weight": 5
         },
         {
-            "news_title": "發現金音 Halloween",
-            "news_image": "http://i.imgur.com/WBXx4QT.jpg",
-            "news_url": "https://www.facebook.com/KUAS.FIN",
+            "news_title": "第三屆康委大冒險<<醫靈肆>>",
+            "news_image": "http://i.imgur.com/egWTZ7r.jpg",
+            "news_url": "https://www.facebook.com/ReliveIsland",
             "news_content": "",
-            "news_weight": 2
+            "news_weight": 99
         },
         {
             "news_title": "觀光-航空走秀",
