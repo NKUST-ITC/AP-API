@@ -24,42 +24,36 @@ def random_news():
             "news_image": "http://i.imgur.com/NzYCzY4.jpg",
             "news_url": "https://www.facebook.com/Puzzlesofwander",
             "news_content": "",
-            "news_weight": 5
+            "news_weight": 4
         },
-        {
-            "news_title": "第三屆康委大冒險<<醫靈肆>>",
-            "news_image": "http://i.imgur.com/egWTZ7r.jpg",
-            "news_url": "https://www.facebook.com/ReliveIsland",
-            "news_content": "",
-            "news_weight": 99
-        },
+
         {
             "news_title": "觀光-航空走秀",
             "news_image": "http://i.imgur.com/OzrJIZZ.jpg",
             "news_url": "https://www.facebook.com/2014TMATOPSHOW",
             "news_content": "",
-            "news_weight": 5
+            "news_weight": 4
         },
         {
-            "news_title": "棒球社全壘打大賽",
-            "news_image": "http://i.imgur.com/nuNL5mY.jpg",
-            "news_url": "http://goo.gl/forms/ANvBwfP28C",
+            "news_title": "資安爐邊聚會",
+            "news_image": "http://i.imgur.com/BpxTSlC.png",
+            "news_url": "http://kuas-it.kktix.cc/events/2015-talk-1",
             "news_content": "",
-            "news_weight": 3
+            "news_weight": 8
         },
         {
             "news_title": "眼界陸-晚安電影院",
             "news_image": "http://i.imgur.com/gnBbsSM.jpg",
             "news_url": "https://www.facebook.com/ScopeFilmFestival?__mref=message_bubble",
             "news_content": "",
-            "news_weight": 4
+            "news_weight": 3
         },
         {
             "news_title": "去你的文創節",
             "news_image": "http://i.imgur.com/G6C2kwm.jpg",
             "news_url": "https://www.facebook.com/I.LIKE.CCI",
             "news_content": "",
-            "news_weight": 8
+            "news_weight": 5
         }
     ]
 
