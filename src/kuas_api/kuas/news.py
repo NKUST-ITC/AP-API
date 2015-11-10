@@ -20,41 +20,26 @@ def random_by_weight(p):
 def random_news():
     news_list = [
         {
-            "news_title": "流浪拼圖 Puzzles of wander",
-            "news_image": "http://i.imgur.com/NzYCzY4.jpg",
-            "news_url": "https://www.facebook.com/Puzzlesofwander",
-            "news_content": "",
-            "news_weight": 4
-        },
-
-        {
-            "news_title": "觀光-航空走秀",
-            "news_image": "http://i.imgur.com/OzrJIZZ.jpg",
-            "news_url": "https://www.facebook.com/2014TMATOPSHOW",
-            "news_content": "",
-            "news_weight": 4
-        },
-        {
-            "news_title": "資安爐邊聚會",
-            "news_image": "http://i.imgur.com/BpxTSlC.png",
-            "news_url": "http://kuas-it.kktix.cc/events/2015-talk-1",
-            "news_content": "",
-            "news_weight": 8
-        },
-        {
-            "news_title": "眼界陸-晚安電影院",
-            "news_image": "http://i.imgur.com/gnBbsSM.jpg",
-            "news_url": "https://www.facebook.com/ScopeFilmFestival?__mref=message_bubble",
-            "news_content": "",
-            "news_weight": 3
-        },
-        {
-            "news_title": "去你的文創節",
-            "news_image": "http://i.imgur.com/G6C2kwm.jpg",
+            "news_title": "文創【知者文化-寫一封信】",
+            "news_image": "http://i.imgur.com/kyeG8jo.jpg",
             "news_url": "https://www.facebook.com/I.LIKE.CCI",
             "news_content": "",
-            "news_weight": 5
-        }
+            "news_weight": 4
+        },
+        {
+            "news_title": "文創【知者，曰-消失的設計】",
+            "news_image": "http://i.imgur.com/WpbODo9.jpg",
+            "news_url": "https://www.facebook.com/I.LIKE.CCI",
+            "news_content": "",
+            "news_weight": 4
+        },
+        {
+            "news_title": "第八屆搖音新生盃",
+            "news_image": "http://i.imgur.com/jQO0VsL.jpg",
+            "news_url": "https://www.facebook.com/KUAS.RockMusicCompany/photos/pb.240024276068437.-2207520000.1446562914./945089888895202/?type=3&theater",
+            "news_content": "",
+            "news_weight": 4
+        },
     ]
 
     if NEWS_DEBUG:
