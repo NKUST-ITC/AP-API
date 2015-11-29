@@ -27,8 +27,8 @@ def random_news():
             "news_weight": 4
         },
         {
-            "news_title": "Legen電力！電競神化盃",
-            "news_image": "http://i.imgur.com/1oJF2wC.jpg",
+            "news_title": "Legen電力！電競神化盃v3",
+            "news_image": "http://i.imgur.com/Vd4Yk2z.jpg",
             "news_url": "https://www.facebook.com/Legen%E9%9B%BB%E5%8A%9B%E9%9B%BB%E7%AB%B6%E7%A5%9E%E5%8C%96%E7%9B%83-782605888423750/",
             "news_content": "",
             "news_weight": 4
