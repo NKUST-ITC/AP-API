@@ -9,7 +9,7 @@ from lxml import etree
 
 # AP URL Setting
 #: AP sytem base url
-AP_BASE_URL = "http://140.127.113.227"
+AP_BASE_URL = "http://140.127.113.224"
 
 #: AP system login url
 AP_LOGIN_URL = AP_BASE_URL + "/kuas/perchk.jsp"
