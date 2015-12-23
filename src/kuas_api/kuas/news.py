@@ -26,6 +26,20 @@ def random_news():
             "news_content": "",
             "news_weight": 4
         },
+        {
+            "news_title": "期末成果發表會 [春韻]",
+            "news_image": "http://i.imgur.com/To8vitb.jpg",
+            "news_url": "https://www.facebook.com/events/806882852767987/",
+            "news_content": "",
+            "news_weight": 4
+        },
+        {
+            "news_title": "我的藝響實驗舞臺-藝起來藝文活動",
+            "news_image": "http://i.imgur.com/eLbq9KU.jpg",
+            "news_url": "https://www.facebook.com/kuasfunart/?pnref=story&__mref=message_bubble",
+            "news_content": "",
+            "news_weight": 4
+        },
     ]
 
     if NEWS_DEBUG:
