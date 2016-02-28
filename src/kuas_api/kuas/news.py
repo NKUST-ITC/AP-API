@@ -25,7 +25,15 @@ def random_news():
             "news_url": "https://docs.google.com/forms/d/11Awcel_MfPeiEkl7zQ0MldvnAw59gXKLecbIODPOaMs/viewform?edit_requested=true",
             "news_content": "",
             "news_weight": 4
+        },
+        {
+            "news_title": "資研社 社員大會",
+            "news_image": "http://i.imgur.com/TGq9T2B.png",
+            "news_url": "https://m.facebook.com/KUASITC/?ref=bookmarks",
+            "news_content": "",
+            "news_weight": 4
         }
+
     ]
 
     if NEWS_DEBUG:
