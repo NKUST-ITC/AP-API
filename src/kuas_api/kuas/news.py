@@ -24,16 +24,22 @@ def random_news():
             "news_image": "http://i.imgur.com/iNbbd4B.jpg",
             "news_url": "https://docs.google.com/forms/d/11Awcel_MfPeiEkl7zQ0MldvnAw59gXKLecbIODPOaMs/viewform?edit_requested=true",
             "news_content": "",
+            "news_weight": 3
+        },
+        {
+            "news_title": "滔滔思想運動會",
+            "news_image": "http://i.imgur.com/DQBGjNS.jpg",
+            "news_url": "https://facebook.com/KUASTAO",
+            "news_content": "",
             "news_weight": 4
         },
         {
-            "news_title": "資研社 社員大會",
-            "news_image": "http://i.imgur.com/TGq9T2B.png",
-            "news_url": "https://m.facebook.com/KUASITC/?ref=bookmarks",
+            "news_title": "體委幹部體驗營",
+            "news_image": "http://i.imgur.com/aJyQlJp.jpg",
+            "news_url": "https://www.facebook.com/Kuas%E9%AB%94%E5%A7%94-440439566106678/?fref=ts",
             "news_content": "",
             "news_weight": 4
         }
-
     ]
 
     if NEWS_DEBUG:
