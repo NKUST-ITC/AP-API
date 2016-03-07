@@ -39,6 +39,13 @@ def random_news():
             "news_url": "https://www.facebook.com/Kuas%E9%AB%94%E5%A7%94-440439566106678/?fref=ts",
             "news_content": "",
             "news_weight": 4
+        },
+        {
+            "news_title": "箏偽",
+            "news_image": "http://i.imgur.com/ZHb6FrC.jpg",
+            "news_url": "https://www.facebook.com/kuaszither/?fref=ts",
+            "news_content": "",
+            "news_weight": 6
         }
     ]
 
