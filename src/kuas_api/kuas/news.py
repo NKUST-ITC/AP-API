@@ -27,13 +27,6 @@ def random_news():
             "news_weight": 3
         },
         {
-            "news_title": "滔滔思想運動會",
-            "news_image": "http://i.imgur.com/DQBGjNS.jpg",
-            "news_url": "https://facebook.com/KUASTAO",
-            "news_content": "",
-            "news_weight": 4
-        },
-        {
             "news_title": "體委幹部體驗營",
             "news_image": "http://i.imgur.com/aJyQlJp.jpg",
             "news_url": "https://www.facebook.com/Kuas%E9%AB%94%E5%A7%94-440439566106678/?fref=ts",
@@ -41,12 +34,20 @@ def random_news():
             "news_weight": 4
         },
         {
-            "news_title": "箏偽",
-            "news_image": "http://i.imgur.com/ZHb6FrC.jpg",
-            "news_url": "https://www.facebook.com/kuaszither/?fref=ts",
+            "news_title": "遊戲外掛 原理實戰",
+            "news_image": "http://i.imgur.com/WkI23R2.jpg",
+            "news_url": "https://www.facebook.com/profile.php?id=735951703168873",
+            "news_content": "",
+            "news_weight": 6
+        },
+        {
+            "news_title": "好日子育樂營",
+            "news_image": "https://scontent-hkg3-1.xx.fbcdn.net/hphotos-xft1/v/t34.0-0/p206x206/12834566_977348362345349_121675822_n.jpg?oh=e04f6830fdfe5d3a77e05a8b3c32fefc&oe=56E663E6",
+            "news_url": "https://m.facebook.com/kuasYGR/",
             "news_content": "",
             "news_weight": 6
         }
+
     ]
 
     if NEWS_DEBUG:
