@@ -149,7 +149,7 @@ def random_news():
             "news_weight": i.weight,
             "news_image": i.image,
             "news_url": i.link,
-            "news_content": i.content
+            "news_content": ""
         })
 
     return random_by_weight(news_list)
@@ -183,13 +183,6 @@ def news():
     news_url = news["news_url"]
 
     return json.dumps([ENABLE, NEWS_ID, news_title, news_template, news_url])
-
-
-# @route('/news/admin/build')
-# def build_admin_db():
-#     build_news_db()
-
-#     return redirect("/admin")
 
 
 if __name__ == "__main__":
