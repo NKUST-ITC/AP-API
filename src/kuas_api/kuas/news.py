@@ -47,7 +47,6 @@ def random_news():
             "news_content": "",
             "news_weight": 6
         }
-
     ]
 
     if NEWS_DEBUG:

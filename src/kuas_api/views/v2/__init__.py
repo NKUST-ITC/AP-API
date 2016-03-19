@@ -43,6 +43,7 @@ from kuas_api.views.v2.ap import routes as ap_routes
 from kuas_api.views.v2.bus import routes as bus_routes
 from kuas_api.views.v2.leave import routes as leave_routes
 from kuas_api.views.v2.notifications import routes as notifications_routes
+from kuas_api.views.v2.news import routes as news_routes
 
 # Dirty from #593
 routes = (
@@ -50,7 +51,8 @@ routes = (
     ap_routes +
     bus_routes +
     leave_routes +
-    notifications_routes
+    notifications_routes +
+    news_routes
 )
 
 for r in routes:

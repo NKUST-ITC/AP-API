@@ -5,12 +5,24 @@ Created on 08/29/2015
 """
 
 from flask import Flask
+import flask_admin as admin
+from flask_sqlalchemy import SQLAlchemy
 from flask.ext.compress import Compress
 
 __version__ = "2.0"
 
 app = Flask(__name__)
 app.config.from_object("config")
+
+# Add admin
+admin = admin.Admin(app, name="KUAS-API News", template_mode="bootstrap3")
+
+# Add db
+app.config["DATABASE_FILE"] = "news_db.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + \
+    app.config["DATABASE_FILE"]
+app.config["SQLALCHEMY_ECHO"] = True
+news_db = SQLAlchemy(app)
 
 # Let secret key go in
 import redis

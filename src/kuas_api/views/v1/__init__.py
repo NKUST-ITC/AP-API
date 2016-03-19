@@ -9,7 +9,7 @@ import kuas_api.kuas.ap as ap
 import kuas_api.kuas.user as user
 import kuas_api.kuas.cache as cache
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 from flask_cors import *
 
 from flask_apiblueprint import APIBlueprint
@@ -337,7 +337,7 @@ def notification(page):
 @api_v1.route('/news')
 @cross_origin(supports_credentials=True)
 def news():
-    return json.dumps(cache.news_query())
+    return redirect("/v2/news")
 
 
 @api_v1.route('/news/status')
