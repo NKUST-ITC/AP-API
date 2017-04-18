@@ -155,6 +155,21 @@ def random_news():
     return random_by_weight(news_list)
 
 
+@route('/news/all')
+def news_all():
+    ret = []
+    for i in News.query.all():
+        ret.append({
+            "news_title": i.title,
+            "news_weight": i.weight,
+            "news_image": i.image,
+            "news_url": i.link,
+            "news_content": ""
+        })
+
+    return json.dumps(ret, ensure_ascii=False)
+
+
 @route('/news')
 def news():
     """
