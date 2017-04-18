@@ -24,7 +24,7 @@ def status():
 
 def login(session, username, password):
     try:
-        r = session.get("https://leave.kuas.edu.tw:446", timeout=TIMEOUT)
+        r = session.get("https://leave.kuas.edu.tw:446/LogOn.aspx", timeout=TIMEOUT)
     except requests.exceptions.ReadTimeout:
         return False
 
@@ -39,7 +39,7 @@ def login(session, username, password):
     form['Login1$UserName'] = username
     form['Login1$Password'] = password
 
-    r = session.post('https://leave.kuas.edu.tw:446/', data=form)
+    r = session.post('https://leave.kuas.edu.tw:446/LogOn.aspx', data=form)
     root = etree.HTML(r.text)
 
     if root.xpath("//td[@align='center' and @style='color:Red;' and @colspan='2']"):
