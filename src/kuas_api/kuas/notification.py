@@ -20,7 +20,7 @@ def get(page=1):
         tr = list(filter(lambda x: x, map(
             lambda x: x.replace("\t", "").replace("\n", ""), tr.itertext())))
 
-        tr = dict(zip(("id", "date", "title", "department"), tr))
+        tr = dict(zip(("id", "title", "department", "date"), tr))
 
         result.append({'link': a, 'info': tr})
 
