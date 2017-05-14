@@ -188,8 +188,10 @@ def bus_reservations(bus_id=None, cancel_key=None):
         return jsonify(reservation=cache.bus_reserve_query(s))
     elif request.method == "PUT":
         result = cache.bus_booking(s, bus_id, "")
-
-        print("PUT,%s,%s,%s" % (user_agent, user_id, result))
+        try:
+            print("PUT,%s,%s,%s" % (user_agent, user_id, result))
+        except:
+            print("PUT ERROR, %s, %s" % (user_agent, user_id))
 
         return jsonify(result)
     elif request.method == "DELETE":
