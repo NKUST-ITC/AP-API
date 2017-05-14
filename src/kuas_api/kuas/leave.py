@@ -7,7 +7,7 @@ s = requests.session()
 
 SUBMIT_LEAVE_URL = "https://leave.kuas.edu.tw:446/CK001MainM.aspx"
 
-TIMEOUT = 1.0
+TIMEOUT = 5.0
 
 
 def status():
