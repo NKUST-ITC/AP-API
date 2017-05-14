@@ -68,7 +68,7 @@ def get_coursetables(year, semester):
     s = stateless_auth.get_requests_session_with_cookies()
 
     classes = cache.ap_query(
-        s, "ag222", {"arg01": year, "arg02": semester, "uid": "1101133117"}, g.username)
+        s, "ag222", {"arg01": year, "arg02": semester}, g.username)
 
     # No Content
     if not classes:
