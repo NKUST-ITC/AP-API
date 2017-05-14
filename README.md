@@ -9,8 +9,11 @@ How to use?
 ---
 ```
 $ git clone https://github.com/kuastw/AP-API
-$ pip install -r requirement.txt
 $ cd AP-API
+$ python -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirement.txt
+$ redis-server &
 $ python src/web-server.py
 ```
 
