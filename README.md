@@ -8,7 +8,7 @@ KUAS API Server
 How to use?
 ---
 ```
-$ git clone https://github.com/JohnSounder/AP-API
+$ git clone https://github.com/kuastw/AP-API
 $ pip install -r requirement.txt
 $ cd AP-API
 $ python src/web-server.py
