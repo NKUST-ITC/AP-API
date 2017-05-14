@@ -199,6 +199,9 @@ def query(session, y, m, d, operation="全部"):
         Data['reserveCount'] = i['reserveCount']
         Data['limitCount'] = i['limitCount']
         Data['isReserve'] = int(i['isReserve']) + 1
+        Data['SpecialTrain'] = i['SpecialTrain']
+        Data['SpecialTrainRemark'] = i['SpecialTrainRemark']
+
         returnData.append(Data)
 
     return returnData
