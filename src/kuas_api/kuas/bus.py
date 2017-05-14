@@ -257,9 +257,9 @@ def book(session, kid, action=None):
 
 
 if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
-    exit()
+    #import doctest
+    #doctest.testmod()
+    #exit()
 
     session = requests.session()
     init(session)
