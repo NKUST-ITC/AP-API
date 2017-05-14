@@ -9,7 +9,7 @@ from lxml import etree
 
 # AP URL Setting
 #: AP sytem base url
-AP_BASE_URL = "http://140.127.113.224"
+AP_BASE_URL = "http://140.127.113.231"
 
 #: AP system login url
 AP_LOGIN_URL = AP_BASE_URL + "/kuas/perchk.jsp"
@@ -26,7 +26,7 @@ AP_GUEST_PASSWORD = "123"
 
 # Timeout Setting
 #: Login timeout
-LOGIN_TIMEOUT = 1.0
+LOGIN_TIMEOUT = 5.0
 
 #: Query timeout
 QUERY_TIMEOUT = 5.0
