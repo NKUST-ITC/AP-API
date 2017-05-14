@@ -3,6 +3,9 @@ flask_apiblueprint
 flask_autodoc
 flask_cors
 flask_httpauth
+flask_admin
+flask_sqlalchemy
+flask_compress
 redis
 requests
 lxml
