@@ -10,4 +10,4 @@ install:
         cd src
 
 script:
-    - ../venv/bin/python -m unittest test
+    - ../venv/bin/python -m unittest discover test
