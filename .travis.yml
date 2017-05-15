@@ -1,0 +1,13 @@
+language: python
+python:
+    - "3.4"
+    - "3.6"
+
+install:
+    - |
+        python -m venv venv
+        ./venv/bin/python -m pip install -r requirements.txt
+        cd src
+
+script:
+    - ../venv/bin/python -m unittest test
