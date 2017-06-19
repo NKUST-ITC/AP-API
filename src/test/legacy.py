@@ -7,8 +7,8 @@ import base64
 import unittest
 import kuas_api
 
-USERNAME = "1102108133"
-PASSWORD = "111"
+USERNAME = ""
+PASSWORD = ""
 
 
 def ignore_warnings(func):

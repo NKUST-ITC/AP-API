@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kuastw/AP-API.svg?branch=master)](https://travis-ci.org/kuastw/AP-API)
+
 KUAS - API
 ==========
 
@@ -8,9 +10,12 @@ KUAS API Server
 How to use?
 ---
 ```
-$ git clone https://github.com/JohnSounder/AP-API
-$ pip install -r requirement.txt
+$ git clone https://github.com/kuastw/AP-API
 $ cd AP-API
+$ python -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirement.txt
+$ redis-server &
 $ python src/web-server.py
 ```
 
