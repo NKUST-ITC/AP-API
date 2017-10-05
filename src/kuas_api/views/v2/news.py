@@ -157,6 +157,50 @@ def random_news():
 
 @route('/news/all')
 def news_all():
+    """Get all news.
+
+    :resjson string news_image: The image URL
+    :resjson string news_url: The link on image
+    :resjson string news_title: The news title
+    :statuscode 200: Query successful
+
+    **Request**
+
+    .. sourcecode:: http
+
+        GET /latest/news/all HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Content-Type: text/html; charset=utf-8
+
+    .. sourcecode:: shell
+
+        curl -X GET https://kuas.grd.idv.tw:14769/latest/news/all
+
+
+    **Response**
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: application/json
+
+        [
+           {
+              "news_weight":8,
+              "news_image":"http://i.imgur.com/blHCDYh.jpg",
+              "news_content":"",
+              "news_url":"https://www.facebook.com/I.LIKE.CCI/",
+              "news_title":"TURN 2017 海峽兩岸三地文創平面設計作品交流展"
+           },
+           {
+              "news_weight":8,
+              "news_image":"http://i.imgur.com/tXt8YLh.jpg",
+              "news_content":"",
+              "news_url":"http://youth.blisswisdom.org/camp/main/",
+              "news_title":"2017 大專青年生命成長營"
+           }
+        ]
+    """ 
     ret = []
     for i in News.query.all():
         ret.append({
@@ -172,16 +216,32 @@ def news_all():
 
 @route('/news')
 def news():
-    """
-    News for kuas.
+    """Get random one news HTML data.
 
-    return [enable, news_id, news_title, news_template, news_url]
-        enable: bool
-        news_id: int
-        news_title: string
-        news_tempalte: string
-        news_url: string
-    """
+    :statuscode 200: Query successful
+
+    **Request**
+
+    .. sourcecode:: http
+
+        GET /latest/news HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Content-Type: text/html; charset=utf-8
+
+    .. sourcecode:: shell
+
+        curl -X GET https://kuas.grd.idv.tw:14769/latest/news
+
+
+    **Response**
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: application/json
+
+        [1, 0, "TURN 2017 \u6d77\u5cfd\u5169\u5cb8\u4e09\u5730\u6587\u5275\u5e73\u9762\u8a2d\u8a08\u4f5c\u54c1\u4ea4\u6d41\u5c55","<div style='text-align:center;'><div><img style='display:block;margin-left:auto;margin-right:auto;max-width:80%;min-height:150px;height:auto;' src='http://i.imgur.com/blHCDYh.jpg'></img></div></div>", "https://www.facebook.com/I.LIKE.CCI/"]
+    """ 
 
     # Get news from random news
     news = random_news()

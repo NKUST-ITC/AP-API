@@ -13,7 +13,7 @@ from kuas_api.modules.stateless_auth import auth
 import kuas_api.modules.stateless_auth as stateless_auth
 import kuas_api.modules.const as const
 import kuas_api.modules.error as error
-
+from .doc import auto
 
 # Nestable blueprints problem
 # not sure isn't this a best practice now.
@@ -38,6 +38,47 @@ def route(rule, **options):
 @route('/ap/users/info')
 @auth.login_required
 def ap_user_info():
+    """Get user's information.
+
+    :reqheader Authorization: Using Basic Auth
+    :resjson string class: User's class name
+    :resjson string education_system: User's scheme
+    :resjson string department: User's department
+    :resjson string student_id: User's student identifier
+    :resjson string student_name_cht: User's name in Chinese
+    :resjson string student_name_eng: User's name in English
+    :statuscode 200: Query successful
+    :statuscode 401: Login failed or auth_token has been expired
+
+    **Request**
+
+    .. sourcecode:: http
+
+        GET /latest/ap/users/info HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Authorization: Basic xxxxxxxxxxxxx=
+
+    .. sourcecode:: shell
+
+        curl -X GET -u username:password https://kuas.grd.idv.tw:14769/latest/ap/users/info
+
+
+    **Response**
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: text/html; charset=utf-8
+
+        {
+            "class":"四資工三甲",
+            "education_system":"日間部四技",
+            "department":"資訊工程系",
+            "student_id":"1104137***",
+            "student_name_cht":"顏**",
+            "student_name_eng":""
+        }
+    """
     # Restore cookies
     s = stateless_auth.get_requests_session_with_cookies()
 
@@ -47,7 +88,35 @@ def ap_user_info():
 @route('/ap/users/picture')
 @auth.login_required
 def ap_user_picture():
-    # Restore cookies
+    """Get user's picture URL.
+
+    :reqheader Authorization: Using Basic Auth
+    :statuscode 200: Query successful
+    :statuscode 401: Login failed or auth_token has been expired
+
+    **Request**
+
+    .. sourcecode:: http
+
+        GET /latest/ap/users/info HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Authorization: Basic xxxxxxxxxxxxx=
+
+    .. sourcecode:: shell
+
+        curl -X GET -u username:password https://kuas.grd.idv.tw:14769/latest/ap/users/picture
+
+
+    **Response**
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: text/html; charset=utf-8
+
+        http://140.127.113.231/kuas/stdpics/1104137***_20170803213***.jpg
+    """
+   # Restore cookies
     s = stateless_auth.get_requests_session_with_cookies()
 
     return user.get_user_picture(s)
@@ -56,6 +125,114 @@ def ap_user_picture():
 @route('/ap/users/coursetables/<int:year>/<int:semester>')
 @auth.login_required
 def get_coursetables(year, semester):
+    """Get user's class schedule.
+
+    :reqheader Authorization: Using Basic Auth
+    :query int year: Specific year to query class schedule. format: yyy (see below)
+    :query int semester: Given a semester
+    :statuscode 200: Query successful
+    :statuscode 401: Login failed or auth_token has been expired
+
+    **Request**
+
+    .. sourcecode:: http
+
+        GET /latest/ap/users/info HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Authorization: Basic xxxxxxxxxxxxx=
+
+    .. sourcecode:: shell
+
+        curl -X GET -u username:password https://kuas.grd.idv.tw:14769/\\
+        latest/ap/users/coursetables/106/1
+
+
+    **Response**
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: application/json
+    
+        {
+           "status":200,
+           "coursetables":{
+              "Tuesday":[
+                 {
+                    "instructors":[
+                       "張雲龍"
+                    ],
+                    "date":{
+                       "weekday":"T",
+                       "start_time":"09:10",
+                       "end_time":"10:00",
+                       "section":"第 2 節"
+                    },
+                    "title":"生物資訊概論",
+                    "location":{
+                       "building":"",
+                       "room":"資002"
+                    }
+                 }
+              ],
+              "Wednesday":[
+                 {
+                    "instructors":[
+                       "洪靖婷"
+                    ],
+                    "date":{
+                       "weekday":"W",
+                       "start_time":"08:10",
+                       "end_time":"09:00",
+                       "section":"第 1 節"
+                    },
+                    "title":"應用文與習作",
+                    "location":{
+                       "building":"",
+                       "room":"育302"
+                    }
+                 }
+              ],
+              "Monday":[
+                 {
+                    "instructors":[
+                       "張道行"
+                    ],
+                    "date":{
+                       "weekday":"M",
+                       "start_time":"13:30",
+                       "end_time":"14:20",
+                       "section":"第 5 節"
+                    },
+                    "title":"計算機結構",
+                    "location":{
+                       "building":"",
+                       "room":"南101"
+                    }
+                 }
+              ],
+              "Thursday":[
+                 {
+                    "instructors":[
+                       "蕭淳元"
+                    ],
+                    "date":{
+                       "weekday":"R",
+                       "start_time":"09:10",
+                       "end_time":"10:00",
+                       "section":"第 2 節"
+                    },
+                    "title":"資料結構",
+                    "location":{
+                       "building":"",
+                       "room":"育302"
+                    }
+                 }
+              ]
+           },
+           "messages":""
+        }
+    """
     # See Gist for more infomation.
     # https://gist.github.com/hearsilent/a2570371cc6aa7db97bb
 
@@ -88,6 +265,151 @@ def get_coursetables(year, semester):
 @route('/ap/users/scores/<int:year>/<int:semester>')
 @auth.login_required
 def get_score(year, semester):
+    """Get user's scores.
+
+    :reqheader Authorization: Using Basic Auth
+    :query int year: Specific year to query class schedule. format: yyy (see below)
+    :query int semester: Set semester to query class schedule. value: 1~4 (see below)
+    :statuscode 200: Query successful
+    :statuscode 401: Login failed or auth_token has been expired
+
+    **Request**
+
+    .. sourcecode:: http
+
+        GET /latest/ap/users/info HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Authorization: Basic xxxxxxxxxxxxx=
+
+    .. sourcecode:: shell
+
+        curl -X GET -u username:password https://kuas.grd.idv.tw:14769/\\
+        latest/ap/users/scores/105/2
+
+
+    **Response**
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: application/json
+       
+
+        {
+          "status":200,
+          "messages":"",
+          "scores":{
+            "detail":{
+              "conduct":82.0,
+              "class_rank":"44/56",
+              "average":70.33,
+              "class_percentage":78.57
+            },
+            "scores":[
+              {
+                "required":"【選修】",
+                "hours":"3.0",
+                "title":"系統程式",
+                "remark":"",
+                "middle_score":"*",
+                "units":"3.0",
+                "final_score":"60.00",
+                "at":"【學期】"
+              },
+              {
+                "required":"【必修】",
+                "hours":"3.0",
+                "title":"物理(二)",
+                "remark":"停修",
+                "middle_score":"*",
+                "units":"3.0",
+                "final_score":"0.00",
+                "at":"【學期】"
+              },
+              {
+                "required":"【必修】",
+                "hours":"2.0",
+                "title":"英語聽講訓練(二)",
+                "remark":"",
+                "middle_score":"85.00",
+                "units":"1.0",
+                "final_score":"75.00",
+                "at":"【學期】"
+              },
+              {
+                "required":"【必修】",
+                "hours":"3.0",
+                "title":"計算機網路",
+                "remark":"",
+                "middle_score":"*",
+                "units":"3.0",
+                "final_score":"63.00",
+                "at":"【學期】"
+              },
+              {
+                "required":"【選修】",
+                "hours":"3.0",
+                "title":"視窗程式設計",
+                "remark":"",
+                "middle_score":"76.00",
+                "units":"3.0",
+                "final_score":"76.00",
+                "at":"【學期】"
+              },
+              {
+                "required":"【必修】",
+                "hours":"3.0",
+                "title":"微處理機",
+                "remark":"",
+                "middle_score":"*",
+                "units":"3.0",
+                "final_score":"79.00",
+                "at":"【學期】"
+              },
+              {
+                "required":"【必修】",
+                "hours":"3.0",
+                "title":"線性代數",
+                "remark":"",
+                "middle_score":"*",
+                "units":"3.0",
+                "final_score":"59.00",
+                "at":"【學期】"
+              },
+              {
+                "required":"【必修】",
+                "hours":"3.0",
+                "title":"機率與統計",
+                "remark":"",
+                "middle_score":"80.00",
+                "units":"3.0",
+                "final_score":"67.00",
+                "at":"【學期】"
+              },
+              {
+                "required":"【必修】",
+                "hours":"2.0",
+                "title":"延伸通識(科技)-近代科技概論",
+                "remark":"",
+                "middle_score":"*",
+                "units":"2.0",
+                "final_score":"95.00",
+                "at":"【學期】"
+              },
+              {
+                "required":"【必修】",
+                "hours":"2.0",
+                "title":"體育－體適能加強班NTC",
+                "remark":"",
+                "middle_score":"*",
+                "units":"0",
+                "final_score":"0.00",
+                "at":"【學期】"
+              }
+            ]
+          }
+        }
+    """
     # Restore cookies
     s = stateless_auth.get_requests_session_with_cookies()
 
@@ -121,6 +443,275 @@ def get_sample_coursetables():
 
 @route('/ap/semester')
 def ap_semester():
+    """Get user's information.
+
+    :reqheader Authorization: Using Basic Auth
+    :resjson string value: Every semester value. format: (year,semester)
+    :resjson string text: Every semester description text.
+    :resjson int selected: If the value is 1, means the semester is default value on KUAS AP Website.
+    :statuscode 200: Query successful
+    :statuscode 401: Login failed or auth_token has been expired
+
+    **Request**
+
+    .. sourcecode:: http
+
+        GET /latest/ap/users/info HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Authorization: Basic xxxxxxxxxxxxx=
+
+    .. sourcecode:: shell
+
+        curl -X GET -u username:password https://kuas.grd.idv.tw:14769/latest/ap/semester
+
+
+    **Response**
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: text/html; charset=utf-8
+
+        {
+          "default":{
+            "value":"106,1",
+            "text":"106學年度第1學期",
+            "selected":1
+          },
+          "semester":[
+            {
+              "value":"106,1",
+              "text":"106學年度第1學期",
+              "selected":1
+            },
+            {
+              "value":"105,1",
+              "text":"105學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"105,2",
+              "text":"105學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"105,4",
+              "text":"105學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"104,1",
+              "text":"104學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"104,2",
+              "text":"104學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"104,3",
+              "text":"104學年度寒修",
+              "selected":0
+            },
+            {
+              "value":"104,4",
+              "text":"104學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"103,1",
+              "text":"103學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"103,2",
+              "text":"103學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"103,4",
+              "text":"103學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"103,5",
+              "text":"103學年度先修學期",
+              "selected":0
+            },
+            {
+              "value":"102,1",
+              "text":"102學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"102,2",
+              "text":"102學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"102,4",
+              "text":"102學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"101,1",
+              "text":"101學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"101,2",
+              "text":"101學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"101,3",
+              "text":"101學年度寒修",
+              "selected":0
+            },
+            {
+              "value":"101,4",
+              "text":"101學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"100,1",
+              "text":"100學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"100,2",
+              "text":"100學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"100,3",
+              "text":"100學年度寒修",
+              "selected":0
+            },
+            {
+              "value":"100,4",
+              "text":"100學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"99,1",
+              "text":"99學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"99,2",
+              "text":"99學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"99,3",
+              "text":"99學年度寒修",
+              "selected":0
+            },
+            {
+              "value":"99,4",
+              "text":"99學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"98,1",
+              "text":"98學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"98,2",
+              "text":"98學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"98,3",
+              "text":"98學年度寒修",
+              "selected":0
+            },
+            {
+              "value":"98,4",
+              "text":"98學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"97,1",
+              "text":"97學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"97,2",
+              "text":"97學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"97,3",
+              "text":"97學年度寒修",
+              "selected":0
+            },
+            {
+              "value":"97,4",
+              "text":"97學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"96,1",
+              "text":"96學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"96,2",
+              "text":"96學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"96,3",
+              "text":"96學年度寒修",
+              "selected":0
+            },
+            {
+              "value":"96,4",
+              "text":"96學年度暑修",
+              "selected":0
+            },
+            {
+              "value":"95,1",
+              "text":"95學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"95,2",
+              "text":"95學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"94,1",
+              "text":"94學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"94,2",
+              "text":"94學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"93,1",
+              "text":"93學年度第1學期",
+              "selected":0
+            },
+            {
+              "value":"93,2",
+              "text":"93學年度第2學期",
+              "selected":0
+            },
+            {
+              "value":"92,2",
+              "text":"92學年度第2學期",
+              "selected":0
+            }
+          ]
+        }
+    """
     semester_list = ap.get_semester_list()
     default_yms = list(
         filter(lambda x: x['selected'] == 1, semester_list))[0]
