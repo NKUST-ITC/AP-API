@@ -76,6 +76,9 @@ def get_coursetables(year, semester):
 
     coursetables = {}
     for c in classes:
+        if 'timecode' in c:
+          coursetables['timecode'] = c['timecode']
+          continue
         weekday = weekdays[c["date"]["weekday"]]
         if not weekday in coursetables:
             coursetables[weekday] = []

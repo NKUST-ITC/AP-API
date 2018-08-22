@@ -84,6 +84,11 @@ def course(cont):
 
             course_table.append(classes)
 
+    timecode = []
+    for r in tbody[1:]:
+        timecode.append(list(r.itertext())[1])
+    course_table.append({'timecode': timecode})
+
     return course_table
 
 
