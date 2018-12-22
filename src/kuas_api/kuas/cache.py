@@ -62,10 +62,10 @@ def login(username, password):
         pass
 
     # Login leave system
-    try:
-        is_login["leave"] = leave.login(session, username, password)
-    except:
-        pass
+    #try:
+    #    is_login["leave"] = leave.login(session, username, password)
+    #except:
+    #    pass
 
     if all(is_login.values()):
         return dump_session_cookies(session)
