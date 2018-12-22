@@ -38,6 +38,35 @@ def route(rule, **options):
 @route('/leaves/<int:year>/<int:semester>')
 @auth.login_required
 def get_leave(year, semester):
+    """Get user's leaves record.
+
+    :reqheader Authorization: Using Basic Auth
+    :query int year: Specific year to query class schedule. format: yyy (see below)
+    :query int semester: Given a semester
+    :statuscode 200: Query successful
+    :statuscode 401: Login failed or auth_token has been expired
+
+    **Request**
+
+    .. sourcecode:: http
+
+        GET /latest/leaves/105/2 HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Authorization: Basic xxxxxxxxxxxxx=
+
+    .. sourcecode:: shell
+
+        curl -X GET -u username:password https://kuas.grd.idv.tw:14769/latest/leaves/105/2
+
+
+    **Response**
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: application/json
+
+    """
     # Restore cookies
     s = stateless_auth.get_requests_session_with_cookies()
 
@@ -54,6 +83,38 @@ def get_leave(year, semester):
 @cross_origin(supports_credentials=True)
 @auth.login_required
 def leave_submit():
+    """Take a user's leave.
+
+    :reqheader Authorization: Using Basic Auth
+    :fparam start_date: The first leave date
+    :fparam end_date: The last leave date
+    :fparam reason_id: The reason identifier
+    :fparam reason_text: The reason of taking a leave
+    :statuscode 200: Query successful
+    :statuscode 401: Login failed or auth_token has been expired
+
+    **Request**
+
+    .. sourcecode:: http
+
+        POST /latest/leave/submit HTTP/1.1
+        Host: kuas.grd.idv.tw:14769
+        Authorization: Basic xxxxxxxxxxxxx=
+
+    .. sourcecode:: shell
+
+        curl -X POST -d "start_date=2017-05-30&end_date=2017-05-31\\
+                &reason_text=I want to take a leave" \\
+                https://kuas.grd.idv.tw:14769/latest/leave/submit -u username:password
+
+    **Response**
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: application/json
+
+    """
     if request.method == 'POST':
         start_date = request.form['start_date'].replace("-", "/")
         end_date = request.form['end_date'].replace("-", "/")

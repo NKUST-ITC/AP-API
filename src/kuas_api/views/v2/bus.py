@@ -40,14 +40,11 @@ def route(rule, **options):
 def timetables():
     """Get KUAS school bus time table.
 
+    :reqheader Authorization: Using Basic Auth
     :query string date: Specific date to query timetable. format: yyyy-mm-dd
     :query string from: The start station you want to query. (not impl yet)
     :statuscode 200: no error
 
-
-    **Requires authentication?**
-
-      Yes
 
     **Request**
 
@@ -61,7 +58,7 @@ def timetables():
 
     .. sourcecode:: shell
 
-        curl -i -X GET localhost:8001/v2/bus/timetables
+        curl -u username:password -X GET https://kuas.grd.idv.tw:14769/v2/bus/timetables
 
     with date
 
@@ -70,6 +67,10 @@ def timetables():
         GET /latest/bus/timetables?date=2015-9-1 HTTP/1.1
         Host: kuas.grd.idv.tw:14769
         Authorization: Basic xxxxxxxxxxxxx=
+
+    .. sourcecode:: shell
+
+        curl -u username:password -X GET https://kuas.grd.idv.tw:14769/v2/bus/timetables?date=2017-08-09
 
 
     **Response**
@@ -142,40 +143,6 @@ def timetables():
 @route("/bus/reservations/<int:cancel_key>", methods=["DELETE"])
 @auth.login_required
 def bus_reservations(bus_id=None, cancel_key=None):
-    """
-    .. warning::
-
-      This endpoints is still under construct,
-      return value `may` change quickly.
-
-      Please check this documentations for update.
-
-
-    .. http:get:: /bus/reservations
-
-      Get user's bus reservation.
-
-      **Requires authentication?**
-
-        Yes
-
-      **Request**
-
-        .. sourcecode:: http
-
-      **Response**
-
-        .. sourcecode:: http
-
-
-    .. http:put:: /bus/reservations
-
-        put
-
-    .. http:delete:: /bus/reservations
-
-        delete
-    """
 
     # Restore cookies
     s = stateless_auth.get_requests_session_with_cookies()
