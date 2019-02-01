@@ -9,14 +9,14 @@ from lxml import etree
 
 # AP URL Setting
 #: AP sytem base url
-AP_BASE_URL = "http://140.127.113.231"
+AP_BASE_URL = "http://webap.nkust.edu.tw"
 
 #: AP system login url
-AP_LOGIN_URL = AP_BASE_URL + "/kuas/perchk.jsp"
+AP_LOGIN_URL = AP_BASE_URL + "/nkust/perchk.jsp"
 
 #: AP system general query url, with two args,
 #  first: prefix of qid, second: qid
-AP_QUERY_URL = AP_BASE_URL + "/kuas/%s_pro/%s.jsp?"
+AP_QUERY_URL = AP_BASE_URL + "/nkust/%s_pro/%s.jsp"
 
 #: AP guest account
 AP_GUEST_ACCOUNT = "guest"

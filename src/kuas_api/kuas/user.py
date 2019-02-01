@@ -49,7 +49,7 @@ def get_user_picture(session):
     root = _get_user_info(session)
 
     try:
-        image = ap.AP_BASE_URL + "/kuas" + \
+        image = ap.AP_BASE_URL + "/nkust" + \
             root.xpath("//img")[0].values()[0][2:]
     except:
         image = ""
