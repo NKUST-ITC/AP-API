@@ -67,6 +67,23 @@ def get_leave(year, semester):
         Content-Type: application/json
 
     """
+    timecode = [
+            "A",
+            "1",
+            "2",
+            "3",
+            "4",
+            "B",
+            "5",
+            "6",
+            "7",
+            "8",
+            "C",
+            "11",
+            "12",
+            "13",
+            "14"
+        ]
     # Restore cookies
     s = stateless_auth.get_requests_session_with_cookies()
 
@@ -75,7 +92,8 @@ def get_leave(year, semester):
     if not leaves:
         return jsonify(status=const.no_content, messages="本學期無缺曠課記錄", leaves=[])
     else:
-        return jsonify(status=const.ok, messages="", leaves=leaves)
+        #leaves.append()
+        return jsonify(status=const.ok, messages="", leaves=leaves,timecode=timecode)
 
 
 @route('/leave/submit', methods=['POST'])

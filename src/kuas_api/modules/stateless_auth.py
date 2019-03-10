@@ -5,7 +5,7 @@ import json
 import redis
 import requests
 from flask import g, abort
-from flask.ext.httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPBasicAuth
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 
@@ -18,7 +18,7 @@ import kuas_api.modules.error as error
 auth = HTTPBasicAuth()
 
 # Redis connection
-red = redis.StrictRedis(db=2)
+red = redis.StrictRedis.from_url(url=os.environ['REDIS_URL'], db=2)
 
 # Shit lazy key
 DIRTY_SECRET_KEY = red.get("SECRET_KEY") if red.exists(
@@ -43,7 +43,7 @@ def set_cookies(s, username):
     :type username: str
     :return: None
     """
-    cookies = json.loads(str(red.get(username), "utf-8"))
+    cookies = json.loads(str(red.get(username), "utf-8"))['cookies']
 
     for c in cookies:
         s.cookies.set(c['name'], c['value'], domain=c['domain'])

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import g, jsonify
+import json
 
 import kuas_api.kuas.cache as cache
 import kuas_api.modules.error as error
@@ -70,12 +71,14 @@ def get_auth_token():
           "auth_token": "adfakdflakds.fladkjflakjdf.adslkfakdadf"
         }
     """
-
+    is_login = json.loads(str(cache.red.get(g.username), "utf-8"))['is_login']
     token = g.token
     return jsonify(
         auth_token=token.decode('ascii'),
         token_type="Basic",
-        duration=const.token_duration)
+        duration=const.token_duration,
+        is_login= is_login
+        )
 
 
 @route('/versions/<string:device_type>')

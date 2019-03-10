@@ -208,7 +208,7 @@ def news_all():
             "news_weight": i.weight,
             "news_image": i.image,
             "news_url": i.link,
-            "news_content": ""
+            "news_content": i.content
         })
 
     return json.dumps(ret, ensure_ascii=False)

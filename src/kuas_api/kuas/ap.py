@@ -6,7 +6,6 @@ __version__ = 2.0
 
 import requests
 from lxml import etree
-
 # AP URL Setting
 #: AP sytem base url
 AP_BASE_URL = "http://webap.nkust.edu.tw"
@@ -27,7 +26,6 @@ AP_GUEST_PASSWORD = "123"
 # Timeout Setting
 #: Login timeout
 LOGIN_TIMEOUT = 5.0
-
 #: Query timeout
 QUERY_TIMEOUT = 5.0
 
@@ -110,15 +108,21 @@ def get_semester_list():
     s = requests.Session()
     login(s, AP_GUEST_ACCOUNT, AP_GUEST_PASSWORD)
 
-    content = query(s, "ag304_01")
+    content = cache.ap_query(s, "ag304_01")
+    if len(content)<3000:
+        return False
     root = etree.HTML(content)
 
-    options = root.xpath("id('yms_yms')/option")
-    options = map(lambda x: {"value": x.values()[0].replace("#", ","),
-                             "selected": 1 if "selected" in x.values() else 0,
-                             "text": x.text},
-                  root.xpath("id('yms_yms')/option")
-                  )
+    #options = root.xpath("id('yms_yms')/option")
+    try:
+        options = map(lambda x: {"value": x.values()[0].replace("#", ","),
+                                "selected": 1 if "selected" in x.values() else 0,
+                                "text": x.text},
+                    root.xpath("id('yms_yms')/option")
+                    )
+    except:
+        return False
+    
     options = list(options)
 
     return options
@@ -165,9 +169,9 @@ def query(session, qid, args={}):
             "fncid": "", "uid": ""}
 
     data['fncid'] = qid
-
-    for key in args:
-        data[key] = args[key]
+    if args != None:
+        for key in args:
+            data[key] = args[key]
 
     try:
         resp = session.post(AP_QUERY_URL % (qid[:2], qid),
@@ -178,10 +182,10 @@ def query(session, qid, args={}):
         content = resp.text
     except requests.exceptions.ReadTimeout:
         content = ""
-
     return content
 
 
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+    #import doctest
+    #doctest.testmod()
+    print(get_semester_list())

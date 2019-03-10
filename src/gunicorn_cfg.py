@@ -5,6 +5,8 @@ reload = True
 bind = "0.0.0.0:14769"
 
 # SSL
+certfile="./cert/cert.pem"
+keyfile="./cert/key.pem"
 
 # Performance
 workers = 3

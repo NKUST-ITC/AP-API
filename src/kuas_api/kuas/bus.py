@@ -222,13 +222,15 @@ def reserve(session):
     resource = json.loads(content)
 
     rd = []
-    for i in resource['data']:
-        data = {}
-        data['time'] = _get_real_time(i['time'])
-        data['endTime'] = _get_real_time(i['endTime'])
-        data['cancelKey'] = i['key']
-        data['end'] = i['end']
-        rd.append(data)
+    
+    if(resource['data'] is not None):
+        for i in resource['data']:
+            data = {}
+            data['time'] = _get_real_time(i['time'])
+            data['endTime'] = _get_real_time(i['endTime'])
+            data['cancelKey'] = i['key']
+            data['end'] = i['end']
+            rd.append(data)
 
     result = sorted(rd, key=lambda k: k['time'])
 

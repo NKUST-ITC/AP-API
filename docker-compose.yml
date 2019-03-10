@@ -1,0 +1,46 @@
+version: '3.6'
+services:
+  web:
+    image: "nkustitc/ap-api:latest"
+    build: 
+      context: . 
+      dockerfile: Dockerfile
+    volumes:
+    - .:/usr/src/app
+    ports:
+      - "2087":2087"
+    environment:
+      - REDIS_URL=${REDIS_URL}
+    command: [ "gunicorn","-c","gunicorn_cfg.py","web-server:app"]
+    networks:
+      - redis-net
+      - front-end
+    depends_on:
+      - redis
+  redis:
+    image: "redis:alpine"
+    volumes:
+      - redis-data:/data
+    networks:
+      - redis-net
+  caddy:
+    image: "abiosoft/caddy:latest"
+    volumes:
+      - ./caddy/Caddyfile:/etc/Caddyfile
+      - ./caddy/path:/root/.caddy
+    ports:
+      - "2015:2015"
+      - "80:80"
+      - "443:443"
+      - "${CADDY_HOST_HTTPS_PORT}:2087"
+    environment:
+      - ACME_AGREE=true
+    depends_on:
+      - web
+    networks:
+      - front-end
+networks:
+  redis-net:
+  front-end:
+volumes:
+  redis-data:

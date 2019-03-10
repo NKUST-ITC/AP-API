@@ -14,7 +14,7 @@ import kuas_api.kuas.parse as parse
 import kuas_api.kuas.bus as bus
 import kuas_api.kuas.notification as notification
 import kuas_api.kuas.news as news
-
+from lxml import etree
 
 AP_QUERY_EXPIRE = 3600
 BUS_EXPIRE_TIME = 0
@@ -24,13 +24,19 @@ NOTIFICATION_EXPIRE_TIME = 3600
 BUS_QUERY_TAG = "bus"
 NOTIFICATION_TAG = "notification"
 
+#: AP guest account
+AP_GUEST_ACCOUNT = "guest"
+
+#: AP guest password
+AP_GUEST_PASSWORD = "123"
+
 s_cache = SimpleCache()
-red = redis.StrictRedis(db=2, decode_responses=True)
+red = redis.StrictRedis.from_url(url= os.environ['REDIS_URL'],db=2)
 SECRET_KEY = red.get("SECRET_KEY") if red.exists(
     "SECRET_KEY") else str(os.urandom(32))
 
 
-def dump_session_cookies(session):
+def dump_session_cookies(session,is_login):
     """Dumps cookies to list
     """
 
@@ -41,7 +47,7 @@ def dump_session_cookies(session):
             'domain': c.domain,
             'value': c.value})
 
-    return cookies
+    return {'is_login': is_login, 'cookies':cookies}
 
 
 def login(username, password):
@@ -52,30 +58,29 @@ def login(username, password):
     try:
         is_login["ap"] = ap.login(session, username, password)
     except:
-        pass
+        is_login["ap"] = False
 
     # Login bus system
     try:
         bus.init(session)
         is_login["bus"] = bus.login(session, username, password)
     except:
-        pass
+        is_login["bus"] = False
 
     # Login leave system
-    #try:
-    #    is_login["leave"] = leave.login(session, username, password)
-    #except:
-    #    pass
-
-    if all(is_login.values()):
-        return dump_session_cookies(session)
+    try:
+        is_login["leave"] = leave.login(session, username, password)
+    except:
+        is_login["leave"] = False
+    if is_login["ap"]: 
+        return dump_session_cookies(session,is_login)
     else:
-        return False
+        return False 
 
 
 def ap_query(session, qid=None, args=None,
              username=None, expire=AP_QUERY_EXPIRE):
-    ap_query_key_tag = str(username) + str(args) + SECRET_KEY
+    ap_query_key_tag = str(username) + str(args) +  str(SECRET_KEY)
     ap_query_key = qid + \
         hashlib.sha512(
             bytes(ap_query_key_tag, "utf-8")).hexdigest()
@@ -89,7 +94,6 @@ def ap_query(session, qid=None, args=None,
         ap_query_content = json.loads(red.get(ap_query_key))
 
     return ap_query_content
-
 
 def leave_query(session, year="102", semester="2"):
     return leave.getList(session, year, semester)
@@ -178,6 +182,39 @@ def server_status():
         server_status = s_cache.get("server_status")
 
     return server_status
+
+
+def get_semester_list():
+    """Get semester list from ap system.
+
+    :rtype: dict
+
+    >>> get_semester_list()[-1]['value']
+    '92,2'
+    """
+
+    s = requests.Session()
+    ap.login(s,AP_GUEST_ACCOUNT, AP_GUEST_PASSWORD)
+
+    content = ap_query(s, "ag304_01")
+    if len(content)<3000:
+        return False
+    root = etree.HTML(content)
+
+    #options = root.xpath("id('yms_yms')/option")
+    try:
+        options = map(lambda x: {"value": x.values()[0].replace("#", ","),
+                                "selected": 1 if "selected" in x.values() else 0,
+                                "text": x.text},
+                    root.xpath("id('yms_yms')/option")
+                    )
+    except:
+        return False
+    
+    options = list(options)
+
+    return options
+
 
 
 if __name__ == "__main__":

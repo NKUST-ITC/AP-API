@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Blueprint
-from flask.ext.autodoc import Autodoc
+from flask_autodoc.autodoc import Autodoc
 
 doc = Blueprint("doc", __name__, url_prefix="/v2/docs")
 auto = Autodoc()
