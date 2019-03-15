@@ -7,10 +7,10 @@ services:
       dockerfile: Dockerfile
     volumes:
     - .:/usr/src/app
-    ports:
-      - "2087":2087"
     environment:
       - REDIS_URL=${REDIS_URL}
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     command: [ "gunicorn","-c","gunicorn_cfg.py","web-server:app"]
     networks:
       - redis-net
