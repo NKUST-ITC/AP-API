@@ -815,14 +815,6 @@ paths:
       description: "If query parameters are empty then return the latest reservations."
       security:
         - JSON-Web-Token: []
-      parameters: 
-      - in: query
-        name: "busId"
-        description: "bus id"
-        schema:
-            type: string
-            format: yyyy-MM-dd
-            example: "2018-12-23"
       responses:
         200:
           description: return reservations by year and semester
