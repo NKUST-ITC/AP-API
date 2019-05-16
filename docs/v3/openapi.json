@@ -1,0 +1,1570 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "NKUST API",
+    "description": "NKUST-API-完善計畫  [Github](https://github.com/NKUST-ITC/AP-API)",
+    "contact": {
+      "email": "nkust.itc@gmail.com"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://github.com/NKUST-ITC/AP-API/blob/master/LICENSE.md"
+    },
+    "version": "3.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://nkust-ap-api.rainvisitor.me:2087/latest"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "About authentication"
+    },
+    {
+      "name": "Server",
+      "description": "Some server info"
+    },
+    {
+      "name": "User",
+      "description": "Everything about user"
+    },
+    {
+      "name": "Bus",
+      "description": "Everything about bus"
+    },
+    {
+      "name": "News",
+      "description": "Everything about news"
+    },
+    {
+      "name": "Leave",
+      "description": "Everything about leave"
+    },
+    {
+      "name": "Library",
+      "description": "Everything about library"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "get a new token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "login sucess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Auth"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Username or password is incorrect"
+          },
+          "504": {
+            "description": "All school server is not alive"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "delete all token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "205": {
+            "description": "Logout sucess and client should reset content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Username or password is incorrect"
+          }
+        }
+      }
+    },
+    "/server/info": {
+      "get": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "get server status (update every 10 minutes)",
+        "responses": {
+          "200": {
+            "description": "return server status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerInfo"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      }
+    },
+    "/news/announcements": {
+      "get": {
+        "tags": [
+          "News"
+        ],
+        "summary": "get first announcements",
+        "responses": {
+          "200": {
+            "description": "return first news",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/News"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/news/announcements/{id}": {
+      "get": {
+        "tags": [
+          "News"
+        ],
+        "summary": "get announcement by id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id or news",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return news by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/News"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/news/announcements/all": {
+      "get": {
+        "tags": [
+          "News"
+        ],
+        "summary": "get all announcements",
+        "responses": {
+          "200": {
+            "description": "return all news",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "id"
+                      },
+                      "nextid": {
+                        "type": "integer",
+                        "description": "next news id"
+                      },
+                      "lastId": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "title"
+                      },
+                      "publishedTime": {
+                        "type": "string",
+                        "description": "publish time"
+                      },
+                      "url": {
+                        "type": "string",
+                        "description": "news url"
+                      },
+                      "imgUrl": {
+                        "type": "string",
+                        "description": "image url"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "news description"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "title": "高科校務通IOS版 回歸",
+                    "id": 1,
+                    "nextId": 2,
+                    "lastId": 2,
+                    "imgUrl": "https://i.imgur.com/faSwvRv.jpg",
+                    "url": "https://nkustap.page.link/bCK1",
+                    "description": "重新推出 IOS 版本 高科校務通 此版本還在測試中 歡迎同學私訊粉專意見回饋\t",
+                    "publishedTime": "2019-03-16T20:16:04+08:00"
+                  },
+                  {
+                    "title": "宿舍直達高鐵站專車",
+                    "id": 2,
+                    "nextId": -1,
+                    "lastId": 2,
+                    "imgUrl": "https://i.imgur.com/wwxD4Xa.png",
+                    "url": "",
+                    "description": "從燕巢宿舍直接發車，不用再走到公車站排隊 人數達25人即發車，一人只要30元喔",
+                    "publishedTime": "2019-03-16T20:16:04+08:00"
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/news/school": {
+      "get": {
+        "tags": [
+          "News"
+        ],
+        "summary": "get news",
+        "responses": {
+          "200": {
+            "description": "return school news",
+            "content": {
+              "application/json": {
+                "example": {
+                  "page": 1,
+                  "notification": [
+                    {
+                      "link": "http://kuasnews.kuas.edu.tw/files/13-1018-70766-1.php",
+                      "info": {
+                        "id": "1",
+                        "title": "2019年高科大高雄亮點日語導覽競賽",
+                        "department": "觀光系",
+                        "date": "2019-03-13"
+                      }
+                    },
+                    {
+                      "link": "http://gec.kuas.edu.tw/files/13-1012-70765-1.php",
+                      "info": {
+                        "id": "2",
+                        "title": "快來拿獎金!!!第22屆優質通識課程學生學習檔案e化徵選活動~",
+                        "department": "通識中心",
+                        "date": "2019-03-13"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/info": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get user's info",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return user info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "educationSystem": {
+                      "type": "string",
+                      "description": "education system"
+                    },
+                    "department": {
+                      "type": "string",
+                      "description": "department"
+                    },
+                    "class": {
+                      "type": "string",
+                      "description": "class"
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "student id"
+                    },
+                    "nameCht": {
+                      "type": "string",
+                      "description": "student chinese name"
+                    },
+                    "nameEng": {
+                      "type": "string",
+                      "description": "student english name"
+                    }
+                  }
+                },
+                "example": {
+                  "educationSystem": "日間部四技",
+                  "department": "資訊工程系",
+                  "class": "四資工四甲",
+                  "id": "1104112345",
+                  "nameCht": "葉大雄",
+                  "nameEng": ""
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      }
+    },
+    "/user/picture": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get user's picture",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return picture url",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "picUrl"
+                    }
+                  }
+                },
+                "example": {
+                  "url": "http://webap.nkust.edu.tw/nkust/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      }
+    },
+    "/user/semester": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get user's semester list",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return semester list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "semester": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string",
+                            "description": "semester"
+                          },
+                          "text": {
+                            "type": "string",
+                            "description": "text"
+                          }
+                        }
+                      }
+                    },
+                    "default": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "description": "semester"
+                        },
+                        "text": {
+                          "type": "string",
+                          "description": "text"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "semester": [
+                    {
+                      "value": "107,1",
+                      "text": "107學年度第1學期"
+                    },
+                    {
+                      "value": "107,2",
+                      "text": "107學年度第2學期"
+                    }
+                  ],
+                  "default": {
+                    "value": "107,2",
+                    "text": "107學年度第2學期"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      }
+    },
+    "/user/scores": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get user's scores",
+        "description": "If query parameters are empty then return the latest score.",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "year",
+            "description": "year of semeter",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "in": "query",
+            "name": "semester",
+            "description": "number of semester",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return score by year and semester",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "scores": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "description": "title"
+                          },
+                          "units": {
+                            "type": "string",
+                            "description": "course credit"
+                          },
+                          "hours": {
+                            "type": "string",
+                            "description": "course hour per week"
+                          },
+                          "required": {
+                            "type": "string",
+                            "description": "text"
+                          },
+                          "at": {
+                            "type": "string",
+                            "description": "text"
+                          },
+                          "middleScore": {
+                            "type": "string",
+                            "description": "midterm grade"
+                          },
+                          "finalScore": {
+                            "type": "string",
+                            "description": "final grade"
+                          },
+                          "remark": {
+                            "type": "string",
+                            "description": "text"
+                          }
+                        }
+                      }
+                    },
+                    "detail": {
+                      "type": "object",
+                      "properties": {
+                        "conduct": {
+                          "type": "integer",
+                          "description": "conduct scores"
+                        },
+                        "average": {
+                          "type": "integer",
+                          "description": "average scores"
+                        },
+                        "classRank": {
+                          "type": "string",
+                          "description": "rank in class"
+                        },
+                        "classPercentage": {
+                          "type": "string",
+                          "description": "percentage in class"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "scores": {
+                    "scores": [
+                      {
+                        "title": "專業倫理",
+                        "units": "1.0",
+                        "hours": "1.0",
+                        "required": "【必修】",
+                        "at": "【學期】",
+                        "middleScore": "*",
+                        "finalScore": "96.00",
+                        "remark": ""
+                      },
+                      {
+                        "title": "核心通識(三)-現今科技議題",
+                        "units": "2.0",
+                        "hours": "2.0",
+                        "required": "【必修】",
+                        "at": "【學期】",
+                        "middleScore": "*",
+                        "finalScore": "69.00",
+                        "remark": ""
+                      }
+                    ],
+                    "detail": {
+                      "conduct": 82,
+                      "average": 39,
+                      "classRank": "57/57",
+                      "classPercentage": 100
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      }
+    },
+    "/user/coursetables": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get user's coursetables",
+        "description": "If query parameters are empty then return the latest coursetable.",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "year",
+            "description": "year of semeter",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "in": "query",
+            "name": "semester",
+            "description": "number of semester",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return coursetable by year and semester",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "coursetables": {
+                    "Thursday": [
+                      {
+                        "title": "區塊鏈技術與應用",
+                        "date": {
+                          "startTime": "09:10",
+                          "endTime": "10:00",
+                          "weekday": "R",
+                          "section": "第2節"
+                        },
+                        "location": {
+                          "building": "",
+                          "room": "育302"
+                        },
+                        "instructors": [
+                          "蕭淳元"
+                        ]
+                      },
+                      {
+                        "title": "區塊鏈技術與應用",
+                        "date": {
+                          "startTime": "10:10",
+                          "endTime": "11:00",
+                          "weekday": "R",
+                          "section": "第3節"
+                        },
+                        "location": {
+                          "building": "",
+                          "room": "育302"
+                        },
+                        "instructors": [
+                          "蕭淳元"
+                        ]
+                      },
+                      {
+                        "title": "區塊鏈技術與應用",
+                        "date": {
+                          "startTime": "11:10",
+                          "endTime": "12:00",
+                          "weekday": "R",
+                          "section": "第4節"
+                        },
+                        "location": {
+                          "building": "",
+                          "room": "育302"
+                        },
+                        "instructors": [
+                          "蕭淳元"
+                        ]
+                      },
+                      {
+                        "title": "圖形理論",
+                        "date": {
+                          "startTime": "13:30",
+                          "endTime": "14:20",
+                          "weekday": "R",
+                          "section": "第5節"
+                        },
+                        "location": {
+                          "building": "",
+                          "room": "育305"
+                        },
+                        "instructors": [
+                          "鐘文鈺"
+                        ]
+                      },
+                      {
+                        "title": "圖形理論",
+                        "date": {
+                          "startTime": "14:30",
+                          "endTime": "15:20",
+                          "weekday": "R",
+                          "section": "第6節"
+                        },
+                        "location": {
+                          "building": "",
+                          "room": "育305"
+                        },
+                        "instructors": [
+                          "鐘文鈺"
+                        ]
+                      },
+                      {
+                        "title": "圖形理論",
+                        "date": {
+                          "startTime": "15:30",
+                          "endTime": "16:20",
+                          "weekday": "R",
+                          "section": "第7節"
+                        },
+                        "location": {
+                          "building": "",
+                          "room": "育305"
+                        },
+                        "instructors": [
+                          "鐘文鈺"
+                        ]
+                      }
+                    ],
+                    "Tuesday": [
+                      {
+                        "title": "高等資料庫",
+                        "date": {
+                          "startTime": "13:30",
+                          "endTime": "14:20",
+                          "weekday": "T",
+                          "section": "第5節"
+                        },
+                        "location": {
+                          "building": "",
+                          "room": "育302"
+                        },
+                        "instructors": [
+                          "楊孟翰"
+                        ]
+                      },
+                      {
+                        "title": "高等資料庫",
+                        "date": {
+                          "startTime": "14:30",
+                          "endTime": "15:20",
+                          "weekday": "T",
+                          "section": "第6節"
+                        },
+                        "location": {
+                          "building": "",
+                          "room": "育302"
+                        },
+                        "instructors": [
+                          "楊孟翰"
+                        ]
+                      },
+                      {
+                        "title": "高等資料庫",
+                        "date": {
+                          "startTime": "15:30",
+                          "endTime": "16:20",
+                          "weekday": "T",
+                          "section": "第7節"
+                        },
+                        "location": {
+                          "building": "",
+                          "room": "育302"
+                        },
+                        "instructors": [
+                          "楊孟翰"
+                        ]
+                      }
+                    ],
+                    "timecode": [
+                      "第M節",
+                      "第1節",
+                      "第2節",
+                      "第3節",
+                      "第4節",
+                      "第A節",
+                      "第5節",
+                      "第6節",
+                      "第7節",
+                      "第8節",
+                      "第9節",
+                      "第10節",
+                      "第11節",
+                      "第12節",
+                      "第13節"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      }
+    },
+    "/bus/timetables": {
+      "get": {
+        "tags": [
+          "Bus"
+        ],
+        "summary": "get bus timetables",
+        "description": "If query parameters are empty then return the latest timetables.",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "description": "date of timetables",
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd",
+              "example": "2018-12-23"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return bus timetables by date",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "timetable": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "endEnrollTime": {
+                            "type": "string",
+                            "description": "end enroll date time"
+                          },
+                          "departureTime": {
+                            "type": "string",
+                            "description": "course credit"
+                          },
+                          "endStation": {
+                            "type": "string",
+                            "description": "end station"
+                          },
+                          "busId": {
+                            "type": "string",
+                            "description": "bus id"
+                          },
+                          "discription": {
+                            "type": "string",
+                            "description": "text"
+                          },
+                          "cancelKey": {
+                            "type": "string",
+                            "description": "final grade"
+                          },
+                          "reserveCount": {
+                            "type": "integer",
+                            "description": "reserve count"
+                          },
+                          "limitCount": {
+                            "type": "integer",
+                            "description": "limit count"
+                          },
+                          "isReserve": {
+                            "type": "boolean",
+                            "description": "is reserve or not"
+                          },
+                          "specialTrain": {
+                            "type": "string",
+                            "description": "special train"
+                          }
+                        }
+                      }
+                    },
+                    "date": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "description": "ISO 8601 time"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "date": "2019-03-17T16:51:57Z",
+                  "timetable": [
+                    {
+                      "endEnrollDateTime": "2019-03-17T16:51:57Z",
+                      "departureTime": "2019-03-17T16:51:57Z",
+                      "endStation": "燕巢",
+                      "busId": "42705",
+                      "reserveCount": 2,
+                      "limitCount": 999,
+                      "isReserve": true,
+                      "specialTrain": "0",
+                      "discription": "",
+                      "cancelKey": 0
+                    },
+                    {
+                      "endEnrollDateTime": "2019-03-17T16:51:57Z",
+                      "departureTime": "2019-03-17T16:51:57Z",
+                      "endStation": "燕巢",
+                      "busId": "42711",
+                      "reserveCount": 11,
+                      "limitCount": 999,
+                      "isReserve": false,
+                      "SpecialTrain": "0",
+                      "discription": "",
+                      "cancelKey": 0
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      }
+    },
+    "/bus/reservations": {
+      "get": {
+        "tags": [
+          "Bus"
+        ],
+        "summary": "get reservations",
+        "description": "If query parameters are empty then return the latest reservations.",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busId",
+            "description": "bus id",
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd",
+              "example": "2018-12-23"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return reservations by year and semester",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reservation": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "time": {
+                            "type": "string",
+                            "description": "start time"
+                          },
+                          "endTime": {
+                            "type": "string",
+                            "description": "end time"
+                          },
+                          "cancelKey": {
+                            "type": "string",
+                            "description": "cancel key for cancel reserved bus"
+                          },
+                          "end": {
+                            "type": "string",
+                            "description": "end station"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "reservation": [
+                    {
+                      "time": "2019-03-17T16:51:57Z",
+                      "endTime": "2019-03-14T08:20Z",
+                      "cancelKey": "2004434",
+                      "end": "燕巢"
+                    },
+                    {
+                      "time": "2019-03-18T00:20Z",
+                      "endTime": "2019-03-17T09:20Z",
+                      "cancelKey": "2006005",
+                      "end": "燕巢"
+                    },
+                    {
+                      "time": "2019-03-18T08:40Z",
+                      "endTime": "2019-03-18T03:40Z",
+                      "cancelKey": "2006006",
+                      "end": "建工"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Bus"
+        ],
+        "summary": "reserve bus",
+        "description": "reserve bus",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busId",
+            "description": "bus id",
+            "schema": {
+              "type": "string",
+              "example": "12345"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "return reservations by year and semester"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Bus"
+        ],
+        "summary": "cancel reserved bus",
+        "description": "cancel reserved bus",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cancelKey",
+            "description": "cancel key",
+            "schema": {
+              "type": "string",
+              "example": "3241"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "return reservations by year and semester"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      }
+    },
+    "/leaves": {
+      "get": {
+        "tags": [
+          "Leave"
+        ],
+        "summary": "get user's absentees and leaves",
+        "description": "If query parameters are empty then return the latest absentees and leaves.",
+        "security": [
+          {
+            "JSON-Web-Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "year",
+            "description": "year of semeter",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "in": "query",
+            "name": "semester",
+            "description": "number of semester",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return score by year and semester",
+            "content": {
+              "application/json": {
+                "example": {
+                  "leaves": [
+                    {
+                      "leaveSheetId": "",
+                      "date": "107/11/14",
+                      "instructors_comment": "",
+                      "leave_sections": [
+                        {
+                          "section": "5",
+                          "reason": "曠"
+                        },
+                        {
+                          "section": "6",
+                          "reason": "曠"
+                        }
+                      ]
+                    }
+                  ],
+                  "timecode": [
+                    "A",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "B",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "C",
+                    "11",
+                    "12",
+                    "13",
+                    "14"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token expired or Unauthorized Access"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Upstream server is timeout"
+          },
+          "504": {
+            "description": "Upstream server is not alive"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ServerInfo": {
+        "type": "object",
+        "properties": {
+          "serverIime": {
+            "type": "string",
+            "description": "ISO 8601"
+          },
+          "services": {
+            "$ref": "#/components/schemas/Service"
+          }
+        },
+        "description": "all services status",
+        "example": {
+          "date": "2019-03-16T20:16:04+08:00",
+          "services": [
+            {
+              "service": "ap",
+              "isAlive": true,
+              "description": "校務系統"
+            },
+            {
+              "service": "bus",
+              "isAlive": true,
+              "description": "校車系統"
+            },
+            {
+              "service": "leave",
+              "isAlive": true,
+              "description": "缺曠系統"
+            },
+            {
+              "service": "library",
+              "isAlive": true,
+              "description": "圖書館系統"
+            }
+          ]
+        }
+      },
+      "Service": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "service": {
+              "type": "string"
+            },
+            "isAlive": {
+              "type": "boolean"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        },
+        "description": "all services status",
+        "example": [
+          {
+            "service": "ap",
+            "isAlive": true,
+            "description": "校務系統"
+          },
+          {
+            "service": "bus",
+            "isAlive": true,
+            "description": "校車系統"
+          },
+          {
+            "service": "leave",
+            "isAlive": true,
+            "description": "缺曠系統"
+          },
+          {
+            "service": "library",
+            "isAlive": true,
+            "description": "圖書館系統"
+          }
+        ]
+      },
+      "News": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "id"
+          },
+          "nextid": {
+            "type": "integer",
+            "description": "next news id"
+          },
+          "lastId": {
+            "type": "integer",
+            "description": "next news id"
+          },
+          "title": {
+            "type": "string",
+            "description": "title"
+          },
+          "publishedAt": {
+            "type": "string",
+            "description": "publish time"
+          },
+          "url": {
+            "type": "string",
+            "description": "news url"
+          },
+          "imgUrl": {
+            "type": "string",
+            "description": "image url"
+          },
+          "description": {
+            "type": "string",
+            "description": "news description"
+          }
+        },
+        "example": {
+          "title": "高科校務通IOS版 回歸",
+          "id": 1,
+          "nextid": 2,
+          "lastId": 5,
+          "publishedAt": "2019-03-16T20:16:04+08:00",
+          "imgUrl": "https://i.imgur.com/faSwvRv.jpg",
+          "url": "https://nkustap.page.link/bCK1",
+          "description": "重新推出 IOS 版本 高科校務通 此版本還在測試中 歡迎同學私訊粉專意見回饋\t"
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "username": "110412345",
+          "password": "1234"
+        }
+      },
+      "Auth": {
+        "type": "object",
+        "properties": {
+          "expire_time": {
+            "type": "string",
+            "description": "ISO 8601"
+          },
+          "token": {
+            "type": "string",
+            "description": "JWT token"
+          }
+        },
+        "example": {
+          "expireTime": "2019-03-16T20:16:04+08:00",
+          "token": "I6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtIjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJ",
+          "services": [
+            {
+              "service": "ap",
+              "isAlive": true,
+              "description": "校務系統"
+            },
+            {
+              "service": "bus",
+              "isAlive": true,
+              "description": "校車系統"
+            },
+            {
+              "service": "leave",
+              "isAlive": true,
+              "description": "缺曠系統"
+            },
+            {
+              "service": "library",
+              "isAlive": true,
+              "description": "圖書館系統"
+            }
+          ]
+        }
+      }
+    },
+    "securitySchemes": {
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      },
+      "JSON-Web-Token": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  }
+}
