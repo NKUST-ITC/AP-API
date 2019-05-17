@@ -1,4 +1,4 @@
-#-*- encoding=utf-8 -*-
+# -*- encoding=utf-8 -*-
 """This module `ap` provide manipulate of kuas AP system.
 """
 
@@ -8,7 +8,7 @@ import requests
 from lxml import etree
 # AP URL Setting
 #: AP sytem base url
-AP_BASE_URL = "http://webap.nkust.edu.tw"
+AP_BASE_URL = "https://webap.nkust.edu.tw"
 
 #: AP system login url
 AP_LOGIN_URL = AP_BASE_URL + "/nkust/perchk.jsp"
@@ -109,20 +109,20 @@ def get_semester_list():
     login(s, AP_GUEST_ACCOUNT, AP_GUEST_PASSWORD)
 
     content = cache.ap_query(s, "ag304_01")
-    if len(content)<3000:
+    if len(content) < 3000:
         return False
     root = etree.HTML(content)
 
     #options = root.xpath("id('yms_yms')/option")
     try:
         options = map(lambda x: {"value": x.values()[0].replace("#", ","),
-                                "selected": 1 if "selected" in x.values() else 0,
-                                "text": x.text},
-                    root.xpath("id('yms_yms')/option")
-                    )
+                                 "selected": 1 if "selected" in x.values() else 0,
+                                 "text": x.text},
+                      root.xpath("id('yms_yms')/option")
+                      )
     except:
         return False
-    
+
     options = list(options)
 
     return options
@@ -187,5 +187,5 @@ def query(session, qid, args={}):
 
 if __name__ == "__main__":
     #import doctest
-    #doctest.testmod()
+    # doctest.testmod()
     print(get_semester_list())

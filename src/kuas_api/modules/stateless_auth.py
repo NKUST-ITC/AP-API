@@ -51,6 +51,7 @@ def set_cookies(s, username):
 
 def get_requests_session_with_cookies():
     s = requests.Session()
+    s.verify = False
 
     if g.username:
         set_cookies(s, g.username)
