@@ -232,3 +232,4 @@ src/gunicorn_cfg.py
 \.idea/
 caddy/Caddyfile
 \.env
+venv/

@@ -100,6 +100,9 @@ Demo
 ---
 https://kuas.grd.idv.tw:14769/v2/token
 
+API Docs
+---
+[docs](https://github.com/NKUST-ITC/AP-API/tree/develop/docs/v3)
 
 
 Donate
