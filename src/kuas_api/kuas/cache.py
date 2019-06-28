@@ -7,7 +7,6 @@ import hashlib
 import requests
 from werkzeug.contrib.cache import SimpleCache
 
-
 import kuas_api.kuas.ap as ap
 import kuas_api.kuas.leave as leave
 import kuas_api.kuas.parse as parse
@@ -34,6 +33,8 @@ s_cache = SimpleCache()
 red = redis.StrictRedis.from_url(url=os.environ['REDIS_URL'], db=2)
 SECRET_KEY = red.get("SECRET_KEY") if red.exists(
     "SECRET_KEY") else str(os.urandom(32))
+# Only use in cache.login , get encoded data from redis.
+# get data from redis should be able use without any decode or encode action.
 red_auth = redis.StrictRedis.from_url(
     url=os.environ['REDIS_URL'], db=2, charset="utf-8", decode_responses=True)
 
