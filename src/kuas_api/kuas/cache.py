@@ -57,11 +57,8 @@ def login(username, password):
     is_login = {}
 
     if red_auth.exists(username):
-        user_redis_cookie = red_auth.get(username)
-
-        login_json = json.loads(user_redis_cookie)
-
-        return login_json
+        user_redis_cookies = red_auth.get(username)
+        return json.loads(user_redis_cookies)
 
     # AP Login
     try:
