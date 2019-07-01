@@ -70,7 +70,7 @@ def generate_auth_token(username, cookies, expiration=600):
     """
     s = Serializer(DIRTY_SECRET_KEY, expires_in=expiration)
 
-    red.set(username, json.dumps(cookies))
+    red.set(username, json.dumps(cookies), ex=600)
 
     return s.dumps({"sid": username})
 

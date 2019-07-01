@@ -7,7 +7,6 @@ import hashlib
 import requests
 from werkzeug.contrib.cache import SimpleCache
 
-
 import kuas_api.kuas.ap as ap
 import kuas_api.kuas.leave as leave
 import kuas_api.kuas.parse as parse
@@ -31,12 +30,16 @@ AP_GUEST_ACCOUNT = "guest"
 AP_GUEST_PASSWORD = "123"
 
 s_cache = SimpleCache()
-red = redis.StrictRedis.from_url(url= os.environ['REDIS_URL'],db=2)
+red = redis.StrictRedis.from_url(url=os.environ['REDIS_URL'], db=2)
 SECRET_KEY = red.get("SECRET_KEY") if red.exists(
     "SECRET_KEY") else str(os.urandom(32))
+# Only use in cache.login , get encoded data from redis.
+# get data from redis should be able use without any decode or encode action.
+red_auth = redis.StrictRedis.from_url(
+    url=os.environ['REDIS_URL'], db=2, charset="utf-8", decode_responses=True)
 
 
-def dump_session_cookies(session,is_login):
+def dump_session_cookies(session, is_login):
     """Dumps cookies to list
     """
 
@@ -47,12 +50,16 @@ def dump_session_cookies(session,is_login):
             'domain': c.domain,
             'value': c.value})
 
-    return {'is_login': is_login, 'cookies':cookies}
+    return {'is_login': is_login, 'cookies': cookies}
 
 
 def login(username, password):
     session = requests.Session()
     is_login = {}
+
+    if red_auth.exists(username):
+        user_redis_cookies = red_auth.get(username)
+        return json.loads(user_redis_cookies)
 
     # AP Login
     try:
@@ -72,15 +79,15 @@ def login(username, password):
         is_login["leave"] = leave.login(session, username, password)
     except:
         is_login["leave"] = False
-    if is_login["ap"]: 
-        return dump_session_cookies(session,is_login)
+    if is_login["ap"]:
+        return dump_session_cookies(session, is_login)
     else:
-        return False 
+        return False
 
 
 def ap_query(session, qid=None, args=None,
              username=None, expire=AP_QUERY_EXPIRE):
-    ap_query_key_tag = str(username) + str(args) +  str(SECRET_KEY)
+    ap_query_key_tag = str(username) + str(args) + str(SECRET_KEY)
     ap_query_key = qid + \
         hashlib.sha512(
             bytes(ap_query_key_tag, "utf-8")).hexdigest()
@@ -94,6 +101,7 @@ def ap_query(session, qid=None, args=None,
         ap_query_content = json.loads(red.get(ap_query_key))
 
     return ap_query_content
+
 
 def leave_query(session, year="102", semester="2"):
     return leave.getList(session, year, semester)
@@ -194,27 +202,26 @@ def get_semester_list():
     """
 
     s = requests.Session()
-    ap.login(s,AP_GUEST_ACCOUNT, AP_GUEST_PASSWORD)
+    ap.login(s, AP_GUEST_ACCOUNT, AP_GUEST_PASSWORD)
 
     content = ap_query(s, "ag304_01")
-    if len(content)<3000:
+    if len(content) < 3000:
         return False
     root = etree.HTML(content)
 
     #options = root.xpath("id('yms_yms')/option")
     try:
         options = map(lambda x: {"value": x.values()[0].replace("#", ","),
-                                "selected": 1 if "selected" in x.values() else 0,
-                                "text": x.text},
-                    root.xpath("id('yms_yms')/option")
-                    )
+                                 "selected": 1 if "selected" in x.values() else 0,
+                                 "text": x.text},
+                      root.xpath("id('yms_yms')/option")
+                      )
     except:
         return False
-    
+
     options = list(options)
 
     return options
-
 
 
 if __name__ == "__main__":
