@@ -7,10 +7,9 @@ services:
       dockerfile: Dockerfile
     volumes:
     - .:/usr/src/app
-    - /etc/localtime:/etc/localtime:ro
-    - /etc/timezone:/etc/timezone:ro
     environment:
       - REDIS_URL=${REDIS_URL}
+      - "TZ=Asia/Taipei"
     command: [ "gunicorn","-c","gunicorn_cfg.py","web-server:app"]
     networks:
       - redis-net
